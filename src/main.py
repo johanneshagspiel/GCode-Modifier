@@ -20,19 +20,24 @@ if __name__ == '__main__':
 
     file_handler = File_Handler()
 
-    file_handler.write_file(modified_gcode.gcode_list)
+    #file_handler.write_file(modified_gcode.main_gcode)
 
     # print(len(modified_gcode.time_elapsed_list))
     # print(len(modified_gcode.layer_list))
 
     # for line in modified_gcode.time_elapsed_list:
-    #     print(modified_gcode.gcode_list[line])
+    #     print(modified_gcode.main_gcode[line])
 
+    # for index, entry in enumerate(original_gcode.layer_list):
+    #     print(str(index) + " " + str(entry))
+    #
+    for entry in original_gcode.movements_per_layer_list:
+        print(entry)
 
-    for line in range(len(original_gcode.gcode_list)):
-        print("Line: " + str(line))
-        print("Original: " + str(original_gcode.gcode_list[line]))
-        print("Modified: " + str(modified_gcode.gcode_list[line]))
-        print("-------")
+    # for line in range(len(original_gcode.main_gcode)):
+    #     print("Line: " + str(line))
+    #     print("Original: " + str(original_gcode.main_gcode[line]))
+    #     print("Modified: " + str(modified_gcode.main_gcode[line]))
+    #     print("-------")
 
 

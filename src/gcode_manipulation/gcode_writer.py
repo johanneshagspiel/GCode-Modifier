@@ -20,21 +20,22 @@ class Gcode_Writer():
     def add_pause_end_each_layer(self):
 
         previous_index = 0
-        last_index = len(self.original_gcode.gcode_list)
+        last_index = len(self.original_gcode.main_gcode)
 
         gcode_list = []
 
         for layer_index in self.original_gcode.time_elapsed_list:
 
             for index in range(previous_index, layer_index):
-                gcode_list.append(self.original_gcode.gcode_list[index])
+                gcode_list.append(self.original_gcode.main_gcode[index])
 
             gcode_list.append("G4 S10")
             previous_index = layer_index
 
         for index in range(previous_index, last_index):
-            gcode_list.append(self.original_gcode.gcode_list[index])
+            gcode_list.append(self.original_gcode.main_gcode[index])
 
-        self.modified_gcode.gcode_list = gcode_list
+        self.modified_gcode.main_gcode = gcode_list
 
         self.update_information()
+
