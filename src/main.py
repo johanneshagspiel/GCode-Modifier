@@ -20,7 +20,7 @@ if __name__ == '__main__':
 
     file_handler = File_Handler()
 
-    file_handler.write_file(modified_gcode)
+    #file_handler.write_file(modified_gcode)
 
     # print(len(modified_gcode.time_elapsed_index_list))
     # print(len(modified_gcode.layer_index_list))
@@ -31,8 +31,8 @@ if __name__ == '__main__':
     # for index, entry in enumerate(original_gcode.layer_index_list):
     #     print(str(index) + " " + str(entry))
     #
-    # for entry in modified_gcode.main_gcode:
-    #     print(entry)
+    # for entry in modified_gcode.layer_index_list:
+    #     print(modified_gcode.main_gcode[entry])
 
     # for line in range(len(original_gcode.main_gcode)):
     #     print("Line: " + str(line))

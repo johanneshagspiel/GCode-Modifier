@@ -65,9 +65,9 @@ class Gcode_Writer():
         self.modified_gcode.main_gcode = new_main
 
         new_end = []
+        new_end.append("M117 Print is winding down")
         for line in self.modified_gcode.end_gcode:
             new_end.append(line)
-            new_end.append("M117 Print is winding down")
         self.modified_gcode.end_gcode = new_end
 
         self.update_information()
