@@ -6,13 +6,16 @@ class Gcode_Writer():
     def __init__(self,gcode: GCode):
         self.original_gcode = gcode
         self.modified_gcode = GCode()
-        self.parser = GCode_Parser()
+        self.parser = GCode_Parser(gcode=self.modified_gcode)
 
     def modify_gcode(self):
 
         self.add_pause_end_each_layer()
 
         return self.modified_gcode
+
+    def update_information(self):
+        self.parser.find_indexes()
 
     def add_pause_end_each_layer(self):
 
@@ -21,12 +24,12 @@ class Gcode_Writer():
 
         gcode_list = []
 
-        for layer_index in self.original_gcode.layer_index_list:
+        for layer_index in self.original_gcode.time_elapsed_list:
 
-            for index in range(previous_index, layer_index-1):
+            for index in range(previous_index, layer_index):
                 gcode_list.append(self.original_gcode.gcode_list[index])
 
-            gcode_list.append("M25")
+            gcode_list.append("G4 S10")
             previous_index = layer_index
 
         for index in range(previous_index, last_index):
@@ -34,4 +37,4 @@ class Gcode_Writer():
 
         self.modified_gcode.gcode_list = gcode_list
 
-        self.parser.find_layer_index(self.modified_gcode)
+        self.update_information()

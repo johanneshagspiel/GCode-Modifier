@@ -1,39 +1,37 @@
-from pathlib import Path
 from gcode_manipulation.gcode import GCode
+from util.file_handler import File_Handler
 
 class GCode_Parser:
 
-    def __init__(self):
-        self.root = Path(__file__).parents[2]
+    def __init__(self,gcode: GCode = None):
+        self.gcode = gcode
+        self.file_handler = File_Handler()
 
     def create_gcode(self):
-        created_gcode = self.read_file()
-        result = self.analyze_gcode(created_gcode)
+        self.setup_gcode()
+        self.analyze_gcode()
 
-        return result
+        return self.gcode
 
-    def read_file(self):
+    def setup_gcode(self):
         new_gcode = GCode()
 
-        file_path = Path.joinpath(self.root, "resources", "CFFFP_20mm_Calibration_Box (half cube).gcode")
-        line_list = []
-        with open(file_path, 'r') as f:
-            line_list = [line.strip() for line in f if line.strip()]
+        new_gcode.gcode_list = self.file_handler.read_file()
+        self.gcode = new_gcode
 
-        new_gcode.gcode_list = line_list
-        return new_gcode
+    def analyze_gcode(self):
+        self.find_indexes()
 
-    def analyze_gcode(self, gcode):
-        gcode = self.find_layer_index(gcode)
-        return gcode
+    def find_indexes(self):
 
-    def find_layer_index(self, gcode):
+        layer_list = []
+        time_elapsed_list =[]
 
-        index_list = []
-        for index, line in enumerate(gcode.gcode_list):
+        for index, line in enumerate(self.gcode.gcode_list):
+            if ";TIME_ELAPSED:" in line:
+                time_elapsed_list.append(index)
             if ";LAYER:" in line:
-                index_list.append(index)
+                layer_list.append(index)
 
-        gcode.layer_index_list = index_list
-
-        return gcode
+        self.gcode.layer_list = layer_list
+        self.gcode.time_elapsed_list = time_elapsed_list
