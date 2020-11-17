@@ -73,6 +73,7 @@ class GCode_Parser:
             if ";TIME_ELAPSED:" in line:
                 time_elapsed_list.append(index)
 
-        self.gcode.layer_list = layer_list
-        self.gcode.time_elapsed_list = time_elapsed_list
+        self.gcode.layer_index_list = layer_list
+        self.gcode.amount_layers = len(layer_list)
+        self.gcode.time_elapsed_index_list = time_elapsed_list
         self.gcode.movements_per_layer_list = movements_per_layer_list

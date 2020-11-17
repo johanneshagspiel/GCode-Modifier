@@ -22,16 +22,16 @@ if __name__ == '__main__':
 
     #file_handler.write_file(modified_gcode.main_gcode)
 
-    # print(len(modified_gcode.time_elapsed_list))
-    # print(len(modified_gcode.layer_list))
+    # print(len(modified_gcode.time_elapsed_index_list))
+    # print(len(modified_gcode.layer_index_list))
 
-    # for line in modified_gcode.time_elapsed_list:
+    # for line in modified_gcode.time_elapsed_index_list:
     #     print(modified_gcode.main_gcode[line])
 
-    # for index, entry in enumerate(original_gcode.layer_list):
+    # for index, entry in enumerate(original_gcode.layer_index_list):
     #     print(str(index) + " " + str(entry))
     #
-    for entry in original_gcode.movements_per_layer_list:
+    for entry in modified_gcode.main_gcode:
         print(entry)
 
     # for line in range(len(original_gcode.main_gcode)):

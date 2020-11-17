@@ -6,6 +6,8 @@ class GCode:
         self.main_gcode = []
         self.end_gcode = []
 
-        self.layer_list = []
-        self.time_elapsed_list = []
+        self.layer_index_list = []
+        self.time_elapsed_index_list = []
         self.movements_per_layer_list = []
+
+        self.amount_layers = 0
