@@ -1,4 +1,6 @@
-from gcode_parser.gcode_parser import GCode_Parser
+from gcode_manipulation.gcode_parser import GCode_Parser
+from gcode_manipulation.gcode_writer import Gcode_Writer
+from gcode_manipulation.gcode import GCode
 
 
 def print_hi(name):
@@ -9,7 +11,10 @@ def print_hi(name):
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     parser = GCode_Parser()
-    gcode = parser.create_gcode()
+    original_gcode = parser.create_gcode()
 
-    for index in gcode.layer_index:
-        print(gcode.original_gcode[index])
+    writer = Gcode_Writer(original_gcode)
+    modified_gcode: GCode = writer.modify_gcode()
+
+    for line in modified_gcode.gcode_list:
+        print(line)
