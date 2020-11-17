@@ -1,4 +1,5 @@
 from pathlib import Path
+from gcode_manipulation.gcode import GCode
 
 class File_Handler():
 
@@ -13,9 +14,11 @@ class File_Handler():
 
         return line_list
 
-    def write_file(self, to_write):
+    def write_file(self, to_write: GCode):
         file_path = Path.joinpath(self.root, "resources", "test.gcode")
 
         f = open(file_path, "w")
-        f.write("\n".join(to_write))
+        f.write("\n".join(to_write.start_gcode))
+        f.write("\n".join(to_write.main_gcode))
+        f.write("\n".join(to_write.end_gcode))
         f.close()
