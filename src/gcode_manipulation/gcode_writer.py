@@ -50,19 +50,20 @@ class Gcode_Writer():
 
         new_main = []
         current_layer = 0
-        current_line = 0
+        current_move = 0
+
+        movement_commands = ["G0", "G1", "G2", "G3", "G5"]
 
         for index, line in enumerate(self.modified_gcode.main_gcode):
-            current_line += 1
-            new_main.append(line)
-
-            if "G0" or "G1" or "G2" or "G3" or "G5" in line:
-                text = "M117 Mov " + str(current_line) + "/" + str(self.modified_gcode.movements_per_layer_list[current_layer]) + " Lay " + str(current_layer + 1) + "/" + str(self.modified_gcode.amount_layers)
+            if any(x in line for x in movement_commands):
+                text = "M117 Mov " + str(current_move) + "/" + str(self.modified_gcode.movements_per_layer_list[current_layer]) + " Lay " + str(current_layer + 1) + "/" + str(self.modified_gcode.amount_layers)
                 new_main.append(text)
+                current_move += 1
+            new_main.append(line)
 
             if index == self.modified_gcode.time_elapsed_index_list[current_layer]:
                 current_layer += 1
-                current_line = 0
+                current_move = 0
 
         self.modified_gcode.main_gcode = new_main
 

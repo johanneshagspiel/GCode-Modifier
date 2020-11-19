@@ -19,7 +19,6 @@ class File_Handler():
 
         f = open(file_path, "w")
         f.write("\n".join(to_write.start_gcode))
-        f.write("\n")
         f.write("\n".join(to_write.main_gcode))
         f.write("\n")
         f.write("\n".join(to_write.end_gcode))

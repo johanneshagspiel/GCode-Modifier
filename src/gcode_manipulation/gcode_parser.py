@@ -68,9 +68,7 @@ class GCode_Parser:
                 if ";Generated with" in line:
                     start_cura_bol = False
             if ";LAYER_COUNT" in line:
-                layer_count_list.append(line)
-                layer_count_list.append("\n")
-
+                layer_count_list.append(line + "\n")
 
         new_start_cura_list = []
         new_start_cura_list.append("M105")
@@ -83,8 +81,9 @@ class GCode_Parser:
         new_start_cura_list.append("G1 Z5.0 F3000")
         new_start_cura_list.append("G92 E0")
         new_start_cura_list.append("G92 E0")
+        new_start_cura_list.append("\n")
 
-        new_start = start_cura_list + new_start_cura_list + layer_count_list
+        new_start = start_cura_list + layer_count_list + new_start_cura_list
         self.gcode.start_gcode = new_start
 
         new_main = []
@@ -102,15 +101,16 @@ class GCode_Parser:
         movements_per_layer_list = []
 
         current_layer = -1
+        movement_commands = ["G0", "G1", "G2", "G3", "G5"]
 
         for index, line in enumerate(self.gcode.main_gcode):
             if ";LAYER:" in line:
                 layer_list.append(index)
                 current_layer += 1
                 movements_per_layer_list.append(0)
-            if "G0" or "G1" or "G2" or "G3" or "G5" in line:
+            elif any(x in line for x in movement_commands):
                 movements_per_layer_list[current_layer] += 1
-            if ";TIME_ELAPSED:" in line:
+            elif ";TIME_ELAPSED:" in line:
                 time_elapsed_list.append(index)
 
         self.gcode.layer_index_list = layer_list
