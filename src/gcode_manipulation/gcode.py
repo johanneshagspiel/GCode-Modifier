@@ -11,3 +11,4 @@ class GCode:
         self.movements_per_layer_list = []
 
         self.amount_layers = 0
+        self.largest_extrusion_value = 0

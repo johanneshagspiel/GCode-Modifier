@@ -102,6 +102,7 @@ class GCode_Parser:
 
         current_layer = -1
         movement_commands = ["G0", "G1", "G2", "G3", "G5"]
+        largest_extrusion_value = 0
 
         for index, line in enumerate(self.gcode.main_gcode):
             if ";LAYER:" in line:
@@ -110,10 +111,21 @@ class GCode_Parser:
                 movements_per_layer_list.append(0)
             elif any(x in line for x in movement_commands):
                 movements_per_layer_list[current_layer] += 1
+
+                split_line = line.split()
+
+                for word in split_line:
+                    if "E" in word:
+                        extrusion_value = float(word[1:])
+                        if extrusion_value > largest_extrusion_value:
+                            largest_extrusion_value = extrusion_value
+
             elif ";TIME_ELAPSED:" in line:
                 time_elapsed_list.append(index)
 
         self.gcode.layer_index_list = layer_list
-        self.gcode.amount_layers = len(layer_list)
         self.gcode.time_elapsed_index_list = time_elapsed_list
         self.gcode.movements_per_layer_list = movements_per_layer_list
+
+        self.gcode.amount_layers = len(layer_list)
+        self.gcode.largest_extrusion_value = largest_extrusion_value

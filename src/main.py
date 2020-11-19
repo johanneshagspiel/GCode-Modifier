@@ -19,5 +19,6 @@ if __name__ == '__main__':
     modified_gcode: GCode = writer.modify_gcode()
 
     file_handler = File_Handler()
+    #file_handler.write_file(modified_gcode)
 
-    file_handler.write_file(modified_gcode)
+    print(modified_gcode.largest_extrusion_value)
