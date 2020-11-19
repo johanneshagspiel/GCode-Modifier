@@ -6,7 +6,7 @@ class File_Handler():
     def __init__(self):
         self.root = Path(__file__).parents[2]
 
-    def read_file(self):
+    def read_gcode_file(self):
         file_path = Path.joinpath(self.root, "resources", "CFFFP_20mm_Calibration_Box (half cube).gcode")
         line_list = []
         with open(file_path, 'r') as f:

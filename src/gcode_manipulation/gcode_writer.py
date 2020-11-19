@@ -10,7 +10,7 @@ class Gcode_Writer():
 
     def modify_gcode(self):
 
-        self.add_pause_end_each_layer()
+        #self.add_pause_end_each_layer()
         self.add_information_text()
 
         return self.modified_gcode
@@ -43,9 +43,9 @@ class Gcode_Writer():
     def add_information_text(self):
 
         new_start = []
+        new_start.append("M117 Print is starting")
         for line in self.modified_gcode.start_gcode:
             new_start.append(line)
-            new_start.append("M117 Print is starting")
         self.modified_gcode.start_gcode = new_start
 
         new_main = []
@@ -55,8 +55,10 @@ class Gcode_Writer():
         for index, line in enumerate(self.modified_gcode.main_gcode):
             current_line += 1
             new_main.append(line)
-            text = "M117 Line " + str(current_line) + "/" + str(self.modified_gcode.movements_per_layer_list[current_layer]) + " Layer " + str(current_layer + 1) + "/" + str(self.modified_gcode.amount_layers)
-            new_main.append(text)
+
+            if "G0" or "G1" or "G2" or "G3" or "G5" in line:
+                text = "M117 Mov " + str(current_line) + "/" + str(self.modified_gcode.movements_per_layer_list[current_layer]) + " Lay " + str(current_layer + 1) + "/" + str(self.modified_gcode.amount_layers)
+                new_main.append(text)
 
             if index == self.modified_gcode.time_elapsed_index_list[current_layer]:
                 current_layer += 1

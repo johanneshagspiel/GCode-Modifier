@@ -16,11 +16,12 @@ class GCode_Parser:
     def setup_gcode(self):
         new_gcode = GCode()
 
-        new_gcode.main_gcode = self.file_handler.read_file()
+        new_gcode.main_gcode = self.file_handler.read_gcode_file()
         self.gcode = new_gcode
 
     def analyze_gcode(self):
         self.split_gcode()
+        self.clean_gcode()
         self.find_indexes()
 
     def split_gcode(self):
@@ -54,6 +55,45 @@ class GCode_Parser:
         self.gcode.start_gcode = start_gcode
         self.gcode.main_gcode = main_gcode
         self.gcode.end_gcode = end_gcode
+
+    def clean_gcode(self):
+
+        start_cura_bol = True
+        start_cura_list = []
+        layer_count_list = []
+
+        for line in self.gcode.start_gcode:
+            if start_cura_bol is True:
+                start_cura_list.append(line)
+                if ";Generated with" in line:
+                    start_cura_bol = False
+            if ";LAYER_COUNT" in line:
+                layer_count_list.append(line)
+                layer_count_list.append("\n")
+
+
+        new_start_cura_list = []
+        new_start_cura_list.append("M105")
+        new_start_cura_list.append("M109 S0")
+        new_start_cura_list.append("M82 ;absolute extrusion mode")
+        new_start_cura_list.append("M302 P1")
+        new_start_cura_list.append("M106 S0")
+        new_start_cura_list.append("G92 E0")
+        new_start_cura_list.append("G28")
+        new_start_cura_list.append("G1 Z5.0 F3000")
+        new_start_cura_list.append("G92 E0")
+        new_start_cura_list.append("G92 E0")
+
+        new_start = start_cura_list + new_start_cura_list + layer_count_list
+        self.gcode.start_gcode = new_start
+
+        new_main = []
+
+        for line in self.gcode.main_gcode:
+            if "M140" not in line:
+                new_main.append(line)
+
+        self.gcode.main_gcode = new_main
 
     def find_indexes(self):
 
