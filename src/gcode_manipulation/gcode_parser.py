@@ -68,7 +68,7 @@ class GCode_Parser:
                 if ";Generated with" in line:
                     start_cura_bol = False
             if ";LAYER_COUNT" in line:
-                layer_count_list.append(line + "\n")
+                layer_count_list.append(line)
 
         new_start_cura_list = []
         new_start_cura_list.append("M105")
@@ -81,18 +81,38 @@ class GCode_Parser:
         new_start_cura_list.append("G1 Z5.0 F3000")
         new_start_cura_list.append("G92 E0")
         new_start_cura_list.append("G92 E0")
-        new_start_cura_list.append("\n")
 
         new_start = start_cura_list + layer_count_list + new_start_cura_list
         self.gcode.start_gcode = new_start
 
-        new_main = []
 
+        new_main = []
         for line in self.gcode.main_gcode:
             if "M140" not in line:
                 new_main.append(line)
-
         self.gcode.main_gcode = new_main
+
+        new_end = []
+        new_end.append("M140 S0")
+        new_end.append("G91")
+        new_end.append("G1 Z1.1 F2400")
+        new_end.append("G1 X5 Y5 F3000")
+        new_end.append("G1 Z10")
+        new_end.append("G90")
+        new_end.append("G1 X0 Y220")
+        new_end.append("M106 S0")
+        new_end.append("M104 S0")
+        new_end.append("M140 S0")
+        new_end.append("M84 E X Y E")
+        new_end.append("M302 P0")
+        new_end.append("M82 ;absolute extrusion mode")
+
+        for line in self.gcode.end_gcode:
+            if ";SETTING_3" in line:
+                new_end.append(line)
+
+        self.gcode.end_gcode = new_end
+
 
     def find_indexes(self):
 

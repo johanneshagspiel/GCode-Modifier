@@ -12,6 +12,7 @@ class Gcode_Writer():
 
         #self.add_pause_end_each_layer()
         self.add_information_text()
+        self.move_syringe_to_start()
 
         return self.modified_gcode
 
@@ -72,5 +73,14 @@ class Gcode_Writer():
         for line in self.modified_gcode.end_gcode:
             new_end.append(line)
         self.modified_gcode.end_gcode = new_end
+
+        self.update_information()
+
+    def move_syringe_to_start(self):
+        text = "G1 X0 Y220 E-" + str(self.modified_gcode.largest_extrusion_value)
+
+        for index, line in enumerate(self.modified_gcode.end_gcode):
+            if "G1 X0 Y220" in line:
+                self.modified_gcode.end_gcode[index] = text
 
         self.update_information()
