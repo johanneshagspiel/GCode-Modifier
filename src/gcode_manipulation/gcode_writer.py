@@ -11,8 +11,10 @@ class Gcode_Writer():
     def modify_gcode(self):
 
         #self.add_pause_end_each_layer()
+
         self.add_information_text()
-        self.move_syringe_to_start()
+
+        #self.move_syringe_to_start()
 
         return self.modified_gcode
 
