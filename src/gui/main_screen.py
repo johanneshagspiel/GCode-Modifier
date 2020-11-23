@@ -1,4 +1,5 @@
 from tkinter import Frame, Label, Tk, Button
+import ctypes
 
 from gui.customizations.styles import Styles
 from gui.customizations.load_font import load_font
@@ -11,11 +12,21 @@ class MainScreen:
         self.master = Tk()
         self.file_handler = File_Handler()
 
-        self.master.title("Paste Printer G-code Modifier - Version 0.1")
+        program_name="Paste Printer G-code Modifier - Version "
+        program_version ="0.1"
+
+        self.master.title(program_name + program_version)
         self.master.geometry("%dx%d+%d+%d" % (720, 720, 160, 56))
         self.master.resizable(width=False, height=False)
 
+        #updates the taskbar icon
+        myappid =program_name + program_version # arbitrary string
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+
+        #updates the application window icon
         self.master.iconbitmap(True, self.file_handler.used_icon_path)
+
+        #loads custom font
         load_font(self.file_handler.used_font_path)
 
         self.center_frame = Frame(self.master, width=720, height=720, background="white")
@@ -34,6 +45,11 @@ class MainScreen:
             self.file_button.grid(row=1, column=file_button_index, sticky ='w')
             file_button_index += 1
 
+            #update is needed otherwise size is not accurately reflected
+            self.file_button.update()
+
     def start(self):
         self.master.lift() #starts on top of all other applications
         self.master.mainloop()
+
+
