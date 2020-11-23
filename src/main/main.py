@@ -13,9 +13,11 @@ if __name__ == '__main__':
     #
     # modified_gcode: GCode = writer.modify_gcode()
     #
-    # file_handler = File_Handler()
-    # file_handler.write_file(modified_gcode)
+    #file_handler = File_Handler()
 
+    # file_handler.write_file(modified_gcode)
+    #
+    #
     main_screen = MainScreen()
     main_screen.start()
 
