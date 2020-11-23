@@ -1,1 +1,1 @@
-pyinstaller main/main.py --onefile --windowed --add-data "main/resources/icons/apple_icon.ico;main/resources/icons/apple_icon.ico" --add-data "main/resources/gcode/original/*;main/resources/gcode/original" --add-data "main/resources/fonts/*;main/resources/fonts" --icon=main/resources/icons/apple_icon.ico --clean
+pyinstaller main/main.py --onefile --windowed --add-data "main/resources/icons/*;main/resources/icons" --add-data "main/resources/gcode/original/*;main/resources/gcode/original" --add-data "main/resources/fonts/*;main/resources/fonts"
