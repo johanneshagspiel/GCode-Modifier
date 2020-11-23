@@ -24,7 +24,7 @@ class MainScreen:
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
         #updates the application window icon
-        self.master.iconbitmap(True, self.file_handler.used_icon_path)
+        #self.master.iconbitmap(True, self.file_handler.used_icon_path)
 
         #loads custom font
         load_font(self.file_handler.used_font_path)
