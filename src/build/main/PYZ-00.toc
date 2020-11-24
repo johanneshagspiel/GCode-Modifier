@@ -662,13 +662,13 @@
    'c:\\users\\johannes\\anaconda3\\lib\\site-packages\\win32\\lib\\pywintypes.py',
    'PYMODULE'),
   ('imp', 'c:\\users\\johannes\\anaconda3\\lib\\imp.py', 'PYMODULE'),
-  ('_py_abc', 'c:\\users\\johannes\\anaconda3\\lib\\_py_abc.py', 'PYMODULE'),
   ('stringprep',
    'c:\\users\\johannes\\anaconda3\\lib\\stringprep.py',
    'PYMODULE'),
   ('tracemalloc',
    'c:\\users\\johannes\\anaconda3\\lib\\tracemalloc.py',
    'PYMODULE'),
+  ('_py_abc', 'c:\\users\\johannes\\anaconda3\\lib\\_py_abc.py', 'PYMODULE'),
   ('gui.main_screen',
    'C:\\Users\\Johannes\\iCloudDrive\\Uni\\CSE\\Year 3\\Advanced '
    'Prototyping\\APP\\3D print, use, disolve, '
@@ -693,6 +693,15 @@
    'C:\\Users\\Johannes\\iCloudDrive\\Uni\\CSE\\Year 3\\Advanced '
    'Prototyping\\APP\\3D print, use, disolve, '
    'repeat\\Github\\src\\gui\\customizations\\styles.py',
+   'PYMODULE'),
+  ('tkinter.filedialog',
+   'c:\\users\\johannes\\anaconda3\\lib\\tkinter\\filedialog.py',
+   'PYMODULE'),
+  ('tkinter.commondialog',
+   'c:\\users\\johannes\\anaconda3\\lib\\tkinter\\commondialog.py',
+   'PYMODULE'),
+  ('tkinter.dialog',
+   'c:\\users\\johannes\\anaconda3\\lib\\tkinter\\dialog.py',
    'PYMODULE'),
   ('tkinter',
    'c:\\users\\johannes\\anaconda3\\lib\\tkinter\\__init__.py',
