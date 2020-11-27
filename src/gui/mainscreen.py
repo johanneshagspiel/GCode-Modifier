@@ -51,8 +51,30 @@ class Mainscreen(QWidget):
         #row pointer
         row_position = 0
 
+        #Nozzle Size Selection
+        nozzle_size_selection_label = QLabel("With with nozzle size do you want to print?")
+        nozzle_size_selection_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.grid.addWidget(nozzle_size_selection_label, row_position, 0, 1, 2)
+        row_position += 1
+
+        #Nozzle Selection HBox
+        nozzle_size_selection_hobx = QHBoxLayout()
+        self.grid.addLayout(nozzle_size_selection_hobx, row_position, 0, 1, 2)
+        row_position += 1
+
+        #Nozzle 1.3 Size Button
+        self.nozzle_1_3_button = QRadioButton("1.3 mm")
+        self.nozzle_1_3_button.setChecked(True)
+        self.nozzle_1_3_button.toggled.connect(lambda:self.update_files("1.3"))
+        nozzle_size_selection_hobx.addWidget(self.nozzle_1_3_button, QtCore.Qt.AlignLeft)
+
+        #Nozzle 1.3 Size Button
+        self.sdf = QRadioButton("sdf")
+        self.sdf.toggled.connect(lambda:self.update_files("sdf"))
+        nozzle_size_selection_hobx.addWidget(self.sdf, QtCore.Qt.AlignLeft)
+
         #File Selection Label
-        file_selection_label = QLabel('Which file do you want to modify?')
+        file_selection_label = QLabel("Which file do you want to modify?")
         file_selection_label.setAlignment(QtCore.Qt.AlignCenter)
         self.grid.addWidget(file_selection_label, row_position, 0, 1, 2)
         row_position += 1
@@ -106,20 +128,20 @@ class Mainscreen(QWidget):
         self.grid.addWidget(print_modifications_label, row_position, 0, 1, 2)
         row_position += 1
 
-        # Add Information Checkbox
-        self.add_information_checkbox = QCheckBox("Show additional information while printing")
-        self.grid.addWidget(self.add_information_checkbox, row_position, 0, 1, 2)
+        #Modification Grid
+        self.modification_grid = QGridLayout()
+        self.grid.addLayout(self.modification_grid, row_position, 0, 1, 2)
         row_position += 1
 
-        #Pause after each layer layout hbox
-        self.pause_print_hbox = QHBoxLayout()
-        self.grid.addLayout(self.pause_print_hbox, row_position, 0, 1, 2)
+        # Add Information Checkbox
+        self.add_information_checkbox = QCheckBox("Show additional information while printing")
+        self.modification_grid.addWidget(self.add_information_checkbox, 0, 0)
         row_position += 1
 
         #Pause after each layer checkbox
         self.pause_print_checkbox = QCheckBox("Pause print after each layer")
         self.pause_print_checkbox.toggled.connect(self.pause_print_toggled)
-        self.pause_print_hbox.addWidget(self.pause_print_checkbox, alignment=QtCore.Qt.AlignLeft)
+        self.modification_grid.addWidget(self.pause_print_checkbox, 1, 0)
 
         #Pauser after each layer seconds label
         self.pause_print_seconds_label = QLabel("Seconds: ")
@@ -129,7 +151,7 @@ class Mainscreen(QWidget):
 
         #Retract syringe at the end of print Checkbox
         self.retract_syringe_checkbox = QCheckBox("Retract the syringe at the end of print")
-        self.grid.addWidget(self.retract_syringe_checkbox, row_position, 0, 1, 2)
+        self.modification_grid.addWidget(self.retract_syringe_checkbox, 2, 0)
         row_position += 1
 
         #Modification label
@@ -172,18 +194,23 @@ class Mainscreen(QWidget):
         self.modify_button.clicked.connect(self.start_modification)
         self.grid.addWidget(self.modify_button, row_position, 0, 1, 2)
 
+    def update_files(self, size):
+        sender = self.sender()
+        if sender.isChecked():
+            print(size)
+
     def pause_print_toggled(self):
         checkbx = self.sender()
         if checkbx.isChecked():
-            self.pause_print_hbox.addWidget(self.pause_print_seconds_label)
-            self.pause_print_hbox.addWidget(self.pause_print_seconds_entry)
+            self.modification_grid.addWidget(self.pause_print_seconds_label, 1, 1)
+            self.modification_grid.addWidget(self.pause_print_seconds_entry, 1, 2)
         else:
             self.pause_print_seconds_label.setParent(None)
             self.pause_print_seconds_entry.setParent(None)
 
     def update_name_selected_file(self, file):
-        radioBtn = self.sender()
-        if radioBtn.isChecked():
+        sender = self.sender()
+        if sender.isChecked():
             self.storage_name_entry.setText(file)
             self.selected_file_name = file
 
