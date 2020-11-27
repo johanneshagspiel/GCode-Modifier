@@ -2,9 +2,9 @@
 class GCode:
 
     def __init__(self):
-        self.start_gcode = []
-        self.main_gcode = []
-        self.end_gcode = []
+        self.startup_code = []
+        self.main_body = []
+        self.shutdown_code = []
 
         self.layer_index_list = []
         self.time_elapsed_index_list = []

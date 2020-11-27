@@ -1,28 +1,26 @@
 from gcode_manipulation.gcode import GCode
-from util.file_handler import File_Handler
 
 class GCode_Parser:
 
-    def __init__(self,gcode: GCode = None):
-        self.gcode = gcode
-        self.file_handler = File_Handler()
+    def __init__(self, line_list):
+        self.line_list = line_list
+
+        self.gcode = None
 
     def create_gcode(self):
-        self.setup_gcode()
+        new_gcode = GCode()
+        new_gcode.main_body = self.line_list
+        self.gcode = new_gcode
+
         self.analyze_gcode()
 
         return self.gcode
 
-    def setup_gcode(self):
-        new_gcode = GCode()
-
-        new_gcode.main_gcode = self.file_handler.read_gcode_file()
-        self.gcode = new_gcode
-
     def analyze_gcode(self):
         self.split_gcode()
         self.clean_gcode()
-        self.find_indexes()
+
+        self.gcode = self.find_indexes()
 
     def split_gcode(self):
 
@@ -34,7 +32,7 @@ class GCode_Parser:
         before_layer_0 = True
         temp_list = []
 
-        for line in self.gcode.main_gcode:
+        for line in self.gcode.main_body:
             if ";LAYER:0" in line:
                 before_layer_0 = False
             if before_layer_0 is True:
@@ -52,9 +50,9 @@ class GCode_Parser:
             for item in sublist:
                 main_gcode.append(item)
 
-        self.gcode.start_gcode = start_gcode
-        self.gcode.main_gcode = main_gcode
-        self.gcode.end_gcode = end_gcode
+        self.gcode.startup_code = start_gcode
+        self.gcode.main_body = main_gcode
+        self.gcode.shutdown_code = end_gcode
 
     def clean_gcode(self):
 
@@ -62,7 +60,7 @@ class GCode_Parser:
         start_cura_list = []
         layer_count_list = []
 
-        for line in self.gcode.start_gcode:
+        for line in self.gcode.startup_code:
             if start_cura_bol is True:
                 start_cura_list.append(line)
                 if ";Generated with" in line:
@@ -83,14 +81,14 @@ class GCode_Parser:
         new_start_cura_list.append("G92 E0")
 
         new_start = start_cura_list + layer_count_list + new_start_cura_list
-        self.gcode.start_gcode = new_start
+        self.gcode.startup_code = new_start
 
 
         new_main = []
-        for line in self.gcode.main_gcode:
+        for line in self.gcode.main_body:
             if "M140" not in line:
                 new_main.append(line)
-        self.gcode.main_gcode = new_main
+        self.gcode.main_body = new_main
 
         new_end = []
         new_end.append("M140 S0")
@@ -107,11 +105,11 @@ class GCode_Parser:
         new_end.append("M302 P0")
         new_end.append("M82 ;absolute extrusion mode")
 
-        for line in self.gcode.end_gcode:
+        for line in self.gcode.shutdown_code:
             if ";SETTING_3" in line:
                 new_end.append(line)
 
-        self.gcode.end_gcode = new_end
+        self.gcode.shutdown_code = new_end
 
 
     def find_indexes(self):
@@ -124,7 +122,7 @@ class GCode_Parser:
         movement_commands = ["G0", "G1", "G2", "G3", "G5"]
         largest_extrusion_value = 0
 
-        for index, line in enumerate(self.gcode.main_gcode):
+        for index, line in enumerate(self.gcode.main_body):
             if ";LAYER:" in line:
                 layer_list.append(index)
                 current_layer += 1
@@ -149,3 +147,8 @@ class GCode_Parser:
 
         self.gcode.amount_layers = len(layer_list)
         self.gcode.largest_extrusion_value = largest_extrusion_value
+
+        return self.gcode
+
+    def set_gcode(self, gcode: GCode):
+        self.gcode = gcode
