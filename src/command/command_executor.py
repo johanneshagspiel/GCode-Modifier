@@ -29,15 +29,15 @@ class Command_Executor:
         self.execute_task(Task.SET_BED_TEMPERATURE, self.command.bed_temperature)
 
         #Check if add information was ticked
-        if self.command.additional_information == 1:
+        if self.command.additional_information == True:
             self.execute_task(Task.ADDITIONAL_INFORMATION)
 
         #Check if pause after each layer was ticked
-        if self.command.pause_each_layer == 1:
+        if self.command.pause_each_layer == True:
             self.execute_task(Task.PAUSE_EACH_LAYER)
 
         # Check if retract syringe was ticked
-        if self.command.retract_syringe == 1:
+        if self.command.retract_syringe == True:
             self.execute_task(Task.RETRACT_SYRINGE)
 
         #Write to file

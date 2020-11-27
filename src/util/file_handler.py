@@ -11,7 +11,8 @@ class File_Handler():
         self.font_path = Path.joinpath(self.resource_path, "fonts")
         self.icon_path = Path.joinpath(self.resource_path, "icons")
 
-        self.used_icon_path = Path.joinpath(self.icon_path, "apple_icon.ico")
+        self.icon_ico_path = Path.joinpath(self.icon_path, "apple_icon.ico")
+        self.icon_png_path = Path.joinpath(self.icon_path, "apple_icon.png")
         self.used_font_path = Path.joinpath(self.font_path, "Eurostile LT Std.otf")
 
         self.test = Path.joinpath(self.gcode_path, "CFFFP_20mm_Calibration_Box (half cube).gcode")

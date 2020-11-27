@@ -4,13 +4,13 @@ from tkinter import Frame, Label, Tk, Button, Checkbutton, Entry, StringVar, Rad
 import ctypes
 
 from gui.tkinter.customizations.styles import Styles
-from gui.tkinter.customizations.load_font import load_font
+from gui.customization.load_font import load_font
 from util.file_handler import File_Handler
 from command.command import Command
 from command.command_executor import Command_Executor
 
 
-class MainScreen:
+class MainScreen_TKinter:
 
     def __init__(self):
         self.master = Tk()
@@ -28,7 +28,7 @@ class MainScreen:
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
         #updates the application window icon
-        self.master.iconbitmap(True, self.file_handler.used_icon_path)
+        self.master.iconbitmap(True, self.file_handler.icon_ico_path)
 
         #loads custom font
         load_font(self.file_handler.used_font_path)
@@ -48,6 +48,7 @@ class MainScreen:
         row_position_index_center_frame += 1
         row_position_index_file_selection_frame = 0
 
+        #Select Files
         file_list = []
         file_paths = sorted(self.file_handler.gcode_path.glob('*.gcode'))
         for file in file_paths:
@@ -79,11 +80,12 @@ class MainScreen:
         row_position_index_center_frame += 1
         row_position_index_print_settings_frame = 0
 
-        #Flow Rate
+        #Flow Rate Label
         self.flow_rate_label = Label(self.print_settings_frame, text="Flow rate: ",
                                               **Styles.label_style_text)
         self.flow_rate_label.grid(row=row_position_index_print_settings_frame, column=0, sticky='w')
 
+        #Flow Rate Entry
         default_flow_rate = StringVar(self.print_settings_frame, "55")
         self.flow_rate_entry = Entry(self.print_settings_frame, **Styles.entry_style, textvariable=default_flow_rate)
         self.flow_rate_entry.grid(row=row_position_index_print_settings_frame, column=1, sticky='w')
@@ -113,14 +115,14 @@ class MainScreen:
 
         #Add Information
         self.result_add_information = IntVar()
-        self.add_information_checkbox = Checkbutton(self.print_modifications_frame, text="Show information while printing",
+        self.add_information_checkbox = Checkbutton(self.print_modifications_frame, text="Show additional information while printing",
                                                     variable=self.result_add_information, **Styles.checkbox_style)
         self.add_information_checkbox.grid(row=row_position_index_print_modifications_frame, column=0, sticky='w')
         row_position_index_print_modifications_frame += 1
 
-        #Stop after each layer
+        #Pause after each layer
         self.result_stop_after_each_layer = IntVar()
-        self.stop_afer_each_layer_checkbox = Checkbutton(self.print_modifications_frame, text="Stop print after each layer",
+        self.stop_afer_each_layer_checkbox = Checkbutton(self.print_modifications_frame, text="Pause print after each layer",
                                                          variable=self.result_stop_after_each_layer, **Styles.checkbox_style)
         self.stop_afer_each_layer_checkbox.grid(row=row_position_index_print_modifications_frame, column=0, sticky='w')
         row_position_index_print_modifications_frame += 1
@@ -155,9 +157,9 @@ class MainScreen:
 
         #Chose Location to store button
         self.storage_location = ""
-        self.location_choose_button = Button(self.storage_frame, text="Choose location to store", command=self.select_storage_location,
-                                    **Styles.button_style, width=10)
-        self.location_choose_button.grid(row=row_position_index_storage_frame, column=0, columnspan=2, sticky='nsew')
+        self.choose_location_button = Button(self.storage_frame, text="Choose location to store", command=self.select_storage_location,
+                                             **Styles.button_style, width=10)
+        self.choose_location_button.grid(row=row_position_index_storage_frame, column=0, columnspan=2, sticky='nsew')
 
         #Location label and entry
         self.path_label = Label(self.storage_frame, text="Storage path: ",
@@ -173,9 +175,6 @@ class MainScreen:
         self.master.lift()  # starts on top of all other applications
         self.master.mainloop()
 
-    def start(self):
-        None
-
     def select_storage_location(self):
         self.storage_location = filedialog.askdirectory()
 
@@ -185,8 +184,8 @@ class MainScreen:
         self.path_label.grid(row=self.row_location_storage, column=0, sticky='w')
         self.path_name_label.grid(row=self.row_location_storage, column=1, sticky='w')
         self.row_location_storage += 1
-        self.location_choose_button.grid(row=self.row_location_storage, column=0, columnspan=3, sticky='nsew')
-        self.location_choose_button.configure(text="Choose a different location")
+        self.choose_location_button.grid(row=self.row_location_storage, column=0, columnspan=3, sticky='nsew')
+        self.choose_location_button.configure(text="Choose a different location")
 
     def update_name_selected_file(self):
         new_name = StringVar(self.storage_frame, value=self.selected_file.get())

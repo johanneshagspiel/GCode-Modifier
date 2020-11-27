@@ -81,7 +81,10 @@ class Gcode_Writer():
             for index in range(previous_index, layer_index):
                 gcode_list.append(self.start_gcode.main_body[index])
 
-            gcode_list.append("G4 S10; Stop each Layer")
+            gcode_list.append("G1 E-40 ; Stop each Layer - Retract a bit")
+            gcode_list.append("G4 S30; Stop each Layer - Wait")
+            gcode_list.append("G1 E40 ; Re-extrude a bit")
+
             previous_index = layer_index
 
         for index in range(previous_index, last_index):
@@ -108,7 +111,7 @@ class Gcode_Writer():
             new_end_gcode.append(line)
             if "G1 X0 Y220" in line:
                 while repeat_insertion is True:
-                    new_reverse_extrusion = "G1 E-" + str(largest_one_time_retraction) + "; Retract Syringe"
+                    new_reverse_extrusion = "G1 E-" + str(largest_one_time_retraction) + "; retract syringe"
                     new_end_gcode.append(new_reverse_extrusion)
 
                     if still_to_rectract > 0:

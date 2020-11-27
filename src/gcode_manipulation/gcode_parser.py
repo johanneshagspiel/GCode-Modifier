@@ -131,7 +131,6 @@ class GCode_Parser:
                 movements_per_layer_list[current_layer] += 1
 
                 split_line = line.split()
-
                 for word in split_line:
                     if "E" in word:
                         extrusion_value = float(word[1:])
