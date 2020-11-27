@@ -7,10 +7,30 @@ class Gcode_Writer():
         self.end_gcode = None
 
     def set_flowrate(self, flowrate):
-        None
+        text = "M221 S" + str(flowrate) + "; Set Flowrate"
+
+        new_main_body = []
+        new_main_body.append(text)
+
+        for line in self.start_gcode.main_body:
+            new_main_body.append(line)
+
+        self.end_gcode.main_body = new_main_body
+
+        return self.end_gcode
 
     def set_bed_temperature(self, bed_temperature):
-        None
+        text = "M140 S" + str(bed_temperature) + "; Set Bed Temperature"
+
+        new_main_body = []
+        new_main_body.append(text)
+
+        for line in self.start_gcode.main_body:
+            new_main_body.append(line)
+
+        self.end_gcode.main_body = new_main_body
+
+        return self.end_gcode
 
     def additional_information(self):
 
