@@ -238,7 +238,11 @@ class Mainscreen(QWidget):
             finish_modification_message.setIcon(QMessageBox.Information)
             open_location_button = QPushButton("Open File Location")
             open_location_button.clicked.connect(lambda: self.open_directory(checked_command.storage_path))
+            open_notebook_button = QPushButton("Open File in Notebook")
+            path_to_file = checked_command.storage_path + "\/" + checked_command.file_name + ".gcode"
+            open_notebook_button.clicked.connect(lambda: self.open_notebook(path_to_file))
             finish_modification_message.addButton(open_location_button, QMessageBox.AcceptRole)
+            finish_modification_message.addButton(open_notebook_button, QMessageBox.AcceptRole)
             finish_modification_message.setStandardButtons(QMessageBox.Ok)
             finish_modification_message.exec_()
 
@@ -310,3 +314,7 @@ class Mainscreen(QWidget):
 
     def open_directory(self, directory):
         os.startfile(directory)
+
+    def open_notebook(self, directory):
+        #print(directory)
+        os.system("notepad.exe " + directory)

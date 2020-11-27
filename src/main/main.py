@@ -1,10 +1,5 @@
-import sys
-
-from PyQt5.QtWidgets import QApplication
-
-from gui.mainscreen import Mainscreen
+from src.main.application import Application
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    main_screen = Mainscreen()
-    sys.exit(app.exec_())
+    application = Application()
+    application.start()
