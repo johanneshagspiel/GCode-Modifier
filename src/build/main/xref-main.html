@@ -151,10 +151,7 @@ imports:
  &#8226;   <a href="#encodings.zlib_codec">encodings.zlib_codec</a>
  &#8226;   <a href="#enum">enum</a>
  &#8226;   <a href="#functools">functools</a>
- &#8226;   <a href="#gcode_manipulation.gcode">gcode_manipulation.gcode</a>
- &#8226;   <a href="#gcode_manipulation.gcode_parser">gcode_manipulation.gcode_parser</a>
- &#8226;   <a href="#gcode_manipulation.gcode_writer">gcode_manipulation.gcode_writer</a>
- &#8226;   <a href="#gui.main_screen">gui.main_screen</a>
+ &#8226;   <a href="#gui.tkinter.main_screen_tkinter">gui.tkinter.main_screen_tkinter</a>
  &#8226;   <a href="#heapq">heapq</a>
  &#8226;   <a href="#io">io</a>
  &#8226;   <a href="#keyword">keyword</a>
@@ -171,7 +168,6 @@ imports:
  &#8226;   <a href="#sre_parse">sre_parse</a>
  &#8226;   <a href="#traceback">traceback</a>
  &#8226;   <a href="#types">types</a>
- &#8226;   <a href="#util.file_handler">util.file_handler</a>
  &#8226;   <a href="#warnings">warnings</a>
  &#8226;   <a href="#weakref">weakref</a>
 
@@ -2722,7 +2718,7 @@ imports:
   <div class="import">
 imported by:
     <a href="#command.command_executor">command.command_executor</a>
- &#8226;   <a href="#gui.main_screen">gui.main_screen</a>
+ &#8226;   <a href="#gui.tkinter.main_screen_tkinter">gui.tkinter.main_screen_tkinter</a>
 
   </div>
 
@@ -2742,7 +2738,7 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#gui.main_screen">gui.main_screen</a>
+    <a href="#gui.tkinter.main_screen_tkinter">gui.tkinter.main_screen_tkinter</a>
 
   </div>
 
@@ -3035,8 +3031,8 @@ imported by:
  &#8226;   <a href="#ctypes.macholib">ctypes.macholib</a>
  &#8226;   <a href="#ctypes.util">ctypes.util</a>
  &#8226;   <a href="#ctypes.wintypes">ctypes.wintypes</a>
- &#8226;   <a href="#gui.customizations.load_font">gui.customizations.load_font</a>
- &#8226;   <a href="#gui.main_screen">gui.main_screen</a>
+ &#8226;   <a href="#gui.tkinter.customizations.load_font">gui.tkinter.customizations.load_font</a>
+ &#8226;   <a href="#gui.tkinter.main_screen_tkinter">gui.tkinter.main_screen_tkinter</a>
  &#8226;   <a href="#multiprocessing.sharedctypes">multiprocessing.sharedctypes</a>
  &#8226;   <a href="#pyreadline.clipboard.win32_clipboard">pyreadline.clipboard.win32_clipboard</a>
  &#8226;   <a href="#pyreadline.console.console">pyreadline.console.console</a>
@@ -6881,7 +6877,6 @@ imports:
 imported by:
     <a href="#gcode_manipulation.gcode_parser">gcode_manipulation.gcode_parser</a>
  &#8226;   <a href="#gcode_manipulation.gcode_writer">gcode_manipulation.gcode_writer</a>
- &#8226;   <a href="#main.py">main.py</a>
  &#8226;   <a href="#util.file_handler">util.file_handler</a>
 
   </div>
@@ -6901,7 +6896,6 @@ imports:
 imported by:
     <a href="#command.command_executor">command.command_executor</a>
  &#8226;   <a href="#gcode_manipulation.gcode_writer">gcode_manipulation.gcode_writer</a>
- &#8226;   <a href="#main.py">main.py</a>
 
   </div>
 
@@ -6920,7 +6914,6 @@ imports:
   <div class="import">
 imported by:
     <a href="#command.command_executor">command.command_executor</a>
- &#8226;   <a href="#main.py">main.py</a>
 
   </div>
 
@@ -7059,16 +7052,15 @@ imported by:
   <a target="code" href="///C:/Users/Johannes/iCloudDrive/Uni/CSE/Year%203/Advanced%20Prototyping/APP/3D%20print%2C%20use%2C%20disolve%2C%20repeat/Github/src/gui/__init__.py" type="text/plain"><tt>gui</tt></a>
 <span class="moduletype">Package</span>  <div class="import">
 imported by:
-    <a href="#gui.customizations">gui.customizations</a>
- &#8226;   <a href="#gui.main_screen">gui.main_screen</a>
+    <a href="#gui.tkinter">gui.tkinter</a>
 
   </div>
 
 </div>
 
 <div class="node">
-  <a name="gui.customizations"></a>
-  <a target="code" href="///C:/Users/Johannes/iCloudDrive/Uni/CSE/Year%203/Advanced%20Prototyping/APP/3D%20print%2C%20use%2C%20disolve%2C%20repeat/Github/src/gui/customizations/__init__.py" type="text/plain"><tt>gui.customizations</tt></a>
+  <a name="gui.tkinter"></a>
+  <a target="code" href="///C:/Users/Johannes/iCloudDrive/Uni/CSE/Year%203/Advanced%20Prototyping/APP/3D%20print%2C%20use%2C%20disolve%2C%20repeat/Github/src/gui/tkinter/__init__.py" type="text/plain"><tt>gui.tkinter</tt></a>
 <span class="moduletype">Package</span>  <div class="import">
 imports:
     <a href="#gui">gui</a>
@@ -7076,60 +7068,77 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#gui.customizations.load_font">gui.customizations.load_font</a>
- &#8226;   <a href="#gui.customizations.styles">gui.customizations.styles</a>
+    <a href="#gui.tkinter.customizations">gui.tkinter.customizations</a>
+ &#8226;   <a href="#gui.tkinter.main_screen_tkinter">gui.tkinter.main_screen_tkinter</a>
 
   </div>
 
 </div>
 
 <div class="node">
-  <a name="gui.customizations.load_font"></a>
-  <a target="code" href="///C:/Users/Johannes/iCloudDrive/Uni/CSE/Year%203/Advanced%20Prototyping/APP/3D%20print%2C%20use%2C%20disolve%2C%20repeat/Github/src/gui/customizations/load_font.py" type="text/plain"><tt>gui.customizations.load_font</tt></a>
+  <a name="gui.tkinter.customizations"></a>
+  <a target="code" href="///C:/Users/Johannes/iCloudDrive/Uni/CSE/Year%203/Advanced%20Prototyping/APP/3D%20print%2C%20use%2C%20disolve%2C%20repeat/Github/src/gui/tkinter/customizations/__init__.py" type="text/plain"><tt>gui.tkinter.customizations</tt></a>
+<span class="moduletype">Package</span>  <div class="import">
+imports:
+    <a href="#gui.tkinter">gui.tkinter</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#gui.tkinter.customizations.load_font">gui.tkinter.customizations.load_font</a>
+ &#8226;   <a href="#gui.tkinter.customizations.styles">gui.tkinter.customizations.styles</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="gui.tkinter.customizations.load_font"></a>
+  <a target="code" href="///C:/Users/Johannes/iCloudDrive/Uni/CSE/Year%203/Advanced%20Prototyping/APP/3D%20print%2C%20use%2C%20disolve%2C%20repeat/Github/src/gui/tkinter/customizations/load_font.py" type="text/plain"><tt>gui.tkinter.customizations.load_font</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#ctypes">ctypes</a>
- &#8226;   <a href="#gui.customizations">gui.customizations</a>
+ &#8226;   <a href="#gui.tkinter.customizations">gui.tkinter.customizations</a>
  &#8226;   <a href="#pathlib">pathlib</a>
  &#8226;   <a href="#platform">platform</a>
 
   </div>
   <div class="import">
 imported by:
-    <a href="#gui.main_screen">gui.main_screen</a>
+    <a href="#gui.tkinter.main_screen_tkinter">gui.tkinter.main_screen_tkinter</a>
 
   </div>
 
 </div>
 
 <div class="node">
-  <a name="gui.customizations.styles"></a>
-  <a target="code" href="///C:/Users/Johannes/iCloudDrive/Uni/CSE/Year%203/Advanced%20Prototyping/APP/3D%20print%2C%20use%2C%20disolve%2C%20repeat/Github/src/gui/customizations/styles.py" type="text/plain"><tt>gui.customizations.styles</tt></a>
+  <a name="gui.tkinter.customizations.styles"></a>
+  <a target="code" href="///C:/Users/Johannes/iCloudDrive/Uni/CSE/Year%203/Advanced%20Prototyping/APP/3D%20print%2C%20use%2C%20disolve%2C%20repeat/Github/src/gui/tkinter/customizations/styles.py" type="text/plain"><tt>gui.tkinter.customizations.styles</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
-    <a href="#gui.customizations">gui.customizations</a>
+    <a href="#gui.tkinter.customizations">gui.tkinter.customizations</a>
  &#8226;   <a href="#tkinter">tkinter</a>
 
   </div>
   <div class="import">
 imported by:
-    <a href="#gui.main_screen">gui.main_screen</a>
+    <a href="#gui.tkinter.main_screen_tkinter">gui.tkinter.main_screen_tkinter</a>
 
   </div>
 
 </div>
 
 <div class="node">
-  <a name="gui.main_screen"></a>
-  <a target="code" href="///C:/Users/Johannes/iCloudDrive/Uni/CSE/Year%203/Advanced%20Prototyping/APP/3D%20print%2C%20use%2C%20disolve%2C%20repeat/Github/src/gui/main_screen.py" type="text/plain"><tt>gui.main_screen</tt></a>
+  <a name="gui.tkinter.main_screen_tkinter"></a>
+  <a target="code" href="///C:/Users/Johannes/iCloudDrive/Uni/CSE/Year%203/Advanced%20Prototyping/APP/3D%20print%2C%20use%2C%20disolve%2C%20repeat/Github/src/gui/tkinter/main_screen_tkinter.py" type="text/plain"><tt>gui.tkinter.main_screen_tkinter</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#command.command">command.command</a>
  &#8226;   <a href="#command.command_executor">command.command_executor</a>
  &#8226;   <a href="#ctypes">ctypes</a>
- &#8226;   <a href="#gui">gui</a>
- &#8226;   <a href="#gui.customizations.load_font">gui.customizations.load_font</a>
- &#8226;   <a href="#gui.customizations.styles">gui.customizations.styles</a>
+ &#8226;   <a href="#gui.tkinter">gui.tkinter</a>
+ &#8226;   <a href="#gui.tkinter.customizations.load_font">gui.tkinter.customizations.load_font</a>
+ &#8226;   <a href="#gui.tkinter.customizations.styles">gui.tkinter.customizations.styles</a>
  &#8226;   <a href="#os">os</a>
  &#8226;   <a href="#pathlib">pathlib</a>
  &#8226;   <a href="#tkinter">tkinter</a>
@@ -7429,7 +7438,7 @@ imports:
  &#8226;   <a href="#importlib">importlib</a>
  &#8226;   <a href="#importlib._bootstrap">importlib._bootstrap</a>
  &#8226;   <a href="#importlib._bootstrap_external">importlib._bootstrap_external</a>
- &#8226;   <a href="#importlib.abc">importlib.abc</a>
+ &#8226;   <a href="#importlib.machinery">importlib.machinery</a>
  &#8226;   <a href="#sys">sys</a>
  &#8226;   <a href="#types">types</a>
  &#8226;   <a href="#warnings">warnings</a>
@@ -7516,8 +7525,7 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#importlib">importlib</a>
- &#8226;   <a href="#importlib.metadata">importlib.metadata</a>
+    <a href="#importlib.metadata">importlib.metadata</a>
  &#8226;   <a href="#importlib.util">importlib.util</a>
  &#8226;   <a href="#zipimport">zipimport</a>
 
@@ -7540,6 +7548,7 @@ imports:
 imported by:
     <a href="#ctypes.util">ctypes.util</a>
  &#8226;   <a href="#imp">imp</a>
+ &#8226;   <a href="#importlib">importlib</a>
  &#8226;   <a href="#importlib.abc">importlib.abc</a>
  &#8226;   <a href="#inspect">inspect</a>
  &#8226;   <a href="#pkgutil">pkgutil</a>
@@ -9072,7 +9081,7 @@ imported by:
  &#8226;   <a href="#getpass">getpass</a>
  &#8226;   <a href="#gettext">gettext</a>
  &#8226;   <a href="#glob">glob</a>
- &#8226;   <a href="#gui.main_screen">gui.main_screen</a>
+ &#8226;   <a href="#gui.tkinter.main_screen_tkinter">gui.tkinter.main_screen_tkinter</a>
  &#8226;   <a href="#gzip">gzip</a>
  &#8226;   <a href="#http.cookiejar">http.cookiejar</a>
  &#8226;   <a href="#http.server">http.server</a>
@@ -9185,8 +9194,8 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#gui.customizations.load_font">gui.customizations.load_font</a>
- &#8226;   <a href="#gui.main_screen">gui.main_screen</a>
+    <a href="#gui.tkinter.customizations.load_font">gui.tkinter.customizations.load_font</a>
+ &#8226;   <a href="#gui.tkinter.main_screen_tkinter">gui.tkinter.main_screen_tkinter</a>
  &#8226;   <a href="#importlib.metadata">importlib.metadata</a>
  &#8226;   <a href="#util.file_handler">util.file_handler</a>
  &#8226;   <a href="#zipimport">zipimport</a>
@@ -9317,7 +9326,7 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#gui.customizations.load_font">gui.customizations.load_font</a>
+    <a href="#gui.tkinter.customizations.load_font">gui.tkinter.customizations.load_font</a>
  &#8226;   <a href="#pydoc">pydoc</a>
  &#8226;   <a href="#test.support">test.support</a>
 
@@ -11517,8 +11526,8 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#gui.customizations.styles">gui.customizations.styles</a>
- &#8226;   <a href="#gui.main_screen">gui.main_screen</a>
+    <a href="#gui.tkinter.customizations.styles">gui.tkinter.customizations.styles</a>
+ &#8226;   <a href="#gui.tkinter.main_screen_tkinter">gui.tkinter.main_screen_tkinter</a>
  &#8226;   <a href="#test.support">test.support</a>
  &#8226;   <a href="#tkinter.commondialog">tkinter.commondialog</a>
  &#8226;   <a href="#tkinter.constants">tkinter.constants</a>
@@ -11596,7 +11605,7 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#gui.main_screen">gui.main_screen</a>
+    <a href="#gui.tkinter.main_screen_tkinter">gui.tkinter.main_screen_tkinter</a>
  &#8226;   <a href="#tkinter">tkinter</a>
 
   </div>
@@ -11614,7 +11623,7 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#gui.main_screen">gui.main_screen</a>
+    <a href="#gui.tkinter.main_screen_tkinter">gui.tkinter.main_screen_tkinter</a>
  &#8226;   <a href="#tkinter">tkinter</a>
 
   </div>
@@ -12230,8 +12239,7 @@ imports:
   <div class="import">
 imported by:
     <a href="#command.command_executor">command.command_executor</a>
- &#8226;   <a href="#gui.main_screen">gui.main_screen</a>
- &#8226;   <a href="#main.py">main.py</a>
+ &#8226;   <a href="#gui.tkinter.main_screen_tkinter">gui.tkinter.main_screen_tkinter</a>
 
   </div>
 

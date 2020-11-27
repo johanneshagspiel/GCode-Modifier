@@ -1,5 +1,4 @@
 from gcode_manipulation.gcode import GCode
-from gcode_manipulation.gcode_parser import GCode_Parser
 
 class Gcode_Writer():
 
@@ -7,10 +6,16 @@ class Gcode_Writer():
         self.start_gcode = None
         self.end_gcode = None
 
-    def add_information_text(self):
+    def set_flowrate(self, flowrate):
+        None
+
+    def set_bed_temperature(self, bed_temperature):
+        None
+
+    def additional_information(self):
 
         new_start = []
-        new_start.append("M117 Print is starting")
+        new_start.append("M117 Print is starting; Additional Information")
         for line in self.end_gcode.startup_code:
             new_start.append(line)
         self.end_gcode.startup_code = new_start
@@ -23,7 +28,8 @@ class Gcode_Writer():
 
         for index, line in enumerate(self.end_gcode.main_body):
             if any(x in line for x in movement_commands):
-                text = "M117 Mov " + str(current_move) + "/" + str(self.end_gcode.movements_per_layer_list[current_layer]) + " Lay " + str(current_layer + 1) + "/" + str(self.end_gcode.amount_layers)
+                text = "M117 Mov " + str(current_move) + "/" + str(self.end_gcode.movements_per_layer_list[current_layer]) \
+                       + " Lay " + str(current_layer + 1) + "/" + str(self.end_gcode.amount_layers) + "; Additional Information"
                 new_main.append(text)
                 current_move += 1
             new_main.append(line)
@@ -35,7 +41,7 @@ class Gcode_Writer():
         self.end_gcode.main_body = new_main
 
         new_end = []
-        new_end.append("M117 Print is winding down")
+        new_end.append("M117 Print is winding down; Additional Information")
         for line in self.end_gcode.shutdown_code:
             new_end.append(line)
         self.end_gcode.shutdown_code = new_end
@@ -43,7 +49,7 @@ class Gcode_Writer():
         return self.end_gcode
 
 
-    def stop_each_layer(self):
+    def pause_each_layer(self):
 
         previous_index = 0
         last_index = len(self.start_gcode.main_body)
@@ -55,7 +61,7 @@ class Gcode_Writer():
             for index in range(previous_index, layer_index):
                 gcode_list.append(self.start_gcode.main_body[index])
 
-            gcode_list.append("G4 S10")
+            gcode_list.append("G4 S10; Stop each Layer")
             previous_index = layer_index
 
         for index in range(previous_index, last_index):
@@ -65,7 +71,7 @@ class Gcode_Writer():
 
         return self.end_gcode
 
-    def retract_syringe_end_of_print(self):
+    def retract_syringe(self):
 
         if self.start_gcode.largest_extrusion_value <= 1000:
             largest_one_time_retraction = self.start_gcode.largest_extrusion_value
@@ -82,7 +88,7 @@ class Gcode_Writer():
             new_end_gcode.append(line)
             if "G1 X0 Y220" in line:
                 while repeat_insertion is True:
-                    new_reverse_extrusion = "G1 E-" + str(largest_one_time_retraction)
+                    new_reverse_extrusion = "G1 E-" + str(largest_one_time_retraction) + "; Retract Syringe"
                     new_end_gcode.append(new_reverse_extrusion)
 
                     if still_to_rectract > 0:

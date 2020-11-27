@@ -39,9 +39,6 @@
   ('importlib',
    'c:\\users\\johannes\\anaconda3\\lib\\importlib\\__init__.py',
    'PYMODULE'),
-  ('importlib.abc',
-   'c:\\users\\johannes\\anaconda3\\lib\\importlib\\abc.py',
-   'PYMODULE'),
   ('importlib._bootstrap',
    'c:\\users\\johannes\\anaconda3\\lib\\importlib\\_bootstrap.py',
    'PYMODULE'),
@@ -50,6 +47,9 @@
    'PYMODULE'),
   ('importlib.metadata',
    'c:\\users\\johannes\\anaconda3\\lib\\importlib\\metadata.py',
+   'PYMODULE'),
+  ('importlib.abc',
+   'c:\\users\\johannes\\anaconda3\\lib\\importlib\\abc.py',
    'PYMODULE'),
   ('configparser',
    'c:\\users\\johannes\\anaconda3\\lib\\configparser.py',
@@ -662,17 +662,22 @@
    'c:\\users\\johannes\\anaconda3\\lib\\site-packages\\win32\\lib\\pywintypes.py',
    'PYMODULE'),
   ('imp', 'c:\\users\\johannes\\anaconda3\\lib\\imp.py', 'PYMODULE'),
+  ('stringprep',
+   'c:\\users\\johannes\\anaconda3\\lib\\stringprep.py',
+   'PYMODULE'),
   ('_py_abc', 'c:\\users\\johannes\\anaconda3\\lib\\_py_abc.py', 'PYMODULE'),
   ('tracemalloc',
    'c:\\users\\johannes\\anaconda3\\lib\\tracemalloc.py',
    'PYMODULE'),
-  ('stringprep',
-   'c:\\users\\johannes\\anaconda3\\lib\\stringprep.py',
-   'PYMODULE'),
-  ('gui.main_screen',
+  ('gui.tkinter.main_screen_tkinter',
    'C:\\Users\\Johannes\\iCloudDrive\\Uni\\CSE\\Year 3\\Advanced '
    'Prototyping\\APP\\3D print, use, disolve, '
-   'repeat\\Github\\src\\gui\\main_screen.py',
+   'repeat\\Github\\src\\gui\\tkinter\\main_screen_tkinter.py',
+   'PYMODULE'),
+  ('gui.tkinter',
+   'C:\\Users\\Johannes\\iCloudDrive\\Uni\\CSE\\Year 3\\Advanced '
+   'Prototyping\\APP\\3D print, use, disolve, '
+   'repeat\\Github\\src\\gui\\tkinter\\__init__.py',
    'PYMODULE'),
   ('gui',
    'C:\\Users\\Johannes\\iCloudDrive\\Uni\\CSE\\Year 3\\Advanced '
@@ -689,25 +694,55 @@
    'Prototyping\\APP\\3D print, use, disolve, '
    'repeat\\Github\\src\\command\\__init__.py',
    'PYMODULE'),
+  ('gcode_manipulation.gcode_writer',
+   'C:\\Users\\Johannes\\iCloudDrive\\Uni\\CSE\\Year 3\\Advanced '
+   'Prototyping\\APP\\3D print, use, disolve, '
+   'repeat\\Github\\src\\gcode_manipulation\\gcode_writer.py',
+   'PYMODULE'),
+  ('gcode_manipulation',
+   'C:\\Users\\Johannes\\iCloudDrive\\Uni\\CSE\\Year 3\\Advanced '
+   'Prototyping\\APP\\3D print, use, disolve, '
+   'repeat\\Github\\src\\gcode_manipulation\\__init__.py',
+   'PYMODULE'),
+  ('gcode_manipulation.gcode',
+   'C:\\Users\\Johannes\\iCloudDrive\\Uni\\CSE\\Year 3\\Advanced '
+   'Prototyping\\APP\\3D print, use, disolve, '
+   'repeat\\Github\\src\\gcode_manipulation\\gcode.py',
+   'PYMODULE'),
+  ('gcode_manipulation.gcode_parser',
+   'C:\\Users\\Johannes\\iCloudDrive\\Uni\\CSE\\Year 3\\Advanced '
+   'Prototyping\\APP\\3D print, use, disolve, '
+   'repeat\\Github\\src\\gcode_manipulation\\gcode_parser.py',
+   'PYMODULE'),
   ('command.command',
    'C:\\Users\\Johannes\\iCloudDrive\\Uni\\CSE\\Year 3\\Advanced '
    'Prototyping\\APP\\3D print, use, disolve, '
    'repeat\\Github\\src\\command\\command.py',
    'PYMODULE'),
-  ('gui.customizations.load_font',
+  ('util.file_handler',
    'C:\\Users\\Johannes\\iCloudDrive\\Uni\\CSE\\Year 3\\Advanced '
    'Prototyping\\APP\\3D print, use, disolve, '
-   'repeat\\Github\\src\\gui\\customizations\\load_font.py',
+   'repeat\\Github\\src\\util\\file_handler.py',
    'PYMODULE'),
-  ('gui.customizations',
+  ('util',
    'C:\\Users\\Johannes\\iCloudDrive\\Uni\\CSE\\Year 3\\Advanced '
    'Prototyping\\APP\\3D print, use, disolve, '
-   'repeat\\Github\\src\\gui\\customizations\\__init__.py',
+   'repeat\\Github\\src\\util\\__init__.py',
    'PYMODULE'),
-  ('gui.customizations.styles',
+  ('gui.tkinter.customizations.load_font',
    'C:\\Users\\Johannes\\iCloudDrive\\Uni\\CSE\\Year 3\\Advanced '
    'Prototyping\\APP\\3D print, use, disolve, '
-   'repeat\\Github\\src\\gui\\customizations\\styles.py',
+   'repeat\\Github\\src\\gui\\tkinter\\customizations\\load_font.py',
+   'PYMODULE'),
+  ('gui.tkinter.customizations',
+   'C:\\Users\\Johannes\\iCloudDrive\\Uni\\CSE\\Year 3\\Advanced '
+   'Prototyping\\APP\\3D print, use, disolve, '
+   'repeat\\Github\\src\\gui\\tkinter\\customizations\\__init__.py',
+   'PYMODULE'),
+  ('gui.tkinter.customizations.styles',
+   'C:\\Users\\Johannes\\iCloudDrive\\Uni\\CSE\\Year 3\\Advanced '
+   'Prototyping\\APP\\3D print, use, disolve, '
+   'repeat\\Github\\src\\gui\\tkinter\\customizations\\styles.py',
    'PYMODULE'),
   ('tkinter.messagebox',
    'c:\\users\\johannes\\anaconda3\\lib\\tkinter\\messagebox.py',
@@ -726,34 +761,4 @@
    'PYMODULE'),
   ('tkinter.constants',
    'c:\\users\\johannes\\anaconda3\\lib\\tkinter\\constants.py',
-   'PYMODULE'),
-  ('util.file_handler',
-   'C:\\Users\\Johannes\\iCloudDrive\\Uni\\CSE\\Year 3\\Advanced '
-   'Prototyping\\APP\\3D print, use, disolve, '
-   'repeat\\Github\\src\\util\\file_handler.py',
-   'PYMODULE'),
-  ('util',
-   'C:\\Users\\Johannes\\iCloudDrive\\Uni\\CSE\\Year 3\\Advanced '
-   'Prototyping\\APP\\3D print, use, disolve, '
-   'repeat\\Github\\src\\util\\__init__.py',
-   'PYMODULE'),
-  ('gcode_manipulation.gcode',
-   'C:\\Users\\Johannes\\iCloudDrive\\Uni\\CSE\\Year 3\\Advanced '
-   'Prototyping\\APP\\3D print, use, disolve, '
-   'repeat\\Github\\src\\gcode_manipulation\\gcode.py',
-   'PYMODULE'),
-  ('gcode_manipulation',
-   'C:\\Users\\Johannes\\iCloudDrive\\Uni\\CSE\\Year 3\\Advanced '
-   'Prototyping\\APP\\3D print, use, disolve, '
-   'repeat\\Github\\src\\gcode_manipulation\\__init__.py',
-   'PYMODULE'),
-  ('gcode_manipulation.gcode_writer',
-   'C:\\Users\\Johannes\\iCloudDrive\\Uni\\CSE\\Year 3\\Advanced '
-   'Prototyping\\APP\\3D print, use, disolve, '
-   'repeat\\Github\\src\\gcode_manipulation\\gcode_writer.py',
-   'PYMODULE'),
-  ('gcode_manipulation.gcode_parser',
-   'C:\\Users\\Johannes\\iCloudDrive\\Uni\\CSE\\Year 3\\Advanced '
-   'Prototyping\\APP\\3D print, use, disolve, '
-   'repeat\\Github\\src\\gcode_manipulation\\gcode_parser.py',
    'PYMODULE')])
