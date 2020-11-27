@@ -243,7 +243,7 @@ class MainScreen_TKinter:
 
             return Command(path_to_file=path_to_file,
                            flow_rate=int_flow_rate, bed_temperature=int_bed_temperature,
-                           additional_information=add_information,
-                           pause_each_layer=stop_each_layer,
-                           retract_syringe=retract_syringe_end_of_print,
+                           additional_information_bol=add_information,
+                           pause_each_layer_bol=stop_each_layer,
+                           retract_syringe_bol=retract_syringe_end_of_print,
                            file_name=file_name, storage_path=storage_location)

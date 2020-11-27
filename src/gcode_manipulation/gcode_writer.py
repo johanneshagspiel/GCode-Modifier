@@ -69,20 +69,20 @@ class Gcode_Writer():
         return self.end_gcode
 
 
-    def pause_each_layer(self):
+    def pause_each_layer(self, pause_in_seconds):
 
         previous_index = 0
         last_index = len(self.start_gcode.main_body)
 
         gcode_list = []
-
+        print(str(pause_in_seconds))
         for layer_index in self.start_gcode.time_elapsed_index_list:
 
             for index in range(previous_index, layer_index):
                 gcode_list.append(self.start_gcode.main_body[index])
 
             gcode_list.append("G1 E-40 ; Stop each Layer - Retract a bit")
-            gcode_list.append("G4 S30; Stop each Layer - Wait")
+            gcode_list.append("G4 S" + str(pause_in_seconds) + "; Stop each Layer - Wait")
             gcode_list.append("G1 E40 ; Re-extrude a bit")
 
             previous_index = layer_index

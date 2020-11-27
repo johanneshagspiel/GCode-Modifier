@@ -4,7 +4,7 @@ from pathlib import Path
 
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QGridLayout, QLabel, QLineEdit, QWidget, QRadioButton, \
-    QCheckBox, QPushButton, QFileDialog, QMessageBox
+    QCheckBox, QPushButton, QFileDialog, QMessageBox, QHBoxLayout
 from PyQt5 import QtCore
 from PyQt5 import QtGui
 
@@ -111,10 +111,21 @@ class Mainscreen(QWidget):
         self.grid.addWidget(self.add_information_checkbox, row_position, 0, 1, 2)
         row_position += 1
 
-        #Pause after each layer v
-        self.pause_print_checkbox = QCheckBox("Pause print after each layer")
-        self.grid.addWidget(self.pause_print_checkbox, row_position, 0, 1, 2)
+        #Pause after each layer layout hbox
+        self.pause_print_hbox = QHBoxLayout()
+        self.grid.addLayout(self.pause_print_hbox, row_position, 0, 1, 2)
         row_position += 1
+
+        #Pause after each layer checkbox
+        self.pause_print_checkbox = QCheckBox("Pause print after each layer")
+        self.pause_print_checkbox.toggled.connect(self.pause_print_toggled)
+        self.pause_print_hbox.addWidget(self.pause_print_checkbox, alignment=QtCore.Qt.AlignLeft)
+
+        #Pauser after each layer seconds label
+        self.pause_print_seconds_label = QLabel("Seconds: ")
+
+        # Pauser after each layer seconds entry
+        self.pause_print_seconds_entry = QLineEdit("10")
 
         #Retract syringe at the end of print Checkbox
         self.retract_syringe_checkbox = QCheckBox("Retract the syringe at the end of print")
@@ -138,15 +149,16 @@ class Mainscreen(QWidget):
         self.grid.addWidget(self.storage_name_entry, row_position, 1)
         row_position += 1
 
+        #Storage Path Label
+        self.path_label = QLabel("Storage path: ")
+        self.grid.addWidget(self.path_label, row_position, 0)
+
         # Chose Location to store button
         self.choose_location_button = QPushButton("Choose location to store")
         self.choose_location_button.clicked.connect(self.select_storage_location)
-        self.grid.addWidget(self.choose_location_button, row_position, 0, 1, 2)
+        self.grid.addWidget(self.choose_location_button, row_position, 1)
         self.row_position_path = row_position
         row_position += 1
-
-        #Storage Path Label
-        self.path_label = QLabel("Storage path: ")
 
         #Storage Path Name Label
         self.path_name_label = QLabel()
@@ -160,6 +172,15 @@ class Mainscreen(QWidget):
         self.modify_button.clicked.connect(self.start_modification)
         self.grid.addWidget(self.modify_button, row_position, 0, 1, 2)
 
+    def pause_print_toggled(self):
+        checkbx = self.sender()
+        if checkbx.isChecked():
+            self.pause_print_hbox.addWidget(self.pause_print_seconds_label)
+            self.pause_print_hbox.addWidget(self.pause_print_seconds_entry)
+        else:
+            self.pause_print_seconds_label.setParent(None)
+            self.pause_print_seconds_entry.setParent(None)
+
     def update_name_selected_file(self, file):
         radioBtn = self.sender()
         if radioBtn.isChecked():
@@ -170,10 +191,10 @@ class Mainscreen(QWidget):
         directory = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
         self.path_name_label.setText(directory)
 
-        self.grid.addWidget(self.path_label, self.row_position_path, 0)
         self.grid.addWidget(self.path_name_label, self.row_position_path, 1)
 
         #Shift Everything below the new path text one row down
+        self.choose_location_button.setText("Choose a different location")
         self.grid.addWidget(self.choose_location_button, self.row_position_path + 1, 0, 1, 2)
         self.grid.addWidget(self.modify_button, self.row_position_path + 2, 0, 1, 2)
 
@@ -223,6 +244,15 @@ class Mainscreen(QWidget):
         if len(file_name) == 0:
             messages.append("A filename needs to be specified.")
 
+        if self.pause_print_checkbox.isChecked():
+            try:
+                int_duration_pause = int(self.pause_print_seconds_entry.text())
+                if int_duration_pause < 0 or int_duration_pause > 1800:
+                    raise Exception
+            except Exception:
+                messages.append("The duration of the pause needs to be an integer between 0 and 1800.")
+                self.pause_print_seconds_entry.setText("")
+
         if len(messages) > 0:
             error_text = "\n".join(messages)
             error_message_box = QMessageBox()
@@ -235,16 +265,21 @@ class Mainscreen(QWidget):
         else:
             file_name_with_extension = self.selected_file_name + ".gcode"
             path_to_file = Path.joinpath(self.file_handler.gcode_path, file_name_with_extension)
-            add_information = self.add_information_checkbox.isChecked()
-            stop_each_layer = self.pause_print_checkbox.isChecked()
-            retract_syringe_end_of_print = self.retract_syringe_checkbox.isChecked()
+            additional_information_bol = self.add_information_checkbox.isChecked()
+            pause_each_layer_bol = self.pause_print_checkbox.isChecked()
+            retract_syringe_bol = self.retract_syringe_checkbox.isChecked()
+
+            pause_each_layer_par = None
+            if pause_each_layer_bol == True:
+                pause_each_layer_par = self.pause_print_seconds_entry.text()
 
             return Command(path_to_file=path_to_file,
                            flow_rate=int_flow_rate, bed_temperature=int_bed_temperature,
-                           additional_information=add_information,
-                           pause_each_layer=stop_each_layer,
-                           retract_syringe=retract_syringe_end_of_print,
-                           file_name=file_name, storage_path=storage_location)
+                           additional_information_bol=additional_information_bol,
+                           pause_each_layer_bol=pause_each_layer_bol,
+                           retract_syringe_bol=retract_syringe_bol,
+                           file_name=file_name, storage_path=storage_location,
+                           pause_each_layer_par=pause_each_layer_par)
 
     def open_directory(self, directory):
         os.startfile(directory)
