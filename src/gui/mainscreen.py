@@ -1,5 +1,6 @@
 import ctypes
 import os
+import subprocess
 from pathlib import Path
 
 from PyQt5.QtGui import QFont
@@ -12,7 +13,6 @@ from command.command import Command
 from command.command_executor import Command_Executor
 from gui.customization.load_font import load_font
 from util.file_handler import File_Handler
-
 
 class Mainscreen(QWidget):
 
@@ -177,6 +177,7 @@ class Mainscreen(QWidget):
 
         # Chose Location to store button
         self.choose_location_button = QPushButton("Choose location to store")
+        self.last_directory = ""
         self.choose_location_button.clicked.connect(self.select_storage_location)
         self.grid.addWidget(self.choose_location_button, row_position, 1)
         self.row_position_path = row_position
@@ -216,7 +217,12 @@ class Mainscreen(QWidget):
 
     def select_storage_location(self):
         directory = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
+
+        if len(directory) == 0 & len(self.last_directory) != 0:
+            directory = self.self.last_directory
+
         self.path_name_label.setText(directory)
+        self.last_directory = directory
 
         self.grid.addWidget(self.path_name_label, self.row_position_path, 1)
 
@@ -236,14 +242,19 @@ class Mainscreen(QWidget):
             finish_modification_message.setText("File has been created successfully!")
             finish_modification_message.setWindowTitle("File Creation Successful")
             finish_modification_message.setIcon(QMessageBox.Information)
+
             open_location_button = QPushButton("Open File Location")
             open_location_button.clicked.connect(lambda: self.open_directory(checked_command.storage_path))
+
             open_notebook_button = QPushButton("Open File in Notebook")
             path_to_file = checked_command.storage_path + "\/" + checked_command.file_name + ".gcode"
             open_notebook_button.clicked.connect(lambda: self.open_notebook(path_to_file))
+
             finish_modification_message.addButton(open_location_button, QMessageBox.AcceptRole)
             finish_modification_message.addButton(open_notebook_button, QMessageBox.AcceptRole)
+
             finish_modification_message.setStandardButtons(QMessageBox.Ok)
+
             finish_modification_message.exec_()
 
     def sanity_check(self):
@@ -316,5 +327,4 @@ class Mainscreen(QWidget):
         os.startfile(directory)
 
     def open_notebook(self, directory):
-        #print(directory)
-        os.system("notepad.exe " + directory)
+        subprocess.Popen(["notepad.exe", directory])
