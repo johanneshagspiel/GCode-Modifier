@@ -29,9 +29,5 @@ class File_Handler():
         file_path = Path.joinpath(Path(path), file_name_extension)
 
         f = open(file_path, "w")
-        f.write("\n".join(gcode.startup_code))
-        f.write("\n\n\n")
-        f.write("\n".join(gcode.main_body))
-        f.write("\n\n\n")
-        f.write("\n".join(gcode.shutdown_code))
+        f.write(gcode.whole_code)
         f.close()

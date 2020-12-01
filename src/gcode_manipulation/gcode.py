@@ -2,6 +2,8 @@
 class GCode:
 
     def __init__(self):
+        self.whole_code = []
+
         self.startup_code = []
         self.main_body = []
         self.shutdown_code = []

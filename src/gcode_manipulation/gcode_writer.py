@@ -6,17 +6,30 @@ class Gcode_Writer():
         self.start_gcode = None
         self.end_gcode = None
 
-    def set_flowrate(self, flowrate):
-        text = "M221 S" + str(flowrate) + "; Set Flowrate"
+    def set_flowrate_layer_0(self, flowrate_layer_0):
+        text = "M221 S" + str(flowrate_layer_0) + "; Set Flowrate Layer 0"
 
         new_main_body = []
-        new_main_body.append(text)
 
         for line in self.start_gcode.main_body:
             new_main_body.append(line)
+            if ";LAYER:0" in line:
+                new_main_body.append(text)
 
         self.end_gcode.main_body = new_main_body
+        return self.end_gcode
 
+    def set_flowrate_other_layers(self, flowrate_other_layers):
+        text = "M221 S" + str(flowrate_other_layers) + "; Set Flowrate Other Layers"
+
+        new_main_body = []
+
+        for line in self.start_gcode.main_body:
+            new_main_body.append(line)
+            if ";LAYER:1" in line:
+                new_main_body.append(text)
+
+        self.end_gcode.main_body = new_main_body
         return self.end_gcode
 
     def set_bed_temperature(self, bed_temperature):

@@ -5,54 +5,62 @@ class GCode_Parser:
     def __init__(self, line_list):
         self.line_list = line_list
 
-        self.gcode = None
+        self.start_gcode = None
+        self.end_gcode = None
 
     def create_gcode(self):
         new_gcode = GCode()
-        new_gcode.main_body = self.line_list
-        self.gcode = new_gcode
+        new_gcode.whole_code = self.line_list
+        self.set_gcode(new_gcode)
 
-        self.analyze_gcode()
+        analyzed_result = self.analyze_gcode()
 
-        return self.gcode
+        return analyzed_result
 
     def analyze_gcode(self):
-        self.split_gcode()
-        self.clean_gcode()
+        split_result = self.split_gcode()
+        self.set_gcode(split_result)
 
-        self.gcode = self.find_indexes()
+        cleaned_result = self.clean_gcode()
+        self.set_gcode(cleaned_result)
+
+        self.end_gcode = self.find_indexes()
+
+        return self.end_gcode
 
     def split_gcode(self):
 
-        start_gcode = []
-        main_gcode = []
-        main_gcode_to_be_flatten = []
-        end_gcode = []
+        startup_code = []
+        main_body = []
+        main_body_to_be_flatten = []
+        shutdown_code = []
 
         before_layer_0 = True
         temp_list = []
 
-        for line in self.gcode.main_body:
+        for line in self.start_gcode.whole_code:
             if ";LAYER:0" in line:
                 before_layer_0 = False
             if before_layer_0 is True:
-                start_gcode.append(line)
+                startup_code.append(line)
             elif ";TIME_ELAPSED:" in line:
                 temp_list.append(line)
-                main_gcode_to_be_flatten.append(temp_list)
+                main_body_to_be_flatten.append(temp_list)
                 temp_list = []
             else:
                 temp_list.append(line)
 
-        end_gcode = temp_list
+        shutdown_code = temp_list
 
-        for sublist in main_gcode_to_be_flatten:
+        for sublist in main_body_to_be_flatten:
             for item in sublist:
-                main_gcode.append(item)
+                main_body.append(item)
 
-        self.gcode.startup_code = start_gcode
-        self.gcode.main_body = main_gcode
-        self.gcode.shutdown_code = end_gcode
+        self.end_gcode.startup_code = startup_code
+        self.end_gcode.main_body = main_body
+        self.end_gcode.shutdown_code = shutdown_code
+
+        return self.end_gcode
 
     def clean_gcode(self):
 
@@ -60,7 +68,7 @@ class GCode_Parser:
         start_cura_list = []
         layer_count_list = []
 
-        for line in self.gcode.startup_code:
+        for line in self.startup_code.startup_code:
             if start_cura_bol is True:
                 start_cura_list.append(line)
                 if ";Generated with" in line:
@@ -81,14 +89,15 @@ class GCode_Parser:
         new_start_cura_list.append("G92 E0")
 
         new_start = start_cura_list + layer_count_list + new_start_cura_list
-        self.gcode.startup_code = new_start
+        self.end_gcode.startup_code = new_start
 
 
         new_main = []
-        for line in self.gcode.main_body:
+        for line in self.startup_code.main_body:
             if "M140" not in line:
                 new_main.append(line)
-        self.gcode.main_body = new_main
+
+        self.end_gcode.main_body = new_main
 
         new_end = []
         new_end.append("M140 S0")
@@ -105,11 +114,13 @@ class GCode_Parser:
         new_end.append("M302 P0")
         new_end.append("M82 ;absolute extrusion mode")
 
-        for line in self.gcode.shutdown_code:
+        for line in self.startup_code.shutdown_code:
             if ";SETTING_3" in line:
                 new_end.append(line)
 
-        self.gcode.shutdown_code = new_end
+        self.end_gcode.shutdown_code = new_end
+
+        return self.end_gcode
 
 
     def find_indexes(self):
@@ -122,7 +133,7 @@ class GCode_Parser:
         movement_commands = ["G0", "G1", "G2", "G3", "G5"]
         largest_extrusion_value = 0
 
-        for index, line in enumerate(self.gcode.main_body):
+        for index, line in enumerate(self.start_gcode.main_body):
             if ";LAYER:" in line:
                 layer_list.append(index)
                 current_layer += 1
@@ -140,14 +151,29 @@ class GCode_Parser:
             elif ";TIME_ELAPSED:" in line:
                 time_elapsed_list.append(index)
 
-        self.gcode.layer_index_list = layer_list
-        self.gcode.time_elapsed_index_list = time_elapsed_list
-        self.gcode.movements_per_layer_list = movements_per_layer_list
+        self.end_gcode.layer_index_list = layer_list
+        self.end_gcode.time_elapsed_index_list = time_elapsed_list
+        self.end_gcode.movements_per_layer_list = movements_per_layer_list
 
-        self.gcode.amount_layers = len(layer_list)
-        self.gcode.largest_extrusion_value = largest_extrusion_value
+        self.end_gcode.amount_layers = len(layer_list)
+        self.end_gcode.largest_extrusion_value = largest_extrusion_value
 
-        return self.gcode
+        return self.end_gcode
 
-    def set_gcode(self, gcode: GCode):
-        self.gcode = gcode
+    def improve_gcode_at_the_end(self):
+
+        return self.end_gcode
+
+    def create_final_gcode(self):
+
+        self.end_gcode.whole_code = "\n".join(self.end_gcode.startup_code)
+        self.end_gcode.whole_code = "\n\n\n"
+        self.end_gcode.whole_code = "\n".join(self.end_gcode.main_body)
+        self.end_gcode.whole_code = "\n\n\n"
+        self.end_gcode.whole_code = "\n".join(self.end_gcode.shutdown_code)
+
+        return self.end_gcode
+
+    def set_gcode(self, new_gcode: GCode):
+        self.start_gcode = new_gcode
+        self.end_gcode = new_gcode

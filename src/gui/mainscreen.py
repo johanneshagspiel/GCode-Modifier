@@ -63,15 +63,20 @@ class Mainscreen(QWidget):
         row_position += 1
 
         #Nozzle 1.3 Size Button
-        self.nozzle_1_3_button = QRadioButton("1.3 mm")
+        self.nozzle_1_3_button = QRadioButton("1.8 mm")
         self.nozzle_1_3_button.setChecked(True)
         self.nozzle_1_3_button.toggled.connect(lambda:self.update_files("1.3"))
         nozzle_size_selection_hobx.addWidget(self.nozzle_1_3_button, QtCore.Qt.AlignLeft)
 
-        #Nozzle 1.3 Size Button
-        self.sdf = QRadioButton("sdf")
-        self.sdf.toggled.connect(lambda:self.update_files("sdf"))
-        nozzle_size_selection_hobx.addWidget(self.sdf, QtCore.Qt.AlignLeft)
+        #Nozzle 0.8 Size Button
+        self.nozzle_0_6_button = QRadioButton("0.8 mm")
+        self.nozzle_0_6_button.toggled.connect(lambda:self.update_files("0.8 mm"))
+        nozzle_size_selection_hobx.addWidget(self.nozzle_0_6_button, QtCore.Qt.AlignLeft)
+
+        #Nozzle 0.6 Size Button
+        self.nozzle_0_6_button = QRadioButton("0.6 mm")
+        self.nozzle_0_6_button.toggled.connect(lambda:self.update_files("0.6 mm"))
+        nozzle_size_selection_hobx.addWidget(self.nozzle_0_6_button, QtCore.Qt.AlignLeft)
 
         #File Selection Label
         file_selection_label = QLabel("Which file do you want to modify?")
@@ -100,15 +105,26 @@ class Mainscreen(QWidget):
         self.grid.addWidget(print_settings_label, row_position, 0, 1, 2)
         row_position += 1
 
+        #Flow Rate Layer 0 Label
+        flow_rate_layer_0_label = QLabel("Flow rate for the first layer: ")
+        flow_rate_layer_0_label.setAlignment(QtCore.Qt.AlignLeft)
+        self.grid.addWidget(flow_rate_layer_0_label,row_position, 0)
+
+        # Flow Rate Layer 0 Entry
+        self.flow_rate_layer_0_entry = QLineEdit()
+        self.flow_rate_layer_0_entry.setText("100")
+        self.grid.addWidget(self.flow_rate_layer_0_entry, row_position, 1)
+        row_position += 1
+
         #Flow Rate Label
-        flow_rate_label = QLabel("Flow rate: ")
-        flow_rate_label.setAlignment(QtCore.Qt.AlignLeft)
-        self.grid.addWidget(flow_rate_label,row_position, 0)
+        flow_rate_other_layers_label = QLabel("Flow rate for all the other layers: ")
+        flow_rate_other_layers_label.setAlignment(QtCore.Qt.AlignLeft)
+        self.grid.addWidget(flow_rate_other_layers_label,row_position, 0)
 
         # Flow Rate Entry
-        self.flow_rate_entry = QLineEdit()
-        self.flow_rate_entry.setText("55")
-        self.grid.addWidget(self.flow_rate_entry, row_position, 1)
+        self.flow_rate_other_layers_entry = QLineEdit()
+        self.flow_rate_other_layers_entry.setText("55")
+        self.grid.addWidget(self.flow_rate_other_layers_entry, row_position, 1)
         row_position += 1
 
         #Bed Temperature Label
@@ -260,14 +276,23 @@ class Mainscreen(QWidget):
     def sanity_check(self):
         messages = []
 
-        flow_rate = self.flow_rate_entry.text()
+        flow_rate_layer_0 = self.flow_rate_layer_0_entry.text()
         try:
-            int_flow_rate = int(flow_rate)
-            if int_flow_rate < 10 or int_flow_rate > 400:
+            int_flow_rate_layer_0 = int(flow_rate_layer_0)
+            if int_flow_rate_layer_0 < 10 or int_flow_rate_layer_0 > 400:
+                raise Exception
+        except Exception:
+            messages.append("The flow rate of layer 0 needs to be an integer between 10 and 400.")
+            self.flow_rate_layer_0.setText("")
+
+        flow_rate_other_layers = self.flow_rate_other_layers_entry.text()
+        try:
+            int_flow_rate_other_layers = int(flow_rate_other_layers)
+            if int_flow_rate_other_layers < 10 or int_flow_rate_other_layers > 400:
                 raise Exception
         except Exception:
             messages.append("The flow rate needs to be an integer between 10 and 400.")
-            self.flow_rate_entry.setText("")
+            self.flow_rate_other_layers_entry.setText("")
 
         bed_temperature = self.bed_temperature_entry.text()
         try:
@@ -316,11 +341,14 @@ class Mainscreen(QWidget):
                 pause_each_layer_par = self.pause_print_seconds_entry.text()
 
             return Command(path_to_file=path_to_file,
-                           flow_rate=int_flow_rate, bed_temperature=int_bed_temperature,
+                           flow_rate_layer_0=flow_rate_layer_0,
+                           flow_rate_other_layers=int_flow_rate_other_layers,
+                           bed_temperature=int_bed_temperature,
                            additional_information_bol=additional_information_bol,
                            pause_each_layer_bol=pause_each_layer_bol,
                            retract_syringe_bol=retract_syringe_bol,
-                           file_name=file_name, storage_path=storage_location,
+                           file_name=file_name,
+                           storage_path=storage_location,
                            pause_each_layer_par=pause_each_layer_par)
 
     def open_directory(self, directory):
