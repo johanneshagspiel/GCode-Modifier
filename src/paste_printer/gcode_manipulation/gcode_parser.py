@@ -166,11 +166,13 @@ class GCode_Parser:
 
     def create_final_gcode(self):
 
-        self.end_gcode.whole_code = "\n".join(self.end_gcode.startup_code)
-        self.end_gcode.whole_code = "\n\n\n"
-        self.end_gcode.whole_code = "\n".join(self.end_gcode.main_body)
-        self.end_gcode.whole_code = "\n\n\n"
-        self.end_gcode.whole_code = "\n".join(self.end_gcode.shutdown_code)
+        startup_string = "\n".join(self.end_gcode.startup_code)
+        startup_string += "\n\n\n"
+        main_body_string = "\n".join(self.end_gcode.main_body)
+        main_body_string += "\n\n\n"
+        shutdown_string = "\n".join(self.end_gcode.shutdown_code)
+
+        self.end_gcode.whole_code = startup_string + main_body_string + shutdown_string
 
         return self.end_gcode
 
