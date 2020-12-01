@@ -1,1 +1,0 @@
-pyinstaller paste_printer/main/main.py --onefile --add-data "paste_printer/main/resources/icons/*;paste_printer/main/resources/icons" --add-data "paste_printer/main/resources/gcode/*;paste_printer/main/resources/gcode" --add-data "paste_printer/main/resources/fonts/*;paste_printer/main/resources/fonts"

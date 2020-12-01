@@ -4,12 +4,11 @@ from paste_printer.gcode_manipulation.gcode import GCode
 class File_Handler():
 
     def __init__(self):
-        self.root = Path.joinpath(Path(__file__).parents[1], "main")
-        self.resource_path = Path.joinpath(self.root, "resources")
+        self.root = Path.joinpath(Path(__file__).parents[1], "resources")
 
-        self.gcode_path = Path.joinpath(self.resource_path, "gcode")
-        self.font_path = Path.joinpath(self.resource_path, "fonts")
-        self.icon_path = Path.joinpath(self.resource_path, "icons")
+        self.gcode_path = Path.joinpath(self.root, "gcode")
+        self.font_path = Path.joinpath(self.root, "fonts")
+        self.icon_path = Path.joinpath(self.root, "icons")
 
         self.icon_ico_path = Path.joinpath(self.icon_path, "apple_icon.ico")
         self.icon_png_path = Path.joinpath(self.icon_path, "apple_icon.png")
