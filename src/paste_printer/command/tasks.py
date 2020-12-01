@@ -1,0 +1,17 @@
+from enum import Enum
+
+class Writer_Task (Enum):
+    SET_FLOWRATE_LAYER_0 = 1
+    SET_FLOWRATE_OTHER_LAYERS = 2
+    SET_BED_TEMPERATURE = 3
+
+    ADDITIONAL_INFORMATION = 4
+    PAUSE_EACH_LAYER = 5
+    RETRACT_SYRINGE = 6
+
+class Parser_Task (Enum):
+    CREATE_GCODE = 1
+    FIND_INDEXES = 2
+
+    IMPROVE_GCODE_AT_END = 3
+    CREATE_FINAL_GCODE = 4
