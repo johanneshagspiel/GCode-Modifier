@@ -42,21 +42,23 @@ class Gcode_Writer():
 
         new_main = []
         current_layer = 0
-        current_move = 0
+        current_move = 1
 
         movement_commands = ["G0", "G1", "G2", "G3", "G5"]
-
         for index, line in enumerate(self.end_gcode.main_body):
             if any(x in line for x in movement_commands):
-                text = "M117 Mov " + str(current_move) + "/" + str(self.end_gcode.movements_per_layer_list[current_layer]) \
-                       + " Lay " + str(current_layer + 1) + "/" + str(self.end_gcode.amount_layers) + "; Additional Information"
-                new_main.append(text)
+                if current_move % 3 == 0 or current_move == self.end_gcode.movements_per_layer_list[current_layer] or current_move == 1:
+                    text = "M117 Mov " + str(current_move) + "/" + str(self.end_gcode.movements_per_layer_list[current_layer]) \
+                           + " Lay " + str(current_layer + 1) + "/" + str(self.end_gcode.amount_layers) + "; Additional Information"
+                    new_main.append(text)
+
                 current_move += 1
+
             new_main.append(line)
 
             if index == self.end_gcode.time_elapsed_index_list[current_layer]:
                 current_layer += 1
-                current_move = 0
+                current_move = 1
 
         self.end_gcode.main_body = new_main
 
@@ -67,7 +69,6 @@ class Gcode_Writer():
         self.end_gcode.shutdown_code = new_end
 
         return self.end_gcode
-
 
     def pause_each_layer(self, pause_in_seconds):
 
