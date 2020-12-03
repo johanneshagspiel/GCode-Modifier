@@ -27,7 +27,7 @@ class TestCommandExecutor(unittest.TestCase):
 
         self.test_command_1 = Command(path_to_file=self.path_to_file,
                                       flow_rate_layer_0="100",
-                                      flow_rate_other_layers="55",
+                                      flow_rate_outer_walls="55",
                                       bed_temperature="0",
                                       print_speed="100",
                                       fan_bol=True,
@@ -49,7 +49,7 @@ class TestCommandExecutor(unittest.TestCase):
 
         self.test_command_1 = Command(path_to_file=self.path_to_file,
                                       flow_rate_layer_0="100",
-                                      flow_rate_other_layers="55",
+                                      flow_rate_outer_walls="55",
                                       bed_temperature="0",
                                       print_speed="120",
                                       fan_bol=False,

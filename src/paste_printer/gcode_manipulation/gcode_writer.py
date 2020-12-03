@@ -7,7 +7,7 @@ class Gcode_Writer():
         self.end_gcode = None
 
     def set_flowrate_layer_0(self, flowrate_layer_0):
-        text = "M221 S" + str(flowrate_layer_0) + "; Set Flowrate Layer 0"
+        text = "M221 S" + str(flowrate_layer_0) + " ; Set Flowrate Layer 0"
 
         new_main_body = []
 
@@ -19,14 +19,25 @@ class Gcode_Writer():
         self.end_gcode.main_body = new_main_body
         return self.end_gcode
 
-    def set_flowrate_other_layers(self, flowrate_other_layers):
-        text = "M221 S" + str(flowrate_other_layers) + "; Set Flowrate Other Layers"
-
+    def set_flowrate_outer_walls(self, flowrate_outer_walls):
         new_main_body = []
 
         for line in self.start_gcode.main_body:
             new_main_body.append(line)
-            if ";LAYER:1" in line:
+            if ";TYPE:WALL-OUTER" in line:
+                text = "M221 S" + str(flowrate_outer_walls) + " ; Set Flowrate Outer Walls"
+                new_main_body.append(text)
+
+        self.end_gcode.main_body = new_main_body
+        return self.end_gcode
+
+    def set_flowrate_infill(self, flow_rate_infill):
+        new_main_body = []
+
+        for line in self.start_gcode.main_body:
+            new_main_body.append(line)
+            if ";TYPE:SKIN" in line:
+                text = "M221 S" + str(flow_rate_infill) + " ; Set Flowrate Infill"
                 new_main_body.append(text)
 
         self.end_gcode.main_body = new_main_body

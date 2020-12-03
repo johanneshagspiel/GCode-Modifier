@@ -24,11 +24,14 @@ class Command_Executor:
         #Create new gcode
         self.execute_parser_task(Parser_Task.CREATE_GCODE)
 
-        #Set Flowrate other layers
+        #Set Flowrate Layer 0
         self.execute_writer_task(Writer_Task.SET_FLOWRATE_LAYER_0, self.command.flow_rate_layer_0)
 
-        #Set Flowrate other layers
-        self.execute_writer_task(Writer_Task.SET_FLOWRATE_OTHER_LAYERS, self.command.flow_rate_other_layers)
+        #Set Flowrate outer walls
+        self.execute_writer_task(Writer_Task.SET_FLOWRATE_OUTER_WALLS, self.command.flow_rate_outer_walls)
+
+        #Set Flowrate infill
+        self.execute_writer_task(Writer_Task.SET_FLOWRATE_INFILL, self.command.flow_rate_infill)
 
         #Set bed temperature
         self.execute_writer_task(Writer_Task.SET_BED_TEMPERATURE, self.command.bed_temperature)
@@ -67,8 +70,10 @@ class Command_Executor:
 
         if writer_task == Writer_Task.SET_FLOWRATE_LAYER_0:
             result_gcode = self.gcode_writer.set_flowrate_layer_0(parameter_1)
-        if writer_task == Writer_Task.SET_FLOWRATE_OTHER_LAYERS:
-            result_gcode = self.gcode_writer.set_flowrate_other_layers(parameter_1)
+        if writer_task == Writer_Task.SET_FLOWRATE_OUTER_WALLS:
+            result_gcode = self.gcode_writer.set_flowrate_outer_walls(parameter_1)
+        if writer_task == Writer_Task.SET_FLOWRATE_INFILL:
+            result_gcode = self.gcode_writer.set_flowrate_infill(parameter_1)
         if writer_task == Writer_Task.SET_BED_TEMPERATURE:
             result_gcode = self.gcode_writer.set_bed_temperature(parameter_1)
         if writer_task == Writer_Task.SET_PRINT_SPEED:

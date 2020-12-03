@@ -116,15 +116,26 @@ class Mainscreen(QWidget):
         self.grid.addWidget(self.flow_rate_layer_0_entry, row_position, 1)
         row_position += 1
 
-        #Flow Rate Label
-        flow_rate_other_layers_label = QLabel("Flow rate for all the other layers: ")
-        flow_rate_other_layers_label.setAlignment(QtCore.Qt.AlignLeft)
-        self.grid.addWidget(flow_rate_other_layers_label,row_position, 0)
+        #Flow Rate Outer Walls Label
+        flow_rate_outer_walls_label = QLabel("Flow rate for the outer walls: ")
+        flow_rate_outer_walls_label.setAlignment(QtCore.Qt.AlignLeft)
+        self.grid.addWidget(flow_rate_outer_walls_label,row_position, 0)
 
-        # Flow Rate Entry
-        self.flow_rate_other_layers_entry = QLineEdit()
-        self.flow_rate_other_layers_entry.setText("55")
-        self.grid.addWidget(self.flow_rate_other_layers_entry, row_position, 1)
+        #Flow Rate Outer Walls Entry
+        self.flow_rate_outer_walls_entry = QLineEdit()
+        self.flow_rate_outer_walls_entry.setText("65")
+        self.grid.addWidget(self.flow_rate_outer_walls_entry, row_position, 1)
+        row_position += 1
+
+        #Flow Rate Infill Label
+        flow_rate_infill_label = QLabel("Flow rate for the infill: ")
+        flow_rate_infill_label.setAlignment(QtCore.Qt.AlignLeft)
+        self.grid.addWidget(flow_rate_infill_label,row_position, 0)
+
+        #Flow Rate Infill Entry
+        self.flow_rate_infill_entry = QLineEdit()
+        self.flow_rate_infill_entry.setText("55")
+        self.grid.addWidget(self.flow_rate_infill_entry, row_position, 1)
         row_position += 1
 
         #Bed Temperature Label
@@ -312,14 +323,23 @@ class Mainscreen(QWidget):
             messages.append("The flow rate of layer 0 needs to be an integer between 10 and 400.")
             self.flow_rate_layer_0.setText("")
 
-        flow_rate_other_layers = self.flow_rate_other_layers_entry.text()
+        flow_rate_outer_walls = self.flow_rate_outer_walls_entry.text()
         try:
-            int_flow_rate_other_layers = int(flow_rate_other_layers)
-            if int_flow_rate_other_layers < 10 or int_flow_rate_other_layers > 400:
+            int_flow_rate_outer_walls = int(flow_rate_outer_walls)
+            if int_flow_rate_outer_walls < 10 or int_flow_rate_outer_walls > 400:
                 raise Exception
         except Exception:
-            messages.append("The flow rate needs to be an integer between 10 and 400.")
-            self.flow_rate_other_layers_entry.setText("")
+            messages.append("The flow rate of the outer walls needs to be an integer between 10 and 400.")
+            self.flow_rate_outer_walls.setText("")
+
+        flow_rate_infill = self.flow_rate_infill_entry.text()
+        try:
+            int_flow_rate_infill = int(flow_rate_infill)
+            if int_flow_rate_infill < 10 or int_flow_rate_infill > 400:
+                raise Exception
+        except Exception:
+            messages.append("The flow rate of the infill needs to be an integer between 10 and 400.")
+            self.flow_rate_infill.setText("")
 
         bed_temperature = self.bed_temperature_entry.text()
         try:
@@ -385,7 +405,8 @@ class Mainscreen(QWidget):
             return Command(path_to_file=path_to_file,
 
                            flow_rate_layer_0=flow_rate_layer_0,
-                           flow_rate_other_layers=int_flow_rate_other_layers,
+                           flow_rate_outer_walls=int_flow_rate_outer_walls,
+                           flow_rate_infill=int_flow_rate_infill,
                            bed_temperature=int_bed_temperature,
                            print_speed=float_print_speed,
                            fan_bol=fan_bol,
