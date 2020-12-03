@@ -359,9 +359,7 @@ class Mainscreen(QWidget):
             command_executor = Command_Executor(checked_command)
             result_gcode = command_executor.execute()
 
-            #print(type(result_gcode.layer_list[0]))
-
-            self.gecode_viewer.show_new_layer(result_gcode.layer_list[0])
+            self.gecode_viewer.show_new_layer(result_gcode.layer_list[-1])
 
             finish_modification_message = QMessageBox()
             finish_modification_message.setText("File has been created successfully!")
