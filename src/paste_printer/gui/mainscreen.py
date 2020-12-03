@@ -138,6 +138,17 @@ class Mainscreen(QWidget):
         self.grid.addWidget(self.bed_temperature_entry, row_position, 1)
         row_position += 1
 
+        #Print Speed Label
+        print_speed_label = QLabel("Print Speed: ")
+        print_speed_label.setAlignment(QtCore.Qt.AlignLeft)
+        self.grid.addWidget(print_speed_label,row_position, 0)
+
+        #Print Speed Entry
+        self.print_speed_entry = QLineEdit()
+        self.print_speed_entry.setText("100")
+        self.grid.addWidget(self.print_speed_entry, row_position, 1)
+        row_position += 1
+
         #Modification label
         print_modifications_label = QLabel("What do you want to modify?")
         print_modifications_label.setAlignment(QtCore.Qt.AlignCenter)
@@ -150,9 +161,9 @@ class Mainscreen(QWidget):
         row_position += 1
 
         #Pause after each layer checkbox
-        self.pause_print_checkbox = QCheckBox("Pause print after each layer")
-        self.pause_print_checkbox.toggled.connect(self.pause_print_toggled)
-        self.grid.addWidget(self.pause_print_checkbox, row_position, 0)
+        self.pause_print_retraction_checkbox = QCheckBox("Pause print after each layer")
+        self.pause_print_retraction_checkbox.toggled.connect(self.pause_print_toggled)
+        self.grid.addWidget(self.pause_print_retraction_checkbox, row_position, 0)
         row_position += 1
 
         #Pause Choices Grid
@@ -231,9 +242,6 @@ class Mainscreen(QWidget):
             self.grid_choices_grid.addWidget(self.pause_print_seconds_entry, 1, 3)
             self.grid_choices_grid.addWidget(self.retract_during_pause_checkbox, 2, 2)
 
-            # self.pause_print_seconds_label.setFixedWidth(100)
-            # self.pause_print_seconds_entry.setFixedWidth(100)
-            # self.retract_during_pause_checkbox.setFixedWidth(100)
         else:
             self.pause_print_seconds_label.setParent(None)
             self.pause_print_seconds_entry.setParent(None)
@@ -317,6 +325,15 @@ class Mainscreen(QWidget):
             messages.append("The bed temperature needs to be an integer between 0 and 60.")
             self.bed_temperature_entry.setText("")
 
+        print_speed = self.print_speed_entry.text()
+        try:
+            float_print_speed = float(print_speed)
+            if float_print_speed < 0 or float_print_speed > 400:
+                raise Exception
+        except Exception:
+            messages.append("The print speed needs to be an integer between 0 and 100.")
+            self.print_speed_entry.setText("")
+
         storage_location = self.path_name_label.text()
         if len(storage_location) == 0:
             messages.append("A storage location needs to be specified.")
@@ -325,7 +342,7 @@ class Mainscreen(QWidget):
         if len(file_name) == 0:
             messages.append("A filename needs to be specified.")
 
-        if self.pause_print_checkbox.isChecked():
+        if self.pause_print_retraction_checkbox.isChecked():
             try:
                 int_duration_pause = int(self.pause_print_seconds_entry.text())
                 if int_duration_pause < 0 or int_duration_pause > 1800:
@@ -347,23 +364,32 @@ class Mainscreen(QWidget):
             file_name_with_extension = self.selected_file_name + ".gcode"
             path_to_file = Path.joinpath(self.file_handler.gcode_path, file_name_with_extension)
             additional_information_bol = self.add_information_checkbox.isChecked()
-            pause_each_layer_bol = self.pause_print_checkbox.isChecked()
+            pause_each_layer_bol = self.pause_print_retraction_checkbox.isChecked()
             retract_syringe_bol = self.retract_syringe_checkbox.isChecked()
 
-            pause_each_layer_par = None
+            pause_each_layer_par_1 = None
+            pause_each_layer_par_2 = None
+
             if pause_each_layer_bol == True:
-                pause_each_layer_par = self.pause_print_seconds_entry.text()
+                pause_each_layer_par_1 = self.pause_print_seconds_entry.text()
+                pause_each_layer_par_2 = self.retract_during_pause_checkbox.isChecked()
 
             return Command(path_to_file=path_to_file,
+
                            flow_rate_layer_0=flow_rate_layer_0,
                            flow_rate_other_layers=int_flow_rate_other_layers,
                            bed_temperature=int_bed_temperature,
+                           print_speed=float_print_speed,
+
                            additional_information_bol=additional_information_bol,
                            pause_each_layer_bol=pause_each_layer_bol,
                            retract_syringe_bol=retract_syringe_bol,
+
                            file_name=file_name,
                            storage_path=storage_location,
-                           pause_each_layer_par=pause_each_layer_par)
+
+                           pause_each_layer_par_1=pause_each_layer_par_1,
+                           pause_each_layer_par_2=pause_each_layer_par_2)
 
     def open_directory(self, directory):
         os.startfile(directory)

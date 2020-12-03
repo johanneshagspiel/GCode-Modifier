@@ -5,7 +5,7 @@ import os
 class Temp_File_Handler():
 
     def __init__(self):
-        self.root = Path.joinpath(Path(__file__).parents[1], "test_file_handling")
+        self.root = Path.joinpath(Path(__file__).parents[1], "util")
 
         self.test_gcode = Path.joinpath(self.root, "test.gcode")
         self.temp_files = Path.joinpath(self.root, "temp_files")

@@ -45,6 +45,26 @@ class Gcode_Writer():
 
         return self.end_gcode
 
+    def set_print_speed(self, print_speed):
+
+        speed_multiplier= float(print_speed) / 100;
+        new_main = []
+        movement_commands = ["G0", "G1", "G2", "G3", "G5"]
+
+        for index, line in enumerate(self.start_gcode.main_body):
+            if any(x in line for x in movement_commands):
+                split_line = line.split()
+                for index, word in enumerate(split_line):
+                    if "F" in word:
+                        current_speed = float(word[1:])
+                        new_speed = current_speed * speed_multiplier
+                        split_line[index] = "F" + str(new_speed)
+                line = " ".join(split_line)
+            new_main.append(line)
+
+        self.end_gcode.main_body = new_main
+        return self.end_gcode
+
     def additional_information(self):
 
         new_start = []
@@ -82,10 +102,11 @@ class Gcode_Writer():
 
         return self.end_gcode
 
-    def pause_each_layer(self, pause_in_seconds):
+    def pause_each_layer(self, pause_in_seconds, retract_bol):
 
         previous_index = 0
         last_index = len(self.start_gcode.main_body)
+        print(retract_bol)
 
         gcode_list = []
         for layer_index in self.start_gcode.time_elapsed_index_list:
@@ -94,10 +115,12 @@ class Gcode_Writer():
                 gcode_list.append(self.start_gcode.main_body[index])
 
             gcode_list.append("G60 S1 ; Save Current Position To Return To")
-            #gcode_list.append("G1 E-1 ; Stop each Layer - Retract a bit")
+            if retract_bol == True:
+                gcode_list.append("G1 E-1 ; Stop each Layer - Retract a bit")
             gcode_list.append("G28 X ; Auto Home To Move Out Of Way")
             gcode_list.append("G4 S" + str(pause_in_seconds) + " ; Stop each Layer - Wait")
-            #gcode_list.append("G1 E1 ; Re-extrude a bit")
+            if retract_bol == True:
+                gcode_list.append("G1 E1 ; Re-extrude a bit")
             gcode_list.append("G61 XYZ S1; Return To The Saved Position")
 
             previous_index = layer_index

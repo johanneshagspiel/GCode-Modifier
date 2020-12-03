@@ -33,13 +33,16 @@ class Command_Executor:
         #Set bed temperature
         self.execute_writer_task(Writer_Task.SET_BED_TEMPERATURE, self.command.bed_temperature)
 
+        #Set print speed
+        self.execute_writer_task(Writer_Task.SET_PRINT_SPEED, self.command.print_speed)
+
         #Check if add information was ticked
         if self.command.additional_information_bol == True:
             self.execute_writer_task(Writer_Task.ADDITIONAL_INFORMATION)
 
         #Check if pause after each layer was ticked
         if self.command.pause_each_layer_bol == True:
-            self.execute_writer_task(Writer_Task.PAUSE_EACH_LAYER, self.command.pause_each_layer_par)
+            self.execute_writer_task(Writer_Task.PAUSE_EACH_LAYER, self.command.pause_each_layer_par_1, self.command.pause_each_layer_par_2)
 
         # Check if retract syringe was ticked
         if self.command.retract_syringe_bol == True:
@@ -54,7 +57,7 @@ class Command_Executor:
         #Write to file
         self.file_handler.write_file(gcode=self.gcode, path=self.command.storage_path, file_name=self.command.file_name)
 
-    def execute_writer_task(self, writer_task, parameter_1 = None):
+    def execute_writer_task(self, writer_task, parameter_1 = None, parameter_2 = None):
 
         self.gcode_writer.set_gcode(self.gcode)
 
@@ -64,11 +67,13 @@ class Command_Executor:
             result_gcode = self.gcode_writer.set_flowrate_other_layers(parameter_1)
         if writer_task == Writer_Task.SET_BED_TEMPERATURE:
             result_gcode = self.gcode_writer.set_bed_temperature(parameter_1)
+        if writer_task == Writer_Task.SET_PRINT_SPEED:
+            result_gcode = self.gcode_writer.set_print_speed(parameter_1)
 
         if writer_task == Writer_Task.ADDITIONAL_INFORMATION:
             result_gcode = self.gcode_writer.additional_information()
         if writer_task == Writer_Task.PAUSE_EACH_LAYER:
-            result_gcode = self.gcode_writer.pause_each_layer(parameter_1)
+            result_gcode = self.gcode_writer.pause_each_layer(parameter_1, parameter_2)
         if writer_task == Writer_Task.RETRACT_SYRINGE:
             result_gcode = self.gcode_writer.retract_syringe()
 
