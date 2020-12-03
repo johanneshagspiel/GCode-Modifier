@@ -1,5 +1,4 @@
 import unittest
-from pathlib import Path
 
 from paste_printer.command.command import Command
 from paste_printer.command.command_executor import Command_Executor

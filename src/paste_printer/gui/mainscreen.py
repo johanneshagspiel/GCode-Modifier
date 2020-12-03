@@ -37,6 +37,7 @@ class Mainscreen(QWidget):
         #change Font
         load_font(self.file_handler.used_font_path)
         self.setFont(QFont("Eurostile LT Std", 18))
+        heading_font = QFont("Eurostile LT Std", 18,weight=QtGui.QFont.Bold)
 
         #change taskbar icon
         myappid = program_name + program_version  # arbitrary string
@@ -54,6 +55,7 @@ class Mainscreen(QWidget):
         #Nozzle Size Selection
         nozzle_size_selection_label = QLabel("With with nozzle size do you want to print?")
         nozzle_size_selection_label.setAlignment(QtCore.Qt.AlignCenter)
+        nozzle_size_selection_label.setFont(heading_font)
         self.grid.addWidget(nozzle_size_selection_label, row_position, 0, 1, 2)
         row_position += 1
 
@@ -81,6 +83,7 @@ class Mainscreen(QWidget):
         #File Selection Label
         file_selection_label = QLabel("Which file do you want to modify?")
         file_selection_label.setAlignment(QtCore.Qt.AlignCenter)
+        file_selection_label.setFont(heading_font)
         self.grid.addWidget(file_selection_label, row_position, 0, 1, 2)
         row_position += 1
 
@@ -102,72 +105,78 @@ class Mainscreen(QWidget):
         #Print setting label
         print_settings_label = QLabel("Which print settings do you want to use?")
         print_settings_label.setAlignment(QtCore.Qt.AlignCenter)
+        print_settings_label.setFont(heading_font)
         self.grid.addWidget(print_settings_label, row_position, 0, 1, 2)
+        row_position += 1
+
+        #Print settings grid
+        self.print_settings_grid = QGridLayout()
+        self.grid.addLayout(self.print_settings_grid, row_position, 0, 1, 2)
         row_position += 1
 
         #Flow Rate Layer 0 Label
         flow_rate_layer_0_label = QLabel("Flow rate for the first layer: ")
         flow_rate_layer_0_label.setAlignment(QtCore.Qt.AlignLeft)
-        self.grid.addWidget(flow_rate_layer_0_label,row_position, 0)
+        self.print_settings_grid.addWidget(flow_rate_layer_0_label, 0, 0)
 
         # Flow Rate Layer 0 Entry
         self.flow_rate_layer_0_entry = QLineEdit()
+        self.flow_rate_layer_0_entry.setAlignment(QtCore.Qt.AlignCenter)
         self.flow_rate_layer_0_entry.setText("100")
-        self.grid.addWidget(self.flow_rate_layer_0_entry, row_position, 1)
-        row_position += 1
+        self.print_settings_grid.addWidget(self.flow_rate_layer_0_entry, 0, 1)
 
         #Flow Rate Outer Walls Label
         flow_rate_outer_walls_label = QLabel("Flow rate for the outer walls: ")
         flow_rate_outer_walls_label.setAlignment(QtCore.Qt.AlignLeft)
-        self.grid.addWidget(flow_rate_outer_walls_label,row_position, 0)
+        self.print_settings_grid.addWidget(flow_rate_outer_walls_label, 1, 0)
 
         #Flow Rate Outer Walls Entry
         self.flow_rate_outer_walls_entry = QLineEdit()
+        self.flow_rate_outer_walls_entry.setAlignment(QtCore.Qt.AlignCenter)
         self.flow_rate_outer_walls_entry.setText("65")
-        self.grid.addWidget(self.flow_rate_outer_walls_entry, row_position, 1)
-        row_position += 1
+        self.print_settings_grid.addWidget(self.flow_rate_outer_walls_entry, 1, 1)
 
         #Flow Rate Infill Label
         flow_rate_infill_label = QLabel("Flow rate for the infill: ")
         flow_rate_infill_label.setAlignment(QtCore.Qt.AlignLeft)
-        self.grid.addWidget(flow_rate_infill_label,row_position, 0)
+        self.print_settings_grid.addWidget(flow_rate_infill_label,2, 0)
 
         #Flow Rate Infill Entry
         self.flow_rate_infill_entry = QLineEdit()
+        self.flow_rate_infill_entry.setAlignment(QtCore.Qt.AlignCenter)
         self.flow_rate_infill_entry.setText("55")
-        self.grid.addWidget(self.flow_rate_infill_entry, row_position, 1)
-        row_position += 1
+        self.print_settings_grid.addWidget(self.flow_rate_infill_entry, 2, 1)
 
         #Bed Temperature Label
         bed_temperature_label = QLabel("Bed Temperature: ")
         bed_temperature_label.setAlignment(QtCore.Qt.AlignLeft)
-        self.grid.addWidget(bed_temperature_label,row_position, 0)
+        self.print_settings_grid.addWidget(bed_temperature_label, 0, 2)
 
         #Bed Temperature Entry
         self.bed_temperature_entry = QLineEdit()
+        self.bed_temperature_entry.setAlignment(QtCore.Qt.AlignCenter)
         self.bed_temperature_entry.setText("0")
-        self.grid.addWidget(self.bed_temperature_entry, row_position, 1)
-        row_position += 1
+        self.print_settings_grid.addWidget(self.bed_temperature_entry, 0, 3)
 
         #Print Speed Label
         print_speed_label = QLabel("Print Speed: ")
         print_speed_label.setAlignment(QtCore.Qt.AlignLeft)
-        self.grid.addWidget(print_speed_label,row_position, 0)
+        self.print_settings_grid.addWidget(print_speed_label, 1, 2)
 
         #Print Speed Entry
         self.print_speed_entry = QLineEdit()
+        self.print_speed_entry.setAlignment(QtCore.Qt.AlignCenter)
         self.print_speed_entry.setText("100")
-        self.grid.addWidget(self.print_speed_entry, row_position, 1)
-        row_position += 1
+        self.print_settings_grid.addWidget(self.print_speed_entry, 1, 3)
 
         #Additional Fan Checkbox
         self.fan_checkbox = QCheckBox("Turn on the fan while printing")
-        self.grid.addWidget(self.fan_checkbox, row_position, 0)
-        row_position += 1
+        self.print_settings_grid.addWidget(self.fan_checkbox, 2, 2)
 
         #Modification label
         print_modifications_label = QLabel("What do you want to modify?")
         print_modifications_label.setAlignment(QtCore.Qt.AlignCenter)
+        print_modifications_label.setFont(heading_font)
         self.grid.addWidget(print_modifications_label, row_position, 0, 1, 2)
         row_position += 1
 
@@ -184,7 +193,7 @@ class Mainscreen(QWidget):
 
         #Pause Choices Grid
         self.grid_choices_grid = QGridLayout()
-        self.grid_choices_grid.setColumnMinimumWidth(1, 100)
+        self.grid_choices_grid.setColumnMinimumWidth(1, 72)
         self.grid_choices_grid.setColumnMinimumWidth(4, 10)
         self.grid_choices_grid.setColumnStretch(4, 1)
         self.grid.addLayout(self.grid_choices_grid, row_position, 0, 1, 2)
@@ -195,7 +204,8 @@ class Mainscreen(QWidget):
 
         # Pauser after each layer seconds entry
         self.pause_print_seconds_entry = QLineEdit("10")
-        self.pause_print_seconds_entry.setMaximumWidth(100)
+        self.pause_print_seconds_entry.setAlignment(QtCore.Qt.AlignCenter)
+        self.pause_print_seconds_entry.setMaximumWidth(64)
 
         # Retract During Pause Label
         self.retract_during_pause_checkbox = QCheckBox("Retract during pause")
@@ -208,31 +218,37 @@ class Mainscreen(QWidget):
         #Modification label
         storage_label = QLabel("How do you want to store the file?")
         storage_label.setAlignment(QtCore.Qt.AlignCenter)
+        storage_label.setFont(heading_font)
         self.grid.addWidget(storage_label, row_position, 0, 1, 2)
+        row_position += 1
+
+        #Storage grid
+        self.storage_grid = QGridLayout()
+        self.grid.addLayout(self.storage_grid, row_position, 0, 1, 2)
         row_position += 1
 
         # Name of Modified File Label
         storage_name_label = QLabel("Name modified file: ")
         storage_name_label.setAlignment(QtCore.Qt.AlignLeft)
-        self.grid.addWidget(storage_name_label, row_position, 0)
+        self.storage_grid.addWidget(storage_name_label, 0, 0)
 
         # Name of Modified File Entry
         self.storage_name_entry = QLineEdit()
         self.storage_name_entry.setText(self.selected_file_name)
-        self.grid.addWidget(self.storage_name_entry, row_position, 1)
-        row_position += 1
+        self.storage_grid.addWidget(self.storage_name_entry, 0, 1)
 
         #Storage Path Label
         self.path_label = QLabel("Storage path: ")
-        self.grid.addWidget(self.path_label, row_position, 0)
+        self.storage_grid.addWidget(self.path_label, 1, 0)
 
         # Chose Location to store button
         self.choose_location_button = QPushButton("Choose location to store")
         self.last_directory = ""
         self.choose_location_button.clicked.connect(self.select_storage_location)
-        self.grid.addWidget(self.choose_location_button, row_position, 1)
-        self.row_position_path = row_position
+        self.storage_grid.addWidget(self.choose_location_button, 1, 1)
+
         row_position += 1
+        self.storage_location_button_row = row_position
 
         #Storage Path Name Label
         self.path_name_label = QLabel()
@@ -278,12 +294,12 @@ class Mainscreen(QWidget):
         self.path_name_label.setText(directory)
         self.last_directory = directory
 
-        self.grid.addWidget(self.path_name_label, self.row_position_path, 1)
+        self.storage_grid.addWidget(self.path_name_label, 1, 1)
 
         #Shift Everything below the new path text one row down
         self.choose_location_button.setText("Choose a different location")
-        self.grid.addWidget(self.choose_location_button, self.row_position_path + 1, 0, 1, 2)
-        self.grid.addWidget(self.modify_button, self.row_position_path + 2, 0, 1, 2)
+        self.grid.addWidget(self.choose_location_button, self.storage_location_button_row, 0, 1, 2)
+        self.grid.addWidget(self.modify_button, self.storage_location_button_row + 1, 0, 1, 2)
 
     def start_modification(self):
         checked_command = self.sanity_check()
