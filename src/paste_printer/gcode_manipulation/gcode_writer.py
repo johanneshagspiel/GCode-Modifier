@@ -65,6 +65,28 @@ class Gcode_Writer():
         self.end_gcode.main_body = new_main
         return self.end_gcode
 
+    def turn_on_fan(self):
+        turn_on_fan_text = "M106 ; Turn On The Fan"
+
+        new_main_body = []
+        new_main_body.append(turn_on_fan_text)
+
+        for line in self.start_gcode.main_body:
+            new_main_body.append(line)
+
+        turn_off_fan_text = "M107 ; Turn Off The Fan"
+
+        new_shutdown_code = []
+        new_shutdown_code.append(turn_off_fan_text)
+
+        for line in self.start_gcode.shutdown_code:
+            new_shutdown_code.append(line)
+
+        self.end_gcode.main_body = new_main_body
+        self.end_gcode.shutdown_code = new_shutdown_code
+
+        return self.end_gcode
+
     def additional_information(self):
 
         new_start = []

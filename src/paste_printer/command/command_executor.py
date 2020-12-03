@@ -36,6 +36,10 @@ class Command_Executor:
         #Set print speed
         self.execute_writer_task(Writer_Task.SET_PRINT_SPEED, self.command.print_speed)
 
+        #Check if turn on fan was ticked
+        if self.command.fan_bol == True:
+            self.execute_writer_task(Writer_Task.TURN_ON_FAN)
+
         #Check if add information was ticked
         if self.command.additional_information_bol == True:
             self.execute_writer_task(Writer_Task.ADDITIONAL_INFORMATION)
@@ -69,6 +73,8 @@ class Command_Executor:
             result_gcode = self.gcode_writer.set_bed_temperature(parameter_1)
         if writer_task == Writer_Task.SET_PRINT_SPEED:
             result_gcode = self.gcode_writer.set_print_speed(parameter_1)
+        if writer_task == Writer_Task.TURN_ON_FAN:
+            result_gcode = self.gcode_writer.turn_on_fan()
 
         if writer_task == Writer_Task.ADDITIONAL_INFORMATION:
             result_gcode = self.gcode_writer.additional_information()

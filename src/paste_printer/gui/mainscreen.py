@@ -149,6 +149,11 @@ class Mainscreen(QWidget):
         self.grid.addWidget(self.print_speed_entry, row_position, 1)
         row_position += 1
 
+        #Additional Fan Checkbox
+        self.fan_checkbox = QCheckBox("Turn on the fan while printing")
+        self.grid.addWidget(self.fan_checkbox, row_position, 0)
+        row_position += 1
+
         #Modification label
         print_modifications_label = QLabel("What do you want to modify?")
         print_modifications_label.setAlignment(QtCore.Qt.AlignCenter)
@@ -363,6 +368,9 @@ class Mainscreen(QWidget):
         else:
             file_name_with_extension = self.selected_file_name + ".gcode"
             path_to_file = Path.joinpath(self.file_handler.gcode_path, file_name_with_extension)
+
+            fan_bol = self.fan_checkbox.isChecked()
+
             additional_information_bol = self.add_information_checkbox.isChecked()
             pause_each_layer_bol = self.pause_print_retraction_checkbox.isChecked()
             retract_syringe_bol = self.retract_syringe_checkbox.isChecked()
@@ -380,6 +388,7 @@ class Mainscreen(QWidget):
                            flow_rate_other_layers=int_flow_rate_other_layers,
                            bed_temperature=int_bed_temperature,
                            print_speed=float_print_speed,
+                           fan_bol=fan_bol,
 
                            additional_information_bol=additional_information_bol,
                            pause_each_layer_bol=pause_each_layer_bol,
