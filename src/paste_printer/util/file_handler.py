@@ -25,8 +25,6 @@ class File_Handler():
         file_name_extension = file_name + ".gcode"
         file_path = Path.joinpath(Path(path), file_name_extension)
 
-        print(gcode.whole_code)
-
         f = open(file_path, "w")
         f.write(gcode.whole_code)
         f.close()

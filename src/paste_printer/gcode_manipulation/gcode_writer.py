@@ -59,6 +59,7 @@ class Gcode_Writer():
 
         movement_commands = ["G0", "G1", "G2", "G3", "G5"]
         for index, line in enumerate(self.end_gcode.main_body):
+            new_main.append(line)
             if any(x in line for x in movement_commands):
                 if current_move % 3 == 0 or current_move == self.end_gcode.movements_per_layer_list[current_layer] or current_move == 1:
                     text = "M117 Mov " + str(current_move) + "/" + str(self.end_gcode.movements_per_layer_list[current_layer]) \
@@ -66,8 +67,6 @@ class Gcode_Writer():
                     new_main.append(text)
 
                 current_move += 1
-
-            new_main.append(line)
 
             if index == self.end_gcode.time_elapsed_index_list[current_layer]:
                 current_layer += 1
@@ -89,15 +88,17 @@ class Gcode_Writer():
         last_index = len(self.start_gcode.main_body)
 
         gcode_list = []
-        print(str(pause_in_seconds))
         for layer_index in self.start_gcode.time_elapsed_index_list:
 
             for index in range(previous_index, layer_index):
                 gcode_list.append(self.start_gcode.main_body[index])
 
-            gcode_list.append("G1 E-40 ; Stop each Layer - Retract a bit")
-            gcode_list.append("G4 S" + str(pause_in_seconds) + "; Stop each Layer - Wait")
-            gcode_list.append("G1 E40 ; Re-extrude a bit")
+            gcode_list.append("G60 S1 ; Save Current Position To Return To")
+            #gcode_list.append("G1 E-1 ; Stop each Layer - Retract a bit")
+            gcode_list.append("G28 X ; Auto Home To Move Out Of Way")
+            gcode_list.append("G4 S" + str(pause_in_seconds) + " ; Stop each Layer - Wait")
+            #gcode_list.append("G1 E1 ; Re-extrude a bit")
+            gcode_list.append("G61 XYZ S1; Return To The Saved Position")
 
             previous_index = layer_index
 
@@ -110,13 +111,15 @@ class Gcode_Writer():
 
     def retract_syringe(self):
 
-        if self.start_gcode.largest_extrusion_value <= 1000:
+        max_one_time_extrusion = 1000
+
+        if self.start_gcode.largest_extrusion_value <= max_one_time_extrusion:
             largest_one_time_retraction = self.start_gcode.largest_extrusion_value
             still_to_rectract = 0
             repeat_insertion = False
         else:
-            largest_one_time_retraction = 1000
-            still_to_rectract = self.start_gcode.largest_extrusion_value - 1000
+            largest_one_time_retraction = max_one_time_extrusion
+            still_to_rectract = self.start_gcode.largest_extrusion_value - max_one_time_extrusion
             repeat_insertion = True
 
         new_end_gcode = []
@@ -125,16 +128,16 @@ class Gcode_Writer():
             new_end_gcode.append(line)
             if "G1 X0 Y220" in line:
                 while repeat_insertion is True:
-                    new_reverse_extrusion = "G1 E-" + str(largest_one_time_retraction) + "; retract syringe"
+                    new_reverse_extrusion = "G1 E-" + str(largest_one_time_retraction) + " ; retract syringe"
                     new_end_gcode.append(new_reverse_extrusion)
 
                     if still_to_rectract > 0:
-                        if still_to_rectract <= 1000:
+                        if still_to_rectract <= max_one_time_extrusion:
                             largest_one_time_retraction = still_to_rectract
                             still_to_rectract = 0
                         else:
                             temp = still_to_rectract
-                            largest_one_time_retraction = still_to_rectract - 1000
+                            largest_one_time_retraction = still_to_rectract - max_one_time_extrusion
                             still_to_rectract = temp - largest_one_time_retraction
                     else:
                         repeat_insertion = False
@@ -146,3 +149,4 @@ class Gcode_Writer():
     def set_gcode(self, new_gcode: GCode):
         self.start_gcode = new_gcode
         self.end_gcode = new_gcode
+        

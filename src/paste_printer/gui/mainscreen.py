@@ -144,30 +144,38 @@ class Mainscreen(QWidget):
         self.grid.addWidget(print_modifications_label, row_position, 0, 1, 2)
         row_position += 1
 
-        #Modification Grid
-        self.modification_grid = QGridLayout()
-        self.grid.addLayout(self.modification_grid, row_position, 0, 1, 2)
-        row_position += 1
-
         # Add Information Checkbox
         self.add_information_checkbox = QCheckBox("Show additional information while printing")
-        self.modification_grid.addWidget(self.add_information_checkbox, 0, 0)
+        self.grid.addWidget(self.add_information_checkbox, row_position, 0)
         row_position += 1
 
         #Pause after each layer checkbox
         self.pause_print_checkbox = QCheckBox("Pause print after each layer")
         self.pause_print_checkbox.toggled.connect(self.pause_print_toggled)
-        self.modification_grid.addWidget(self.pause_print_checkbox, 1, 0)
+        self.grid.addWidget(self.pause_print_checkbox, row_position, 0)
+        row_position += 1
+
+        #Pause Choices Grid
+        self.grid_choices_grid = QGridLayout()
+        self.grid_choices_grid.setColumnMinimumWidth(1, 100)
+        self.grid_choices_grid.setColumnMinimumWidth(4, 10)
+        self.grid_choices_grid.setColumnStretch(4, 1)
+        self.grid.addLayout(self.grid_choices_grid, row_position, 0, 1, 2)
+        row_position += 1
 
         #Pauser after each layer seconds label
         self.pause_print_seconds_label = QLabel("Seconds: ")
 
         # Pauser after each layer seconds entry
         self.pause_print_seconds_entry = QLineEdit("10")
+        self.pause_print_seconds_entry.setMaximumWidth(100)
+
+        # Retract During Pause Label
+        self.retract_during_pause_checkbox = QCheckBox("Retract during pause")
 
         #Retract syringe at the end of print Checkbox
         self.retract_syringe_checkbox = QCheckBox("Retract the syringe at the end of print")
-        self.modification_grid.addWidget(self.retract_syringe_checkbox, 2, 0)
+        self.grid.addWidget(self.retract_syringe_checkbox, row_position, 0)
         row_position += 1
 
         #Modification label
@@ -219,11 +227,17 @@ class Mainscreen(QWidget):
     def pause_print_toggled(self):
         checkbx = self.sender()
         if checkbx.isChecked():
-            self.modification_grid.addWidget(self.pause_print_seconds_label, 1, 1)
-            self.modification_grid.addWidget(self.pause_print_seconds_entry, 1, 2)
+            self.grid_choices_grid.addWidget(self.pause_print_seconds_label, 1, 2)
+            self.grid_choices_grid.addWidget(self.pause_print_seconds_entry, 1, 3)
+            self.grid_choices_grid.addWidget(self.retract_during_pause_checkbox, 2, 2)
+
+            # self.pause_print_seconds_label.setFixedWidth(100)
+            # self.pause_print_seconds_entry.setFixedWidth(100)
+            # self.retract_during_pause_checkbox.setFixedWidth(100)
         else:
             self.pause_print_seconds_label.setParent(None)
             self.pause_print_seconds_entry.setParent(None)
+            self.retract_during_pause_checkbox.setParent(None)
 
     def update_name_selected_file(self, file):
         sender = self.sender()

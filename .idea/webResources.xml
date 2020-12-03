@@ -6,6 +6,7 @@
         <entryData>
           <resourceRoots>
             <path value="file://$PROJECT_DIR$/src/main/resources" />
+            <path value="file://$PROJECT_DIR$/src/paste_printer/resources" />
           </resourceRoots>
         </entryData>
       </entry>

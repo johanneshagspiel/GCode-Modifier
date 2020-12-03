@@ -83,7 +83,7 @@ class GCode_Parser:
         new_start_cura_list.append("M302 P1")
         new_start_cura_list.append("M106 S0")
         new_start_cura_list.append("G92 E0")
-        new_start_cura_list.append("G28")
+        new_start_cura_list.append("G28 ; Manual Bedleveling (?)")
         new_start_cura_list.append("G1 Z5.0 F3000")
         new_start_cura_list.append("G92 E0")
         new_start_cura_list.append("G92 E0")
