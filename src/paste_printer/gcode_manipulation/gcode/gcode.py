@@ -8,6 +8,8 @@ class GCode:
         self.main_body = []
         self.shutdown_code = []
 
+        self.layer_list = []
+
         self.layer_index_list = []
         self.time_elapsed_index_list = []
         self.movements_per_layer_list = []

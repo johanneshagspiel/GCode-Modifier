@@ -55,7 +55,7 @@ class Command_Executor:
         if self.command.retract_syringe_bol == True:
             self.execute_writer_task(Writer_Task.RETRACT_SYRINGE)
 
-        # Improve the gcode at the end (i.e. add start timer)
+        #TODO!!! Improve the gcode at the end (i.e. add start timer)
         self.execute_parser_task(Parser_Task.IMPROVE_GCODE_AT_END)
 
         # Create final gcode(combine all parts into one)
@@ -63,6 +63,8 @@ class Command_Executor:
 
         #Write to file
         self.file_handler.write_file(gcode=self.gcode, path=self.command.storage_path, file_name=self.command.file_name)
+
+        return self.gcode
 
     def execute_writer_task(self, writer_task, parameter_1 = None, parameter_2 = None):
 

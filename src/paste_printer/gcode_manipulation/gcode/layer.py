@@ -1,0 +1,12 @@
+
+class Layer():
+
+    def __init__(self):
+        self.number = None
+
+        self.layer_as_string = []
+
+        self.x_data = []
+        self.y_data = []
+
+        self.largest_extrusion_value = 0

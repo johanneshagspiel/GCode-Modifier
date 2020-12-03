@@ -1,9 +1,12 @@
-from paste_printer.gcode_manipulation.gcode import GCode
+from paste_printer.gcode_manipulation.gcode.gcode import GCode
+from paste_printer.gcode_manipulation.gcode.layer_parser import Layer_Parser
 
 class GCode_Parser:
 
     def __init__(self, line_list):
         self.line_list = line_list
+
+        self.layer_parser = Layer_Parser()
 
         self.start_gcode = None
         self.end_gcode = None
@@ -31,12 +34,16 @@ class GCode_Parser:
     def split_gcode(self):
 
         startup_code = []
-        main_body = []
         main_body_to_be_flatten = []
+        main_body = []
+
+        layer_list_to_be_parsed = []
+        layer_list = []
+
         shutdown_code = []
 
         before_layer_0 = True
-        temp_list = []
+        current_layer = []
 
         for line in self.start_gcode.whole_code:
             if ";LAYER:0" in line:
@@ -44,20 +51,25 @@ class GCode_Parser:
             if before_layer_0 is True:
                 startup_code.append(line)
             elif ";TIME_ELAPSED:" in line:
-                temp_list.append(line)
-                main_body_to_be_flatten.append(temp_list)
-                temp_list = []
+                current_layer.append(line)
+                main_body_to_be_flatten.append(current_layer)
+                layer_list_to_be_parsed.append(current_layer)
+                current_layer = []
             else:
-                temp_list.append(line)
+                current_layer.append(line)
 
-        shutdown_code = temp_list
+        shutdown_code = current_layer
 
         for sublist in main_body_to_be_flatten:
             for item in sublist:
                 main_body.append(item)
 
+        for layer in layer_list_to_be_parsed:
+            layer_list.append(self.layer_parser.parse_layer(layer))
+
         self.end_gcode.startup_code = startup_code
         self.end_gcode.main_body = main_body
+        self.end_gcode.layer_list = layer_list
         self.end_gcode.shutdown_code = shutdown_code
 
         return self.end_gcode

@@ -1,5 +1,5 @@
 from pathlib import Path
-from paste_printer.gcode_manipulation.gcode import GCode
+from paste_printer.gcode_manipulation.gcode.gcode import GCode
 
 class File_Handler():
 

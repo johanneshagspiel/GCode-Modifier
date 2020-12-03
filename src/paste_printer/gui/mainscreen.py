@@ -12,6 +12,7 @@ from PyQt5 import QtGui
 from paste_printer.command.command import Command
 from paste_printer.command.command_executor import Command_Executor
 from paste_printer.gui.customization.load_font import load_font
+from paste_printer.gui.gcode_viewer.gcode_viewer import GCode_Viewer
 from paste_printer.util.file_handler import File_Handler
 
 class Mainscreen(QWidget):
@@ -44,16 +45,20 @@ class Mainscreen(QWidget):
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
         #Set size of Window (Starting x, starting y, width, height
-        self.setGeometry(180, 180, 720, 720)
+        self.setGeometry(180, 180, 1440, 720)
+
+        #Overall HBox
+        self.overall_hbox = QHBoxLayout()
 
         #Create Grid
         self.grid = QGridLayout()
+        self.overall_hbox.addLayout(self.grid)
 
         #row pointer
         row_position = 0
 
         #Nozzle Size Selection
-        nozzle_size_selection_label = QLabel("With with nozzle size do you want to print?")
+        nozzle_size_selection_label = QLabel("With which nozzle size do you want to print?")
         nozzle_size_selection_label.setAlignment(QtCore.Qt.AlignCenter)
         nozzle_size_selection_label.setFont(heading_font)
         self.grid.addWidget(nozzle_size_selection_label, row_position, 0, 1, 2)
@@ -125,27 +130,39 @@ class Mainscreen(QWidget):
         self.flow_rate_layer_0_entry.setText("100")
         self.print_settings_grid.addWidget(self.flow_rate_layer_0_entry, 0, 1)
 
+        #Toggle Differentiate between Infill / Outer Walls
+        self.flow_rate_differentiation_button = QPushButton("Different flow rate for outer walls and infill")
+        self.flow_rate_differentiation_button.clicked.connect(self.differentiate_flow_rate)
+        self.print_settings_grid.addWidget(self.flow_rate_differentiation_button, 1, 0, 1, 2)
+
+        #Flow Rate Other Layers
+        self.flow_rate_other_layers_label = QLabel("Flow rate for the other layers: ")
+        self.flow_rate_other_layers_label.setAlignment(QtCore.Qt.AlignLeft)
+        self.print_settings_grid.addWidget(self.flow_rate_other_layers_label, 2, 0)
+
+        # Flow Rate Layer 0 Entry
+        self.flow_rate_other_layers_entry = QLineEdit()
+        self.flow_rate_other_layers_entry.setAlignment(QtCore.Qt.AlignCenter)
+        self.flow_rate_other_layers_entry.setText("100")
+        self.print_settings_grid.addWidget(self.flow_rate_other_layers_entry, 2, 1)
+
         #Flow Rate Outer Walls Label
-        flow_rate_outer_walls_label = QLabel("Flow rate for the outer walls: ")
-        flow_rate_outer_walls_label.setAlignment(QtCore.Qt.AlignLeft)
-        self.print_settings_grid.addWidget(flow_rate_outer_walls_label, 1, 0)
+        self.flow_rate_outer_walls_label = QLabel("Flow rate for the outer walls: ")
+        self.flow_rate_outer_walls_label.setAlignment(QtCore.Qt.AlignLeft)
 
         #Flow Rate Outer Walls Entry
         self.flow_rate_outer_walls_entry = QLineEdit()
         self.flow_rate_outer_walls_entry.setAlignment(QtCore.Qt.AlignCenter)
         self.flow_rate_outer_walls_entry.setText("65")
-        self.print_settings_grid.addWidget(self.flow_rate_outer_walls_entry, 1, 1)
 
         #Flow Rate Infill Label
-        flow_rate_infill_label = QLabel("Flow rate for the infill: ")
-        flow_rate_infill_label.setAlignment(QtCore.Qt.AlignLeft)
-        self.print_settings_grid.addWidget(flow_rate_infill_label,2, 0)
+        self.flow_rate_infill_label = QLabel("Flow rate for the infill: ")
+        self.flow_rate_infill_label.setAlignment(QtCore.Qt.AlignLeft)
 
         #Flow Rate Infill Entry
         self.flow_rate_infill_entry = QLineEdit()
         self.flow_rate_infill_entry.setAlignment(QtCore.Qt.AlignCenter)
         self.flow_rate_infill_entry.setText("55")
-        self.print_settings_grid.addWidget(self.flow_rate_infill_entry, 2, 1)
 
         #Bed Temperature Label
         bed_temperature_label = QLabel("Bed Temperature: ")
@@ -253,14 +270,48 @@ class Mainscreen(QWidget):
         #Storage Path Name Label
         self.path_name_label = QLabel()
 
-        #Set layout and show mainscreen
-        self.setLayout(self.grid)
-        self.show()
-
         #Modify Button
         self.modify_button = QPushButton("Modify!")
         self.modify_button.clicked.connect(self.start_modification)
         self.grid.addWidget(self.modify_button, row_position, 0, 1, 2)
+
+        #Right Hand Grid
+        self.right_hand_grid = QGridLayout()
+        self.overall_hbox.addLayout(self.right_hand_grid)
+
+        #GCode_Viewer
+        self.gecode_viewer = GCode_Viewer()
+        self.right_hand_grid.addWidget(self.gecode_viewer)
+
+        #Set layout and show mainscreen
+        self.setLayout(self.overall_hbox)
+        self.show()
+
+    def differentiate_flow_rate(self):
+
+        self.print_settings_grid.addWidget(self.flow_rate_outer_walls_label, 2, 0)
+        self.print_settings_grid.addWidget(self.flow_rate_outer_walls_entry, 2, 1)
+        self.print_settings_grid.addWidget(self.flow_rate_infill_label,3, 0)
+        self.print_settings_grid.addWidget(self.flow_rate_infill_entry, 3, 1)
+
+        self.flow_rate_other_layers_entry.setParent(None)
+        self.flow_rate_other_layers_label.setParent(None)
+
+        self.flow_rate_differentiation_button.setText("Same flow rate for infill and outer walls")
+        self.flow_rate_differentiation_button.clicked.connect(self.un_differentiate_flow_rate)
+
+    def un_differentiate_flow_rate(self):
+
+        self.flow_rate_outer_walls_label.setParent(None)
+        self.flow_rate_outer_walls_entry.setParent(None)
+        self.flow_rate_infill_label.setParent(None)
+        self.flow_rate_infill_entry.setParent(None)
+
+        self.print_settings_grid.addWidget(self.flow_rate_other_layers_label, 2, 0)
+        self.print_settings_grid.addWidget(self.flow_rate_other_layers_entry, 2, 1)
+
+        self.flow_rate_differentiation_button.setText("Different flow rate for infill and outer walls")
+        self.flow_rate_differentiation_button.clicked.connect(self.differentiate_flow_rate)
 
     def update_files(self, size):
         sender = self.sender()
@@ -306,7 +357,11 @@ class Mainscreen(QWidget):
 
         if checked_command != False:
             command_executor = Command_Executor(checked_command)
-            command_executor.execute()
+            result_gcode = command_executor.execute()
+
+            #print(type(result_gcode.layer_list[0]))
+
+            self.gecode_viewer.show_new_layer(result_gcode.layer_list[0])
 
             finish_modification_message = QMessageBox()
             finish_modification_message.setText("File has been created successfully!")
