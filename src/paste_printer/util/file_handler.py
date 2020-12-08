@@ -14,6 +14,11 @@ class File_Handler():
         self.icon_png_path = Path.joinpath(self.icon_path, "apple_icon.png")
         self.used_font_path = Path.joinpath(self.font_path, "Eurostile LT Std.otf")
 
+        self.diameter_1_5_path = Path.joinpath(self.gcode_path, "1.5")
+        self.diameter_0_8_path = Path.joinpath(self.gcode_path, "0.8")
+        self.diameter_0_6_path = Path.joinpath(self.gcode_path, "0.6")
+
+
     def read_gcode_file(self, file_path):
         line_list = []
         with open(file_path, 'r') as f:

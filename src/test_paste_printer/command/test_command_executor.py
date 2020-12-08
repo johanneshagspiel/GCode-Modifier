@@ -2,6 +2,7 @@ import unittest
 
 from paste_printer.command.command import Command
 from paste_printer.command.command_executor import Command_Executor
+from paste_printer.gui.gcode_viewer.test import Test
 from test_paste_printer.util.temp_file_handler import Temp_File_Handler
 
 
@@ -16,7 +17,7 @@ class TestCommandExecutor(unittest.TestCase):
 
     def execute_command(self, command: Command):
         command_executor = Command_Executor(command)
-        command_executor.execute()
+        return command_executor.execute()
 
     def test_command_1(self):
         additional_information_bol = True
@@ -56,8 +57,11 @@ class TestCommandExecutor(unittest.TestCase):
                                       fan_bol=False,
                                       additional_information_bol=additional_information_bol,
                                       pause_each_layer_bol=pause_each_layer_bol,
+                                      clean_nozzle_bol=True,
                                       retract_syringe_bol=retract_syringe_bol,
                                       file_name="test",
                                       storage_path=self.test_file_handler.temp_files)
 
-        self.execute_command(self.test_command_1)
+        result_gcode = self.execute_command(self.test_command_1)
+        # test = Test()
+        # test.test_open3D(result_gcode.layer_list)

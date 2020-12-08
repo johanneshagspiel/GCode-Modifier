@@ -40,20 +40,24 @@ class Command_Executor:
         self.execute_writer_task(Writer_Task.SET_PRINT_SPEED, self.command.print_speed)
 
         #Check if turn on fan was ticked
-        if self.command.fan_bol == True:
+        if self.command.fan_bol:
             self.execute_writer_task(Writer_Task.TURN_ON_FAN)
 
         #Check if add information was ticked
-        if self.command.additional_information_bol == True:
+        if self.command.additional_information_bol:
             self.execute_writer_task(Writer_Task.ADDITIONAL_INFORMATION)
 
         #Check if pause after each layer was ticked
-        if self.command.pause_each_layer_bol == True:
+        if self.command.pause_each_layer_bol:
             self.execute_writer_task(Writer_Task.PAUSE_EACH_LAYER, self.command.pause_each_layer_par_1, self.command.pause_each_layer_par_2)
+
+        #Check if clean nozzle was ticked
+        if self.command.clean_nozzle_bol:
+            self.execute_writer_task(Writer_Task.CLEAN_NOZZLE, self.command.clean_nozzle_par_1)
 
         # Check if retract syringe was ticked
         if self.command.retract_syringe_bol == True:
-            self.execute_writer_task(Writer_Task.RETRACT_SYRINGE)
+            self.execute_writer_task(Writer_Task.RETRACT_SYRINGE_AT_END)
 
         #TODO!!! Improve the gcode at the end (i.e. add start timer)
         self.execute_parser_task(Parser_Task.IMPROVE_GCODE_AT_END)
@@ -87,7 +91,9 @@ class Command_Executor:
             result_gcode = self.gcode_writer.additional_information()
         if writer_task == Writer_Task.PAUSE_EACH_LAYER:
             result_gcode = self.gcode_writer.pause_each_layer(parameter_1, parameter_2)
-        if writer_task == Writer_Task.RETRACT_SYRINGE:
+        if writer_task == Writer_Task.CLEAN_NOZZLE:
+            result_gcode = self.gcode_writer.clean_nozzle(parameter_1)
+        if writer_task == Writer_Task.RETRACT_SYRINGE_AT_END:
             result_gcode = self.gcode_writer.retract_syringe()
 
         self.gcode = result_gcode

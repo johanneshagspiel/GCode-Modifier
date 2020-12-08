@@ -64,8 +64,7 @@ class GCode_Parser:
             for item in sublist:
                 main_body.append(item)
 
-        for layer in layer_list_to_be_parsed:
-            layer_list.append(self.layer_parser.parse_layer(layer))
+        layer_list = self.layer_parser.parse_layer_list(layer_list_to_be_parsed)
 
         self.end_gcode.startup_code = startup_code
         self.end_gcode.main_body = main_body

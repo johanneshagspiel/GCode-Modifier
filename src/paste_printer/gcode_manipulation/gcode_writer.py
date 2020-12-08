@@ -102,35 +102,35 @@ class Gcode_Writer():
 
         new_start = []
         new_start.append("M117 Print is starting; Additional Information")
-        for line in self.end_gcode.startup_code:
+        for line in self.start_gcode.startup_code:
             new_start.append(line)
-        self.end_gcode.startup_code = new_start
 
         new_main = []
         current_layer = 0
         current_move = 1
 
         movement_commands = ["G0", "G1", "G2", "G3", "G5"]
-        for index, line in enumerate(self.end_gcode.main_body):
+        for index, line in enumerate(self.start_gcode.main_body):
             new_main.append(line)
             if any(x in line for x in movement_commands):
-                if current_move % 3 == 0 or current_move == self.end_gcode.movements_per_layer_list[current_layer] or current_move == 1:
-                    text = "M117 Mov " + str(current_move) + "/" + str(self.end_gcode.movements_per_layer_list[current_layer]) \
-                           + " Lay " + str(current_layer + 1) + "/" + str(self.end_gcode.amount_layers) + "; Additional Information"
+                if current_move % 3 == 0 or current_move == self.start_gcode.movements_per_layer_list[current_layer] or current_move == 1:
+                    text = "M117 Mov " + str(current_move) + "/" + str(self.start_gcode.movements_per_layer_list[current_layer]) \
+                           + " Lay " + str(current_layer + 1) + "/" + str(self.start_gcode.amount_layers) + "; Additional Information"
                     new_main.append(text)
 
                 current_move += 1
 
-            if index == self.end_gcode.time_elapsed_index_list[current_layer]:
+            if index == self.start_gcode.time_elapsed_index_list[current_layer]:
                 current_layer += 1
                 current_move = 1
 
-        self.end_gcode.main_body = new_main
-
         new_end = []
         new_end.append("M117 Print is winding down; Additional Information")
-        for line in self.end_gcode.shutdown_code:
+        for line in self.start_gcode.shutdown_code:
             new_end.append(line)
+
+        self.end_gcode.startup_code = new_start
+        self.end_gcode.main_body = new_main
         self.end_gcode.shutdown_code = new_end
 
         return self.end_gcode
@@ -162,6 +162,33 @@ class Gcode_Writer():
             gcode_list.append(self.start_gcode.main_body[index])
 
         self.end_gcode.main_body = gcode_list
+
+        return self.end_gcode
+
+    def clean_nozzle(self, amount_of_moves):
+
+        movement_commands = ["G0", "G1", "G2", "G3", "G5"]
+
+        new_main=[]
+        current_z_position = 0
+
+        for index, line in enumerate(self.start_gcode.main_body):
+            new_main.append(line)
+            if any(x in line for x in movement_commands):
+                split_line = line.split()
+                for word in split_line:
+                    if "Z" in word:
+                        z_position = float(word[1:])
+                        current_z_position = z_position
+            if index != 0 and index % amount_of_moves == 0:
+                clean_nozzle_command = []
+                clean_nozzle_command.append("G60 S1 ; Save Current Position To Return To")
+                if current_z_position<16:
+                    current_z_position = 16
+                clean_nozzle_command.append("G1 Z" + str(current_z_position + 15) + " ; Move Up A Bit")
+
+
+        self.end_gcode.main_body = new_main
 
         return self.end_gcode
 

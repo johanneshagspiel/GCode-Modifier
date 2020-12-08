@@ -5,7 +5,7 @@ from pathlib import Path
 
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QGridLayout, QLabel, QLineEdit, QWidget, QRadioButton, \
-    QCheckBox, QPushButton, QFileDialog, QMessageBox, QHBoxLayout
+    QCheckBox, QPushButton, QFileDialog, QMessageBox, QHBoxLayout, QButtonGroup, QGroupBox
 from PyQt5 import QtCore
 from PyQt5 import QtGui
 
@@ -13,6 +13,7 @@ from paste_printer.command.command import Command
 from paste_printer.command.command_executor import Command_Executor
 from paste_printer.gui.customization.load_font import load_font
 from paste_printer.gui.gcode_viewer.gcode_viewer import GCode_Viewer
+from paste_printer.gui.gcode_viewer.test import Test
 from paste_printer.util.file_handler import File_Handler
 
 class Mainscreen(QWidget):
@@ -45,7 +46,7 @@ class Mainscreen(QWidget):
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
         #Set size of Window (Starting x, starting y, width, height
-        self.setGeometry(180, 180, 1440, 720)
+        self.setGeometry(180, 180, 720, 720)
 
         #Overall HBox
         self.overall_hbox = QHBoxLayout()
@@ -69,20 +70,30 @@ class Mainscreen(QWidget):
         self.grid.addLayout(nozzle_size_selection_hobx, row_position, 0, 1, 2)
         row_position += 1
 
+        #Nozzle Selection Buttongroup
+        nozzle_size_selection_button_group = QButtonGroup(self)
+
         #Nozzle 1.3 Size Button
-        self.nozzle_1_3_button = QRadioButton("1.8 mm")
+        self.nozzle_1_3_button = QRadioButton("1.5 mm")
+
+        #1.5 diameter is the default
         self.nozzle_1_3_button.setChecked(True)
-        self.nozzle_1_3_button.toggled.connect(lambda:self.update_files("1.3"))
+        self.selected_diameter_path = self.file_handler.diameter_1_5_path
+
+        self.nozzle_1_3_button.toggled.connect(lambda:self.update_diameter("1.5"))
+        nozzle_size_selection_button_group.addButton(self.nozzle_1_3_button)
         nozzle_size_selection_hobx.addWidget(self.nozzle_1_3_button, QtCore.Qt.AlignLeft)
 
         #Nozzle 0.8 Size Button
-        self.nozzle_0_6_button = QRadioButton("0.8 mm")
-        self.nozzle_0_6_button.toggled.connect(lambda:self.update_files("0.8 mm"))
-        nozzle_size_selection_hobx.addWidget(self.nozzle_0_6_button, QtCore.Qt.AlignLeft)
+        self.nozzle_0_8_button = QRadioButton("0.8 mm")
+        self.nozzle_0_8_button.toggled.connect(lambda:self.update_diameter("0.8 mm"))
+        nozzle_size_selection_button_group.addButton(self.nozzle_0_8_button)
+        nozzle_size_selection_hobx.addWidget(self.nozzle_0_8_button, QtCore.Qt.AlignLeft)
 
         #Nozzle 0.6 Size Button
         self.nozzle_0_6_button = QRadioButton("0.6 mm")
-        self.nozzle_0_6_button.toggled.connect(lambda:self.update_files("0.6 mm"))
+        self.nozzle_0_6_button.toggled.connect(lambda:self.update_diameter("0.6 mm"))
+        nozzle_size_selection_button_group.addButton(self.nozzle_0_6_button)
         nozzle_size_selection_hobx.addWidget(self.nozzle_0_6_button, QtCore.Qt.AlignLeft)
 
         #File Selection Label
@@ -92,20 +103,37 @@ class Mainscreen(QWidget):
         self.grid.addWidget(file_selection_label, row_position, 0, 1, 2)
         row_position += 1
 
-        #Radiobutton for each gcode
-        file_list = []
-        file_paths = sorted(self.file_handler.gcode_path.glob('*.gcode'))
-        for file in file_paths:
-            file_list.append(os.path.splitext(file.name)[0])
+        # File Selection Buttongroup
+        file_selection_button_group = QButtonGroup(self)
 
-        for index, file in enumerate(file_list):
-            temp = QRadioButton(file)
-            if index == 0:
-                temp.setChecked(True)
-                self.selected_file_name = file
-            temp.toggled.connect(lambda _, file=file: self.update_name_selected_file(file))
-            self.grid.addWidget(temp, row_position, 0, 1, 2)
-            row_position += 1
+        # File Selection HBox
+        file_selection_hobx = QHBoxLayout()
+        self.grid.addLayout(file_selection_hobx, row_position, 0, 1, 2)
+        row_position += 1
+
+        # Cube Button
+        self.cube_button = QRadioButton("Cube")
+
+        # Cube is the default
+        self.cube_button.setChecked(True)
+        self.selected_file_name = "cube.gcode"
+
+        self.cube_button.toggled.connect(lambda: self.update_file_name("Cube"))
+        file_selection_button_group.addButton(self.cube_button)
+        file_selection_hobx.addWidget(self.cube_button, QtCore.Qt.AlignLeft)
+
+        # Vase Button
+        self.vase_button = QRadioButton("Vase")
+        self.vase_button.toggled.connect(lambda: self.update_file_name("Vase"))
+        file_selection_button_group.addButton(self.vase_button)
+        file_selection_hobx.addWidget(self.vase_button, QtCore.Qt.AlignLeft)
+
+        # Apple Button
+        self.apple_button = QRadioButton("Apple")
+        self.apple_button.toggled.connect(lambda: self.update_file_name("Apple"))
+        file_selection_button_group.addButton(self.apple_button)
+        file_selection_hobx.addWidget(self.apple_button, QtCore.Qt.AlignLeft)
+
 
         #Print setting label
         print_settings_label = QLabel("Which print settings do you want to use?")
@@ -227,6 +255,31 @@ class Mainscreen(QWidget):
         # Retract During Pause Label
         self.retract_during_pause_checkbox = QCheckBox("Retract during pause")
 
+        #Clean the nozzle ever x moves
+        self.clean_nozzle_checkbox = QCheckBox("Clean the nozzle during the print")
+        self.grid.addWidget(self.clean_nozzle_checkbox, row_position, 0)
+        self.clean_nozzle_checkbox.toggled.connect(self.clean_nozzle_toggled)
+        row_position += 1
+
+        #Clean Nozzle Grid
+        self.clean_nozzle_grid = QGridLayout()
+        self.clean_nozzle_grid.setColumnMinimumWidth(1, 72)
+        self.clean_nozzle_grid.setColumnMinimumWidth(4, 10)
+        self.clean_nozzle_grid.setColumnStretch(4, 1)
+        self.grid.addLayout(self.clean_nozzle_grid, row_position, 0, 1, 2)
+        row_position += 1
+
+        #Pauser after each layer seconds label
+        self.clean_nozzle_label_1 = QLabel("Every")
+
+        # Pauser after each layer seconds entry
+        self.clean_nozzle_entry = QLineEdit("50")
+        self.clean_nozzle_entry.setAlignment(QtCore.Qt.AlignCenter)
+        self.clean_nozzle_entry.setMaximumWidth(64)
+
+        #Pauser after each layer seconds label
+        self.clean_nozzle_label_2 = QLabel("moves")
+
         #Retract syringe at the end of print Checkbox
         self.retract_syringe_checkbox = QCheckBox("Retract the syringe at the end of print")
         self.grid.addWidget(self.retract_syringe_checkbox, row_position, 0)
@@ -276,12 +329,12 @@ class Mainscreen(QWidget):
         self.grid.addWidget(self.modify_button, row_position, 0, 1, 2)
 
         #Right Hand Grid
-        self.right_hand_grid = QGridLayout()
-        self.overall_hbox.addLayout(self.right_hand_grid)
+        # self.right_hand_grid = QGridLayout()
+        # self.overall_hbox.addLayout(self.right_hand_grid)
 
-        #GCode_Viewer
-        self.gecode_viewer = GCode_Viewer()
-        self.right_hand_grid.addWidget(self.gecode_viewer)
+        # #GCode_Viewer
+        # self.gecode_viewer = GCode_Viewer()
+        # self.right_hand_grid.addWidget(self.gecode_viewer)
 
         #Set layout and show mainscreen
         self.setLayout(self.overall_hbox)
@@ -313,10 +366,28 @@ class Mainscreen(QWidget):
         self.flow_rate_differentiation_button.setText("Different flow rate for infill and outer walls")
         self.flow_rate_differentiation_button.clicked.connect(self.differentiate_flow_rate)
 
-    def update_files(self, size):
+    def update_diameter(self, size):
         sender = self.sender()
         if sender.isChecked():
-            print(size)
+            if size == "1.5":
+                self.selected_diameter_path = self.file_handler.diameter_1_5_path
+            if size == "0.8":
+                self.selected_diameter_path = self.file_handler.diameter_0_8_path
+            if size == "0.6":
+                self.selected_diameter_path = self.file_handler.diameter_0_6_path
+
+    def update_file_name(self, size):
+        sender = self.sender()
+        if sender.isChecked():
+            if size == "Cube":
+                self.selected_file_name = "cube.gcode"
+                self.storage_name_entry.setText("cube")
+            if size == "Vase":
+                self.selected_file_name = "vase.gcode"
+                self.storage_name_entry.setText("vase")
+            if size == "Apple":
+                self.selected_file_name = "apple.gcode"
+                self.storage_name_entry.setText("apple")
 
     def pause_print_toggled(self):
         checkbx = self.sender()
@@ -330,11 +401,17 @@ class Mainscreen(QWidget):
             self.pause_print_seconds_entry.setParent(None)
             self.retract_during_pause_checkbox.setParent(None)
 
-    def update_name_selected_file(self, file):
-        sender = self.sender()
-        if sender.isChecked():
-            self.storage_name_entry.setText(file)
-            self.selected_file_name = file
+    def clean_nozzle_toggled(self):
+        checkbx = self.sender()
+        if checkbx.isChecked():
+            self.clean_nozzle_grid.addWidget(self.clean_nozzle_label_1, 1, 2)
+            self.clean_nozzle_grid.addWidget(self.clean_nozzle_entry, 1, 3)
+            self.clean_nozzle_grid.addWidget(self.clean_nozzle_label_2, 1, 4)
+
+        else:
+            self.clean_nozzle_label_1.setParent(None)
+            self.clean_nozzle_entry.setParent(None)
+            self.clean_nozzle_label_2.setParent(None)
 
     def select_storage_location(self):
         directory = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
@@ -359,7 +436,9 @@ class Mainscreen(QWidget):
             command_executor = Command_Executor(checked_command)
             result_gcode = command_executor.execute()
 
-            self.gecode_viewer.show_new_layer(result_gcode.layer_list[-1])
+            #self.gecode_viewer.show_new_layer(result_gcode.layer_list[0])
+            # test = Test()
+            # test.test_open3D(result_gcode.layer_list)
 
             finish_modification_message = QMessageBox()
             finish_modification_message.setText("File has been created successfully!")
@@ -445,6 +524,15 @@ class Mainscreen(QWidget):
                 messages.append("The duration of the pause needs to be an integer between 0 and 1800.")
                 self.pause_print_seconds_entry.setText("")
 
+        if self.clean_nozzle_checkbox.isChecked():
+            try:
+                int_amount_moves = int(self.clean_nozzle_entry.text())
+                if int_amount_moves < 10 or int_amount_moves > 1000:
+                    raise Exception
+            except Exception:
+                messages.append("The amount of moves between cleaning needs to be an integer between 10 and 1000.")
+                self.clean_nozzle_entry.setText("")
+
         if len(messages) > 0:
             error_text = "\n".join(messages)
             error_message_box = QMessageBox()
@@ -455,21 +543,26 @@ class Mainscreen(QWidget):
             return False
 
         else:
-            file_name_with_extension = self.selected_file_name + ".gcode"
-            path_to_file = Path.joinpath(self.file_handler.gcode_path, file_name_with_extension)
+            file_name = self.selected_file_name.split(".")[0]
+            path_to_file = Path.joinpath(self.selected_diameter_path, self.selected_file_name)
 
             fan_bol = self.fan_checkbox.isChecked()
 
             additional_information_bol = self.add_information_checkbox.isChecked()
             pause_each_layer_bol = self.pause_print_retraction_checkbox.isChecked()
+            clean_nozzle_bol = self.clean_nozzle_checkbox.isChecked()
             retract_syringe_bol = self.retract_syringe_checkbox.isChecked()
 
             pause_each_layer_par_1 = None
             pause_each_layer_par_2 = None
+            clean_nozzle_par_1 = None
 
-            if pause_each_layer_bol == True:
+            if pause_each_layer_bol:
                 pause_each_layer_par_1 = self.pause_print_seconds_entry.text()
                 pause_each_layer_par_2 = self.retract_during_pause_checkbox.isChecked()
+
+            if clean_nozzle_bol:
+                clean_nozzle_par_1 = self.clean_nozzle_entry.text()
 
             return Command(path_to_file=path_to_file,
 
@@ -482,13 +575,16 @@ class Mainscreen(QWidget):
 
                            additional_information_bol=additional_information_bol,
                            pause_each_layer_bol=pause_each_layer_bol,
+                           clean_nozzle_bol=clean_nozzle_bol,
                            retract_syringe_bol=retract_syringe_bol,
 
                            file_name=file_name,
                            storage_path=storage_location,
 
                            pause_each_layer_par_1=pause_each_layer_par_1,
-                           pause_each_layer_par_2=pause_each_layer_par_2)
+                           pause_each_layer_par_2=pause_each_layer_par_2,
+
+                           clean_nozzle_par_1=clean_nozzle_par_1)
 
     def open_directory(self, directory):
         os.startfile(directory)
