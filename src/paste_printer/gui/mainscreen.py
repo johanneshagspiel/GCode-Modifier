@@ -13,7 +13,6 @@ from paste_printer.command.command import Command
 from paste_printer.command.command_executor import Command_Executor
 from paste_printer.gui.customization.load_font import load_font
 from paste_printer.gui.gcode_viewer.gcode_viewer import GCode_Viewer
-from paste_printer.gui.gcode_viewer.test import Test
 from paste_printer.util.file_handler import File_Handler
 
 class Mainscreen(QWidget):
@@ -577,7 +576,7 @@ class Mainscreen(QWidget):
 
                            additional_information_bol=additional_information_bol,
                            pause_each_layer_bol=pause_each_layer_bol,
-                           clean_nozzle_bol=clean_nozzle_bol,
+                           clean_nozzle_bol=False,
                            retract_syringe_bol=retract_syringe_bol,
 
                            file_name=file_name,

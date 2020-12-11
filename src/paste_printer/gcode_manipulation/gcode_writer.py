@@ -213,8 +213,9 @@ class Gcode_Writer():
         for index, line in enumerate(self.start_gcode.shutdown_code):
             new_end_gcode.append(line)
             if "G1 X0 Y220" in line:
+                new_end_gcode.append("M83 ; Set eXtrusion Mode To Relative During Retraction")
                 while repeat_insertion is True:
-                    new_reverse_extrusion = "G1 E-" + str(largest_one_time_retraction) + " ; retract syringe"
+                    new_reverse_extrusion = "G1 E-" + str(largest_one_time_retraction) + " ; Retract Syringe"
                     new_end_gcode.append(new_reverse_extrusion)
 
                     if still_to_rectract > 0:
@@ -227,6 +228,7 @@ class Gcode_Writer():
                             still_to_rectract = temp - largest_one_time_retraction
                     else:
                         repeat_insertion = False
+                new_end_gcode.append("M82 ; Set eXtrusion Mode Back To Absolute")
 
         self.end_gcode.shutdown_code = new_end_gcode
 
