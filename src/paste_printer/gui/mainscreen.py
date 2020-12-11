@@ -27,7 +27,7 @@ class Mainscreen(QWidget):
         self.file_handler = File_Handler()
 
         #Create program name
-        program_name="Paste Printer G-code Modifier - Version "
+        program_name="Paste Printer G-Code Modifier - Version "
         program_version ="0.1"
 
         #Set Name Of Program
@@ -134,7 +134,6 @@ class Mainscreen(QWidget):
         file_selection_button_group.addButton(self.apple_button)
         file_selection_hobx.addWidget(self.apple_button, QtCore.Qt.AlignLeft)
 
-
         #Print setting label
         print_settings_label = QLabel("Which print settings do you want to use?")
         print_settings_label.setAlignment(QtCore.Qt.AlignCenter)
@@ -160,37 +159,34 @@ class Mainscreen(QWidget):
 
         #Toggle Differentiate between Infill / Outer Walls
         self.flow_rate_differentiation_button = QPushButton("Different flow rate for outer walls and infill")
-        self.flow_rate_differentiation_button.clicked.connect(self.differentiate_flow_rate)
+        self.flow_rate_differentiation_button.clicked.connect(lambda: self.differentiate_flow_rate(self.flow_rate_differentiation_button.text()))
         self.print_settings_grid.addWidget(self.flow_rate_differentiation_button, 1, 0, 1, 2)
 
         #Flow Rate Other Layers
-        self.flow_rate_other_layers_label = QLabel("Flow rate for the other layers: ")
-        self.flow_rate_other_layers_label.setAlignment(QtCore.Qt.AlignLeft)
-        self.print_settings_grid.addWidget(self.flow_rate_other_layers_label, 2, 0)
+        self.flow_rate_par_1_label = QLabel("Flow rate for the other layers: ")
+        self.flow_rate_par_1_label.setAlignment(QtCore.Qt.AlignLeft)
+        self.print_settings_grid.addWidget(self.flow_rate_par_1_label, 2, 0)
 
         # Flow Rate Layer 0 Entry
-        self.flow_rate_other_layers_entry = QLineEdit()
-        self.flow_rate_other_layers_entry.setAlignment(QtCore.Qt.AlignCenter)
-        self.flow_rate_other_layers_entry.setText("100")
-        self.print_settings_grid.addWidget(self.flow_rate_other_layers_entry, 2, 1)
+        self.flow_rate_par_1_entry = QLineEdit()
+        self.flow_rate_par_1_entry.setAlignment(QtCore.Qt.AlignCenter)
+        self.flow_rate_par_1_entry.setText("100")
+        self.print_settings_grid.addWidget(self.flow_rate_par_1_entry, 2, 1)
 
-        #Flow Rate Outer Walls Label
-        self.flow_rate_outer_walls_label = QLabel("Flow rate for the outer walls: ")
-        self.flow_rate_outer_walls_label.setAlignment(QtCore.Qt.AlignLeft)
+        # Temp Label
+        self.flow_rate_par_2_label = QLabel("Flow rate for the infill: ")
+        self.flow_rate_par_2_label.setAlignment(QtCore.Qt.AlignLeft)
 
-        #Flow Rate Outer Walls Entry
-        self.flow_rate_outer_walls_entry = QLineEdit()
-        self.flow_rate_outer_walls_entry.setAlignment(QtCore.Qt.AlignCenter)
-        self.flow_rate_outer_walls_entry.setText("65")
+        self.print_settings_grid.addWidget(self.flow_rate_par_2_label, 3, 0)
+        self.flow_rate_par_2_label.setHidden(True)
 
-        #Flow Rate Infill Label
-        self.flow_rate_infill_label = QLabel("Flow rate for the infill: ")
-        self.flow_rate_infill_label.setAlignment(QtCore.Qt.AlignLeft)
+        # Temp Entry
+        self.flow_rate_par_2_entry = QLineEdit()
+        self.flow_rate_par_2_entry.setAlignment(QtCore.Qt.AlignCenter)
+        self.flow_rate_par_2_entry.setText("65")
 
-        #Flow Rate Infill Entry
-        self.flow_rate_infill_entry = QLineEdit()
-        self.flow_rate_infill_entry.setAlignment(QtCore.Qt.AlignCenter)
-        self.flow_rate_infill_entry.setText("55")
+        self.print_settings_grid.addWidget(self.flow_rate_par_2_entry, 3, 1)
+        self.flow_rate_par_2_entry.setHidden(True)
 
         #Bed Temperature Label
         bed_temperature_label = QLabel("Bed Temperature: ")
@@ -304,7 +300,7 @@ class Mainscreen(QWidget):
 
         # Name of Modified File Entry
         self.storage_name_entry = QLineEdit()
-        self.storage_name_entry.setText(self.selected_file_name)
+        self.storage_name_entry.setText(self.selected_file_name.split(".")[0])
         self.storage_grid.addWidget(self.storage_name_entry, 0, 1)
 
         #Storage Path Label
@@ -340,31 +336,22 @@ class Mainscreen(QWidget):
         self.setLayout(self.overall_hbox)
         self.show()
 
-    def differentiate_flow_rate(self):
+    def differentiate_flow_rate(self, current_text):
 
-        self.print_settings_grid.addWidget(self.flow_rate_outer_walls_label, 2, 0)
-        self.print_settings_grid.addWidget(self.flow_rate_outer_walls_entry, 2, 1)
-        self.print_settings_grid.addWidget(self.flow_rate_infill_label,3, 0)
-        self.print_settings_grid.addWidget(self.flow_rate_infill_entry, 3, 1)
+        if current_text == "Different flow rate for outer walls and infill":
+            self.flow_rate_differentiation_button.setText("Same flow rate for infill and outer walls")
+            self.flow_rate_par_1_label.setText("Flow rate for the outer walls: ")
+            self.flow_rate_par_1_entry.setText("55")
 
-        self.flow_rate_other_layers_entry.setParent(None)
-        self.flow_rate_other_layers_label.setParent(None)
+            self.flow_rate_par_2_label.setHidden(False)
+            self.flow_rate_par_2_entry.setHidden(False)
+        else:
+            self.flow_rate_differentiation_button.setText("Different flow rate for outer walls and infill")
+            self.flow_rate_par_1_label.setText("Flow rate for the other layers: ")
+            self.flow_rate_par_1_entry.setText("100")
 
-        self.flow_rate_differentiation_button.setText("Same flow rate for infill and outer walls")
-        self.flow_rate_differentiation_button.clicked.connect(self.un_differentiate_flow_rate)
-
-    def un_differentiate_flow_rate(self):
-
-        self.flow_rate_outer_walls_label.setParent(None)
-        self.flow_rate_outer_walls_entry.setParent(None)
-        self.flow_rate_infill_label.setParent(None)
-        self.flow_rate_infill_entry.setParent(None)
-
-        self.print_settings_grid.addWidget(self.flow_rate_other_layers_label, 2, 0)
-        self.print_settings_grid.addWidget(self.flow_rate_other_layers_entry, 2, 1)
-
-        self.flow_rate_differentiation_button.setText("Different flow rate for infill and outer walls")
-        self.flow_rate_differentiation_button.clicked.connect(self.differentiate_flow_rate)
+            self.flow_rate_par_2_label.setHidden(True)
+            self.flow_rate_par_2_entry.setHidden(True)
 
     def update_diameter(self, size):
         sender = self.sender()
@@ -471,23 +458,18 @@ class Mainscreen(QWidget):
             messages.append("The flow rate of layer 0 needs to be an integer between 10 and 400.")
             self.flow_rate_layer_0.setText("")
 
-        flow_rate_outer_walls = self.flow_rate_outer_walls_entry.text()
+        flow_rate_par_1 = self.flow_rate_par_1_entry.text()
         try:
-            int_flow_rate_outer_walls = int(flow_rate_outer_walls)
-            if int_flow_rate_outer_walls < 10 or int_flow_rate_outer_walls > 400:
+            int_flow_rate_par_1 = int(flow_rate_par_1)
+            if int_flow_rate_par_1 < 10 or int_flow_rate_par_1 > 400:
                 raise Exception
         except Exception:
-            messages.append("The flow rate of the outer walls needs to be an integer between 10 and 400.")
-            self.flow_rate_outer_walls.setText("")
-
-        flow_rate_infill = self.flow_rate_infill_entry.text()
-        try:
-            int_flow_rate_infill = int(flow_rate_infill)
-            if int_flow_rate_infill < 10 or int_flow_rate_infill > 400:
-                raise Exception
-        except Exception:
-            messages.append("The flow rate of the infill needs to be an integer between 10 and 400.")
-            self.flow_rate_infill.setText("")
+            if self.flow_rate_differentiation_button.text() == "Different flow rate for outer walls and infill":
+                messages.append("The flow rate of the other layers needs to be an integer between 10 and 400.")
+                self.flow_rate_par_1_entry.setText("100")
+            else:
+                messages.append("The flow rate for the outer walls needs to be an integer between 10 and 400.")
+                self.flow_rate_par_1_entry.setText("55")
 
         bed_temperature = self.bed_temperature_entry.text()
         try:
@@ -514,6 +496,17 @@ class Mainscreen(QWidget):
         file_name = self.storage_name_entry.text()
         if len(file_name) == 0:
             messages.append("A filename needs to be specified.")
+
+        flow_rate_differentiate_bol = self.flow_rate_differentiation_button.text() == "Same flow rate for infill and outer walls"
+        if flow_rate_differentiate_bol:
+            flow_rate_par_2 = self.flow_rate_par_2_entry.text()
+            try:
+                int_flow_rate_par_2 = int(flow_rate_par_2)
+                if int_flow_rate_par_2 < 10 or int_flow_rate_par_2 > 400:
+                    raise Exception
+            except Exception:
+                messages.append("The flow rate for the infill needs to be an integer between 10 and 400.")
+                self.flow_rate_par_2_entry.setText("65")
 
         if self.pause_print_retraction_checkbox.isChecked():
             try:
@@ -546,6 +539,10 @@ class Mainscreen(QWidget):
             file_name = self.selected_file_name.split(".")[0]
             path_to_file = Path.joinpath(self.selected_diameter_path, self.selected_file_name)
 
+            flow_rate_layer_0=int_flow_rate_layer_0
+            flow_rate_par_1=int_flow_rate_par_1
+            flow_rate_differentiate_bol=flow_rate_differentiate_bol
+
             fan_bol = self.fan_checkbox.isChecked()
 
             additional_information_bol = self.add_information_checkbox.isChecked()
@@ -553,9 +550,13 @@ class Mainscreen(QWidget):
             clean_nozzle_bol = self.clean_nozzle_checkbox.isChecked()
             retract_syringe_bol = self.retract_syringe_checkbox.isChecked()
 
+            flow_rate_par_2 = None
             pause_each_layer_par_1 = None
             pause_each_layer_par_2 = None
             clean_nozzle_par_1 = None
+
+            if flow_rate_differentiate_bol:
+                flow_rate_par_2 = int_flow_rate_par_2
 
             if pause_each_layer_bol:
                 pause_each_layer_par_1 = self.pause_print_seconds_entry.text()
@@ -567,8 +568,9 @@ class Mainscreen(QWidget):
             return Command(path_to_file=path_to_file,
 
                            flow_rate_layer_0=flow_rate_layer_0,
-                           flow_rate_outer_walls=int_flow_rate_outer_walls,
-                           flow_rate_infill=int_flow_rate_infill,
+                           flow_rate_par_1=flow_rate_par_1,
+                           flow_rate_differentiate_bol=flow_rate_differentiate_bol,
+
                            bed_temperature=int_bed_temperature,
                            print_speed=float_print_speed,
                            fan_bol=fan_bol,
@@ -580,6 +582,8 @@ class Mainscreen(QWidget):
 
                            file_name=file_name,
                            storage_path=storage_location,
+
+                           flow_rate_par_2=flow_rate_par_2,
 
                            pause_each_layer_par_1=pause_each_layer_par_1,
                            pause_each_layer_par_2=pause_each_layer_par_2,

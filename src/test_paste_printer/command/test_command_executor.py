@@ -26,8 +26,8 @@ class TestCommandExecutor(unittest.TestCase):
         pause_each_layer_par_2 = True
 
         self.test_command_1 = Command(path_to_file=self.path_to_file,
-                                      flow_rate_layer_0="100",
-                                      flow_rate_outer_walls="65",
+                                      flow_rate_par_1="100",
+                                      flow_rate_par_2="65",
                                       flow_rate_infill="55",
                                       bed_temperature="0",
                                       print_speed="100",
@@ -50,14 +50,15 @@ class TestCommandExecutor(unittest.TestCase):
 
         self.test_command_1 = Command(path_to_file=self.path_to_file,
                                       flow_rate_layer_0="100",
-                                      flow_rate_outer_walls="55",
-                                      flow_rate_infill="65",
+                                      flow_rate_par_1="55",
+                                      flow_rate_differentiate_bol="True",
+                                      flow_rate_par_2="67",
                                       bed_temperature="0",
                                       print_speed="120",
                                       fan_bol=False,
                                       additional_information_bol=additional_information_bol,
                                       pause_each_layer_bol=pause_each_layer_bol,
-                                      clean_nozzle_bol=True,
+                                      clean_nozzle_bol=False,
                                       retract_syringe_bol=retract_syringe_bol,
                                       file_name="test",
                                       storage_path=self.test_file_handler.temp_files)

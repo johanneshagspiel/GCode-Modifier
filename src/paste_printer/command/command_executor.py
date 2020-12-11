@@ -25,13 +25,14 @@ class Command_Executor:
         self.execute_parser_task(Parser_Task.CREATE_GCODE)
 
         #Set Flowrate Layer 0
-        self.execute_writer_task(Writer_Task.SET_FLOWRATE_LAYER_0, self.command.flow_rate_layer_0)
+        self.execute_writer_task(Writer_Task.SET_FLOWRATE_LAYER_0, self.command.flow_rate_par_1)
 
         #Set Flowrate outer walls
-        self.execute_writer_task(Writer_Task.SET_FLOWRATE_OUTER_WALLS, self.command.flow_rate_outer_walls)
-
-        #Set Flowrate infill
-        self.execute_writer_task(Writer_Task.SET_FLOWRATE_INFILL, self.command.flow_rate_infill)
+        print(self.command.flow_rate_differentiate_bol)
+        if self.command.flow_rate_differentiate_bol:
+            self.execute_writer_task(Writer_Task.SET_FLOWRATE_OUTER_INFILL, self.command.flow_rate_par_1, self.command.flow_rate_par_2)
+        else:
+            self.execute_writer_task(Writer_Task.SET_FLOWRATE_OTHER_LAYERS, self.command.flow_rate_par_1)
 
         #Set bed temperature
         self.execute_writer_task(Writer_Task.SET_BED_TEMPERATURE, self.command.bed_temperature)
@@ -76,10 +77,10 @@ class Command_Executor:
 
         if writer_task == Writer_Task.SET_FLOWRATE_LAYER_0:
             result_gcode = self.gcode_writer.set_flowrate_layer_0(parameter_1)
-        if writer_task == Writer_Task.SET_FLOWRATE_OUTER_WALLS:
-            result_gcode = self.gcode_writer.set_flowrate_outer_walls(parameter_1)
-        if writer_task == Writer_Task.SET_FLOWRATE_INFILL:
-            result_gcode = self.gcode_writer.set_flowrate_infill(parameter_1)
+        if writer_task == Writer_Task.SET_FLOWRATE_OTHER_LAYERS:
+            result_gcode = self.gcode_writer.set_flow_rate_other_layers(parameter_1)
+        if writer_task == Writer_Task.SET_FLOWRATE_OUTER_INFILL:
+            result_gcode = self.gcode_writer.set_flow_rate_outer_walls_infill(parameter_1, parameter_2)
         if writer_task == Writer_Task.SET_BED_TEMPERATURE:
             result_gcode = self.gcode_writer.set_bed_temperature(parameter_1)
         if writer_task == Writer_Task.SET_PRINT_SPEED:
