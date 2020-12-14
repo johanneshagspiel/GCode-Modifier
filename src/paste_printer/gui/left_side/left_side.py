@@ -11,7 +11,7 @@ from PyQt5 import QtGui
 
 from paste_printer.command.command import Command
 from paste_printer.command.command_executor import Command_Executor
-from paste_printer.gcode_manipulation.gcode_parser import GCode_Parser
+from paste_printer.gcode_manipulation.gcode.gcode_parser import GCode_Parser
 from paste_printer.gui.customization.load_font import load_font
 from paste_printer.util.file_handler import File_Handler
 
@@ -481,8 +481,8 @@ class Left_Side(QWidget):
         if len(storage_location) == 0:
             messages.append("A storage location needs to be specified.")
 
-        file_name = self.storage_name_entry.text()
-        if len(file_name) == 0:
+        file_name_checked = self.storage_name_entry.text()
+        if len(file_name_checked) == 0:
             messages.append("A filename needs to be specified.")
 
         flow_rate_differentiate_bol = self.flow_rate_differentiation_button.text() == "Same flow rate for infill and outer walls"
@@ -524,7 +524,7 @@ class Left_Side(QWidget):
             return False
 
         else:
-            file_name = self.selected_file_name.split(".")[0]
+            file_name_checked = file_name_checked.split(".")[0]
             path_to_file = Path.joinpath(self.selected_diameter_path, self.selected_file_name)
 
             flow_rate_layer_0=int_flow_rate_layer_0
@@ -568,7 +568,7 @@ class Left_Side(QWidget):
                            clean_nozzle_bol=False,
                            retract_syringe_bol=retract_syringe_bol,
 
-                           file_name=file_name,
+                           file_name=file_name_checked,
                            storage_path=storage_location,
 
                            flow_rate_par_2=flow_rate_par_2,

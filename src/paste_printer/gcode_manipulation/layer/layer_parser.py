@@ -1,4 +1,4 @@
-from paste_printer.gcode_manipulation.gcode.layer import Layer
+from paste_printer.gcode_manipulation.layer.layer import Layer
 
 class Layer_Parser():
 
@@ -8,6 +8,14 @@ class Layer_Parser():
     def parse_layer_list(self, layer_list):
 
         self.last_z_value = 0
+        self.from_x = 0
+        self.from_y = 0
+        self.from_z = 0
+
+        self.to_x = 0
+        self.to_y = 0
+        self.to_z = 0
+
         parsed_layer_list = []
 
         for layer in layer_list:
@@ -29,13 +37,15 @@ class Layer_Parser():
                     layer_number = line.split(":")[1]
                     layer.number = int(layer_number)
             else:
+                self.from_x = self.to_x
+                self.from_y = self.to_y
+                self.from_z = self.to_z
+
                 if any(x in line for x in movement_commands):
                     if "G1" in line:
                         layer.color_data.append("r")
                     if "G0" in line:
                         layer.color_data.append("b")
-                    if "Z" not in line:
-                        layer.z_data.append(self.last_z_value)
                     split_line = line.split()
                     for word in split_line:
                         if "E" in word:
@@ -44,17 +54,20 @@ class Layer_Parser():
                                 largest_extrusion_value = extrusion_value
                         if "X" in word:
                             x_position = float(word[1:])
-                            layer.x_data.append(x_position)
+                            self.to_x = x_position
                         if "Y" in word:
                             y_position = float(word[1:])
-                            layer.y_data.append(y_position)
+                            self.to_y = y_position
                         if "Z" in word:
                             z_position = float(word[1:])
-                            layer.z_data.append(z_position)
-                            self.last_z_value = z_position
+                            self.to_z = z_position
                 else:
                     layer.color_data.append("g")
 
+                layer.x_data.append((self.from_x, self.to_x))
+                layer.y_data.append((self.from_y, self.to_y))
+                layer.z_data.append((self.from_z, self.to_z))
+                layer.move_data.append(line)
 
         layer.largest_extrusion_value = largest_extrusion_value
 

@@ -35,22 +35,17 @@ class Gcode_3D_Viewer():
 
         points = []
         lines = []
-        colors = []
         counter = 0
 
         for layer in layer_list:
-            for x, y, z, color in zip(layer.x_data, layer.y_data, layer.z_data, layer.color_data):
-                points.append([x, y, z])
-                colors.append(color)
+            for x, y, z in zip(layer.x_data, layer.y_data, layer.z_data):
                 if counter != 0:
-                    lines.append([counter - 1, counter])
+                    points.append([x[0], y[0], z[0]])
+                    lines.append((counter - 1, counter))
                 counter += 1
 
         line_set = LineSet()
         line_set.points = Vector3dVector(points)
         line_set.lines = Vector2iVector(lines)
 
-        #o3d.io.write_line_set("test.ply",line_set,write_ascii=True, print_progress=True)
-
         draw_geometries([line_set], width=720, height=720)
-        #self.test_show_ply()

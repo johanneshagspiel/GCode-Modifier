@@ -1,10 +1,9 @@
-from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QWidget, QGridLayout
 
 from paste_printer.gui.right_side.gcode_layer_viewer.gcode_canvas import GCode_Canvas
 
 
-class GCode_Layer_Viewer(QWidget):
+class GCode_Layer_Viewer_Static(QWidget):
 
     def __init__(self):
         super().__init__()
@@ -32,7 +31,8 @@ class GCode_Layer_Viewer(QWidget):
         self.max_iteration = len(self.layer.x_data)
         self.current_iteration = 2
 
-        self.start_showing_animation()
+        #self.start_showing_static()
+        self.test()
 
     def initUI(self):
         self.grid = QGridLayout()
@@ -40,41 +40,29 @@ class GCode_Layer_Viewer(QWidget):
         self.grid.addWidget(self.canvas, 0, 0)
         self.setLayout(self.grid)
 
-    def start_showing_animation(self):
-        self.xdata = self.overall_x[0]
-        self.ydata = self.overall_y[0]
-        self.colordata = self.overall_color[0]
+    def start_showing_static(self):
+        self.xdata = self.overall_x
+        self.ydata = self.overall_y
+        self.colordata = self.overall_color
 
         self.canvas.axes.cla()
         self.canvas.axes.set_xlim(0, 220)
         self.canvas.axes.set_ylim(0, 220)
-        self.canvas.axes.plot(self.xdata, self.ydata, self.colordata)
+        self.canvas.axes.plot(self.xdata, self.ydata, "-r")
         self.canvas.draw()
         self.show()
 
-        self.timer = QTimer()
-        self.timer.timeout.connect(self.update_plot)
-        self.timer.start(100)
-
-    def update_plot(self):
-
-        self.xdata = self.overall_x[:self.current_iteration]
-        self.ydata = self.overall_y[:self.current_iteration]
-        self.colordata = self.overall_color[:self.current_iteration]
+    def test(self):
+        self.xdata = self.overall_x
+        self.ydata = self.overall_y
+        self.colordata = self.overall_color
 
         self.canvas.axes.cla()
         # self.canvas.axes.set_xlim(0, 220)
         # self.canvas.axes.set_ylim(0, 220)
 
         for x, y, color in zip(self.xdata, self.ydata, self.colordata):
-            print(x, y)
             self.canvas.axes.plot(x, y, color)
 
         self.canvas.draw()
-
-        self.current_iteration += 1
-
-        if self.current_iteration == self.max_iteration:
-            self.current_iteration = 2
-
-        self.canvas.draw()
+        self.show()

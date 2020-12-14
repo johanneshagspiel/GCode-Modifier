@@ -3,6 +3,7 @@ import unittest
 from paste_printer.command.command import Command
 from paste_printer.command.command_executor import Command_Executor
 from test_paste_printer.util.temp_file_handler import Temp_File_Handler
+from paste_printer.gui.right_side.gcode_3d_viewer.gcode_3d_viewer import Gcode_3D_Viewer
 
 
 class TestCommandExecutor(unittest.TestCase):
@@ -63,3 +64,7 @@ class TestCommandExecutor(unittest.TestCase):
                                       storage_path=self.test_file_handler.temp_files)
 
         result_gcode = self.execute_command(self.test_command_1)
+
+        test= Gcode_3D_Viewer()
+
+        test.show_with_open3D(result_gcode.layer_list)

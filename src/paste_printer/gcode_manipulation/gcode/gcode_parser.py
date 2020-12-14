@@ -1,5 +1,5 @@
 from paste_printer.gcode_manipulation.gcode.gcode import GCode
-from paste_printer.gcode_manipulation.gcode.layer_parser import Layer_Parser
+from paste_printer.gcode_manipulation.layer.layer_parser import Layer_Parser
 
 class GCode_Parser:
 

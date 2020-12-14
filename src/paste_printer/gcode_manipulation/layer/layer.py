@@ -6,6 +6,7 @@ class Layer():
 
         self.layer_as_string = []
 
+        self.move_data = []
         self.x_data = []
         self.y_data = []
         self.z_data = []

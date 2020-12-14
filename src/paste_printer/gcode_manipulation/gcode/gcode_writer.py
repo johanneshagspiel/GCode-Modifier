@@ -82,11 +82,15 @@ class Gcode_Writer():
     def turn_on_fan(self):
 
         turn_on_fan_text = "M106 ; Turn On The Fan"
-        new_start_up = []
+        new_main_body = []
+        movement_commands = ["G0", "G1", "G2", "G3", "G5"]
+        first_time = True
 
-        for line in self.start_gcode.startup_code:
-            new_start_up.append(line)
-        new_start_up.append(turn_on_fan_text)
+        for line in self.start_gcode.main_body:
+            new_main_body.append(line)
+            if any(x in line for x in movement_commands) and first_time:
+                new_main_body.append(turn_on_fan_text)
+                first_time = False
 
         turn_off_fan_text = "M107 ; Turn Off The Fan"
         new_shutdown_code = []
@@ -96,7 +100,7 @@ class Gcode_Writer():
         for line in self.start_gcode.shutdown_code:
             new_shutdown_code.append(line)
 
-        self.end_gcode.startup_code = new_start_up
+        self.end_gcode.main_body = new_main_body
         self.end_gcode.shutdown_code = new_shutdown_code
 
         return self.end_gcode
@@ -116,7 +120,7 @@ class Gcode_Writer():
         for index, line in enumerate(self.start_gcode.main_body):
             new_main.append(line)
             if any(x in line for x in movement_commands):
-                if current_move % 3 == 0 or current_move == self.start_gcode.movements_per_layer_list[current_layer] or current_move == 1:
+                if current_move % 5 == 0 or current_move == self.start_gcode.movements_per_layer_list[current_layer] or current_move == 1:
                     text = "M117 Mov " + str(current_move) + "/" + str(self.start_gcode.movements_per_layer_list[current_layer]) \
                            + " Lay " + str(current_layer + 1) + "/" + str(self.start_gcode.amount_layers) + "; Additional Information"
                     new_main.append(text)
@@ -149,14 +153,15 @@ class Gcode_Writer():
             for index in range(previous_index, layer_index):
                 gcode_list.append(self.start_gcode.main_body[index])
 
-            gcode_list.append("G60 S1 ; Save Current Position To Return To")
+            gcode_list.append("G60 S0 ; Save Current Position To Return To")
             if retract_bol == True:
                 gcode_list.append("G1 E-1 ; Stop each Layer - Retract a bit")
             gcode_list.append("G28 X ; Auto Home To Move Out Of Way")
             gcode_list.append("G4 S" + str(pause_in_seconds) + " ; Stop each Layer - Wait")
+            gcode_list.append("M117 Pause "+ str(pause_in_seconds) + " seconds")
             if retract_bol == True:
                 gcode_list.append("G1 E1 ; Re-extrude a bit")
-            gcode_list.append("G61 XYZ S1; Return To The Saved Position")
+            gcode_list.append("G61 XYZ S0; Return To The Saved Position")
 
             previous_index = layer_index
 

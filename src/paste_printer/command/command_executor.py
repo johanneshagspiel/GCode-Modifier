@@ -1,7 +1,7 @@
 from paste_printer.command.command import Command
 from paste_printer.command.tasks import Writer_Task, Parser_Task
-from paste_printer.gcode_manipulation.gcode_parser import GCode_Parser
-from paste_printer.gcode_manipulation.gcode_writer import Gcode_Writer
+from paste_printer.gcode_manipulation.gcode.gcode_parser import GCode_Parser
+from paste_printer.gcode_manipulation.gcode.gcode_writer import Gcode_Writer
 from paste_printer.util.file_handler import File_Handler
 
 class Command_Executor:
