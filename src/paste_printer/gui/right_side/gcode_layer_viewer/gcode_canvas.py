@@ -7,12 +7,3 @@ class GCode_Canvas(FigureCanvas):
         fig = Figure(figsize=(width, height), dpi=dpi)
         self.axes = fig.add_subplot(111)
         super(GCode_Canvas, self).__init__(fig)
-
-    def test(self, xdata, ydata, colordata):
-
-        self.axes.cla()
-
-        for x, y, color in zip(xdata, ydata, colordata):
-            self.axes.plot(x, y)
-
-        self.draw()

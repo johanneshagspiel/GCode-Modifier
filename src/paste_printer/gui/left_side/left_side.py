@@ -5,22 +5,24 @@ from pathlib import Path
 
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QGridLayout, QLabel, QLineEdit, QWidget, QRadioButton, \
-    QCheckBox, QPushButton, QFileDialog, QMessageBox, QHBoxLayout, QButtonGroup, QGroupBox
+    QCheckBox, QPushButton, QFileDialog, QMessageBox, QHBoxLayout, QButtonGroup
 from PyQt5 import QtCore
 from PyQt5 import QtGui
 
 from paste_printer.command.command import Command
 from paste_printer.command.command_executor import Command_Executor
+from paste_printer.gcode_manipulation.gcode_parser import GCode_Parser
 from paste_printer.gui.customization.load_font import load_font
-from paste_printer.gui.gcode_viewer.gcode_viewer import GCode_Viewer
 from paste_printer.util.file_handler import File_Handler
 
-class Mainscreen(QWidget):
+
+class Left_Side(QWidget):
 
     def __init__(self):
         super().__init__()
 
         self.initUI()
+        self.observer = None
 
     def initUI(self):
         self.file_handler = File_Handler()
@@ -47,12 +49,8 @@ class Mainscreen(QWidget):
         #Set size of Window (Starting x, starting y, width, height
         self.setGeometry(180, 180, 720, 720)
 
-        #Overall HBox
-        self.overall_hbox = QHBoxLayout()
-
         #Create Grid
         self.grid = QGridLayout()
-        self.overall_hbox.addLayout(self.grid)
 
         #row pointer
         row_position = 0
@@ -323,17 +321,8 @@ class Mainscreen(QWidget):
         self.modify_button.clicked.connect(self.start_modification)
         self.grid.addWidget(self.modify_button, row_position, 0, 1, 2)
 
-        #Right Hand Grid
-        # self.right_hand_grid = QGridLayout()
-        # self.overall_hbox.addLayout(self.right_hand_grid)
-
-        # #GCode_Viewer
-        # self.gecode_viewer = GCode_Viewer()
-        # self.right_hand_grid.addWidget(self.gecode_viewer)
-
         #Set layout and show mainscreen
-        self.setLayout(self.overall_hbox)
-        self.show()
+        self.setLayout(self.grid)
 
     def differentiate_flow_rate(self, current_text):
 
@@ -362,6 +351,8 @@ class Mainscreen(QWidget):
             if size == "0.6":
                 self.selected_diameter_path = self.file_handler.diameter_0_6_path
 
+            self.notify_observer()
+
     def update_file_name(self, size):
         sender = self.sender()
         if sender.isChecked():
@@ -374,6 +365,8 @@ class Mainscreen(QWidget):
             if size == "Apple":
                 self.selected_file_name = "apple.gcode"
                 self.storage_name_entry.setText("apple")
+
+            self.notify_observer()
 
     def pause_print_toggled(self):
         checkbx = self.sender()
@@ -421,10 +414,6 @@ class Mainscreen(QWidget):
         if checked_command != False:
             command_executor = Command_Executor(checked_command)
             result_gcode = command_executor.execute()
-
-            #self.gecode_viewer.show_new_layer(result_gcode.layer_list[0])
-            # test = Test()
-            # test.test_open3D(result_gcode.layer_list)
 
             finish_modification_message = QMessageBox()
             finish_modification_message.setText("File has been created successfully!")
@@ -594,3 +583,10 @@ class Mainscreen(QWidget):
 
     def open_notebook(self, directory):
         subprocess.Popen(["notepad.exe", directory])
+
+    def notify_observer(self):
+        self.path_to_file = Path.joinpath(self.selected_diameter_path, self.selected_file_name)
+        new_gocde_line_list = self.file_handler.read_gcode_file(self.path_to_file)
+        temp_gcode_parser = GCode_Parser(new_gocde_line_list)
+        new_gcode = temp_gcode_parser.create_gcode()
+        self.observer.update(new_gcode)

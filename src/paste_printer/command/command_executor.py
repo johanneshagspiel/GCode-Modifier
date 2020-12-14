@@ -28,7 +28,6 @@ class Command_Executor:
         self.execute_writer_task(Writer_Task.SET_FLOWRATE_LAYER_0, self.command.flow_rate_par_1)
 
         #Set Flowrate outer walls
-        print(self.command.flow_rate_differentiate_bol)
         if self.command.flow_rate_differentiate_bol:
             self.execute_writer_task(Writer_Task.SET_FLOWRATE_OUTER_INFILL, self.command.flow_rate_par_1, self.command.flow_rate_par_2)
         else:

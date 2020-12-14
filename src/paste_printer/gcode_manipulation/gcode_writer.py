@@ -80,23 +80,23 @@ class Gcode_Writer():
         return self.end_gcode
 
     def turn_on_fan(self):
+
         turn_on_fan_text = "M106 ; Turn On The Fan"
+        new_start_up = []
 
-        new_main_body = []
-        new_main_body.append(turn_on_fan_text)
-
-        for line in self.start_gcode.main_body:
-            new_main_body.append(line)
+        for line in self.start_gcode.startup_code:
+            new_start_up.append(line)
+        new_start_up.append(turn_on_fan_text)
 
         turn_off_fan_text = "M107 ; Turn Off The Fan"
-
         new_shutdown_code = []
+
         new_shutdown_code.append(turn_off_fan_text)
 
         for line in self.start_gcode.shutdown_code:
             new_shutdown_code.append(line)
 
-        self.end_gcode.main_body = new_main_body
+        self.end_gcode.startup_code = new_start_up
         self.end_gcode.shutdown_code = new_shutdown_code
 
         return self.end_gcode
@@ -142,7 +142,6 @@ class Gcode_Writer():
 
         previous_index = 0
         last_index = len(self.start_gcode.main_body)
-        print(retract_bol)
 
         gcode_list = []
         for layer_index in self.start_gcode.time_elapsed_index_list:
@@ -202,11 +201,10 @@ class Gcode_Writer():
         if self.start_gcode.largest_extrusion_value <= max_one_time_extrusion:
             largest_one_time_retraction = self.start_gcode.largest_extrusion_value
             still_to_rectract = 0
-            repeat_insertion = False
         else:
             largest_one_time_retraction = max_one_time_extrusion
             still_to_rectract = self.start_gcode.largest_extrusion_value - max_one_time_extrusion
-            repeat_insertion = True
+        repeat_insertion = True
 
         new_end_gcode = []
 
@@ -215,7 +213,7 @@ class Gcode_Writer():
             if "G1 X0 Y220" in line:
                 new_end_gcode.append("M83 ; Set eXtrusion Mode To Relative During Retraction")
                 while repeat_insertion is True:
-                    new_reverse_extrusion = "G1 E-" + str(largest_one_time_retraction) + " ; Retract Syringe"
+                    new_reverse_extrusion = "G0 E-" + str(largest_one_time_retraction) + " ; Retract Syringe"
                     new_end_gcode.append(new_reverse_extrusion)
 
                     if still_to_rectract > 0:
@@ -224,8 +222,8 @@ class Gcode_Writer():
                             still_to_rectract = 0
                         else:
                             temp = still_to_rectract
-                            largest_one_time_retraction = still_to_rectract - max_one_time_extrusion
-                            still_to_rectract = temp - largest_one_time_retraction
+                            still_to_rectract = temp - max_one_time_extrusion
+                            largest_one_time_retraction = max_one_time_extrusion
                     else:
                         repeat_insertion = False
                 new_end_gcode.append("M82 ; Set eXtrusion Mode Back To Absolute")
