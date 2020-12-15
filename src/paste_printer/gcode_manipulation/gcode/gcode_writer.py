@@ -24,7 +24,7 @@ class Gcode_Writer():
 
         for line in self.start_gcode.main_body:
             new_main_body.append(line)
-            if ";LAYER:1" in line:
+            if line == ";LAYER:1":
                 text = "M221 S" + str(flow_rate) + " ; Set Flowrate Other Layers"
                 new_main_body.append(text)
 

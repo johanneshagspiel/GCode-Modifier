@@ -1,6 +1,4 @@
-from mpl_toolkits import mplot3d
 import matplotlib.pyplot as plt
-import numpy as np
 import open3d as o3d
 
 from open3d.cpu.pybind.geometry import LineSet
@@ -15,20 +13,15 @@ class Gcode_3D_Viewer():
 
     def test_matplotlib(self, layer_list):
         fig = plt.figure()
-        ax = plt.axes(projection='3d')
+        ax = fig.add_subplot(111, projection='3d')
 
-        x_space = []
-        y_space = []
-        z_space = []
+        counter = 0
 
         for layer in layer_list:
-            for x, y, z in zip(layer.x_data, layer.y_data, layer.z_data):
-                x_space.append(x)
-                y_space.append(y)
-                z_space.append(z)
-
-        ax.plot3D(x_space, y_space, z_space, 'gray')
-
+            for x, y, z, color in zip(layer.x_data, layer.y_data, layer.z_data, layer.color_data):
+                if counter != 0:
+                    ax.plot3D(x, y, z, color)
+                counter += 1
         plt.show()
 
     def show_with_open3D(self, layer_list):

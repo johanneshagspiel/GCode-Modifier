@@ -15,6 +15,7 @@ class Command_Executor:
         self.gcode_writer = Gcode_Writer()
 
     def execute(self):
+
         #Read the gcode from file
         line_list = self.file_handler.read_gcode_file(file_path=self.command.path_to_file)
 

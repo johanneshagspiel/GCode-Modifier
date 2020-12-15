@@ -67,4 +67,4 @@ class TestCommandExecutor(unittest.TestCase):
 
         test= Gcode_3D_Viewer()
 
-        test.show_with_open3D(result_gcode.layer_list)
+        test.test_matplotlib(result_gcode.layer_list)

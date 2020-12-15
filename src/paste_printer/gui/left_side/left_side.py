@@ -83,13 +83,13 @@ class Left_Side(QWidget):
 
         #Nozzle 0.8 Size Button
         self.nozzle_0_8_button = QRadioButton("0.8 mm")
-        self.nozzle_0_8_button.toggled.connect(lambda:self.update_diameter("0.8 mm"))
+        self.nozzle_0_8_button.toggled.connect(lambda:self.update_diameter("0.8"))
         nozzle_size_selection_button_group.addButton(self.nozzle_0_8_button)
         nozzle_size_selection_hobx.addWidget(self.nozzle_0_8_button, QtCore.Qt.AlignLeft)
 
         #Nozzle 0.6 Size Button
         self.nozzle_0_6_button = QRadioButton("0.6 mm")
-        self.nozzle_0_6_button.toggled.connect(lambda:self.update_diameter("0.6 mm"))
+        self.nozzle_0_6_button.toggled.connect(lambda:self.update_diameter("0.6"))
         nozzle_size_selection_button_group.addButton(self.nozzle_0_6_button)
         nozzle_size_selection_hobx.addWidget(self.nozzle_0_6_button, QtCore.Qt.AlignLeft)
 

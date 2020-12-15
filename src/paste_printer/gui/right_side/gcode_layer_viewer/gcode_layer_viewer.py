@@ -1,5 +1,5 @@
 from PyQt5.QtCore import QTimer
-from PyQt5.QtWidgets import QWidget, QGridLayout
+from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel
 
 from paste_printer.gui.right_side.gcode_layer_viewer.gcode_canvas import GCode_Canvas
 
@@ -28,6 +28,7 @@ class GCode_Layer_Viewer(QWidget):
         self.overall_x = self.layer.x_data
         self.overall_y = self.layer.y_data
         self.overall_color = self.layer.color_data
+        self.overall_move = self.layer.move_data
 
         self.max_iteration = len(self.layer.x_data)
         self.current_iteration = 2
@@ -38,6 +39,10 @@ class GCode_Layer_Viewer(QWidget):
         self.grid = QGridLayout()
         self.canvas = GCode_Canvas(self, width=5, height=4, dpi=100)
         self.grid.addWidget(self.canvas, 0, 0)
+
+        self.current_move_label = QLabel()
+        self.grid.addWidget(self.current_move_label, 1, 0)
+
         self.setLayout(self.grid)
 
     def start_showing_animation(self):
@@ -54,7 +59,7 @@ class GCode_Layer_Viewer(QWidget):
 
         self.timer = QTimer()
         self.timer.timeout.connect(self.update_plot)
-        self.timer.start(100)
+        self.timer.start(1000)
 
     def update_plot(self):
 
@@ -67,10 +72,10 @@ class GCode_Layer_Viewer(QWidget):
         # self.canvas.axes.set_ylim(0, 220)
 
         for x, y, color in zip(self.xdata, self.ydata, self.colordata):
-            print(x, y)
             self.canvas.axes.plot(x, y, color)
 
         self.canvas.draw()
+        self.current_move_label.setText(str(self.overall_move[self.current_iteration]))
 
         self.current_iteration += 1
 

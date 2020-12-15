@@ -31,8 +31,7 @@ class GCode_Layer_Viewer_Static(QWidget):
         self.max_iteration = len(self.layer.x_data)
         self.current_iteration = 2
 
-        #self.start_showing_static()
-        self.test()
+        self.start_showing_static()
 
     def initUI(self):
         self.grid = QGridLayout()
@@ -41,18 +40,6 @@ class GCode_Layer_Viewer_Static(QWidget):
         self.setLayout(self.grid)
 
     def start_showing_static(self):
-        self.xdata = self.overall_x
-        self.ydata = self.overall_y
-        self.colordata = self.overall_color
-
-        self.canvas.axes.cla()
-        self.canvas.axes.set_xlim(0, 220)
-        self.canvas.axes.set_ylim(0, 220)
-        self.canvas.axes.plot(self.xdata, self.ydata, "-r")
-        self.canvas.draw()
-        self.show()
-
-    def test(self):
         self.xdata = self.overall_x
         self.ydata = self.overall_y
         self.colordata = self.overall_color
