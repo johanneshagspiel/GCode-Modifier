@@ -41,7 +41,7 @@ class Main_Screen(QMainWindow):
         myappid = program_name + program_version  # arbitrary string
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
-        # Set size of Window (Starting x, starting y, width, height
+        # Set name of Window (Starting x, starting y, width, height
         #self.setGeometry(180, 180, 720, 720)
 
         # Add left hand side

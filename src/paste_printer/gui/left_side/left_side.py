@@ -46,7 +46,7 @@ class Left_Side(QWidget):
         myappid = program_name + program_version  # arbitrary string
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
-        #Set size of Window (Starting x, starting y, width, height
+        #Set name of Window (Starting x, starting y, width, height
         self.setGeometry(180, 180, 720, 720)
 
         #Create Grid
@@ -56,7 +56,7 @@ class Left_Side(QWidget):
         row_position = 0
 
         #Nozzle Size Selection
-        nozzle_size_selection_label = QLabel("With which nozzle size do you want to print?")
+        nozzle_size_selection_label = QLabel("With which nozzle name do you want to print?")
         nozzle_size_selection_label.setAlignment(QtCore.Qt.AlignCenter)
         nozzle_size_selection_label.setFont(heading_font)
         self.grid.addWidget(nozzle_size_selection_label, row_position, 0, 1, 2)
@@ -71,15 +71,15 @@ class Left_Side(QWidget):
         nozzle_size_selection_button_group = QButtonGroup(self)
 
         #Nozzle 1.3 Size Button
-        self.nozzle_1_3_button = QRadioButton("1.5 mm")
+        self.nozzle_1_5_button = QRadioButton("1.5 mm")
 
         #1.5 diameter is the default
-        self.nozzle_1_3_button.setChecked(True)
+        self.nozzle_1_5_button.setChecked(True)
         self.selected_diameter_path = self.file_handler.diameter_1_5_path
 
-        self.nozzle_1_3_button.toggled.connect(lambda:self.update_diameter("1.5"))
-        nozzle_size_selection_button_group.addButton(self.nozzle_1_3_button)
-        nozzle_size_selection_hobx.addWidget(self.nozzle_1_3_button, QtCore.Qt.AlignLeft)
+        self.nozzle_1_5_button.toggled.connect(lambda:self.update_diameter("1.5"))
+        nozzle_size_selection_button_group.addButton(self.nozzle_1_5_button)
+        nozzle_size_selection_hobx.addWidget(self.nozzle_1_5_button, QtCore.Qt.AlignLeft)
 
         #Nozzle 0.8 Size Button
         self.nozzle_0_8_button = QRadioButton("0.8 mm")
@@ -101,35 +101,17 @@ class Left_Side(QWidget):
         row_position += 1
 
         # File Selection Buttongroup
-        file_selection_button_group = QButtonGroup(self)
+        self.file_selection_button_group = QButtonGroup(self)
 
         # File Selection HBox
-        file_selection_hobx = QHBoxLayout()
-        self.grid.addLayout(file_selection_hobx, row_position, 0, 1, 2)
+        self.file_selection_hobx = QHBoxLayout()
+        self.grid.addLayout(self.file_selection_hobx, row_position, 0, 1, 2)
         row_position += 1
 
-        # Cube Button
-        self.cube_button = QRadioButton("Cube")
+        self.selected_file_name = None
+        self.file_button_list = []
 
-        # Cube is the default
-        self.cube_button.setChecked(True)
-        self.selected_file_name = "cube.gcode"
-
-        self.cube_button.toggled.connect(lambda: self.update_file_name("Cube"))
-        file_selection_button_group.addButton(self.cube_button)
-        file_selection_hobx.addWidget(self.cube_button, QtCore.Qt.AlignLeft)
-
-        # Vase Button
-        self.vase_button = QRadioButton("Vase")
-        self.vase_button.toggled.connect(lambda: self.update_file_name("Vase"))
-        file_selection_button_group.addButton(self.vase_button)
-        file_selection_hobx.addWidget(self.vase_button, QtCore.Qt.AlignLeft)
-
-        # Apple Button
-        self.apple_button = QRadioButton("Apple")
-        self.apple_button.toggled.connect(lambda: self.update_file_name("Apple"))
-        file_selection_button_group.addButton(self.apple_button)
-        file_selection_hobx.addWidget(self.apple_button, QtCore.Qt.AlignLeft)
+        self.create_file_buttons()
 
         #Print setting label
         print_settings_label = QLabel("Which print settings do you want to use?")
@@ -324,6 +306,32 @@ class Left_Side(QWidget):
         #Set layout and show mainscreen
         self.setLayout(self.grid)
 
+    def create_file_buttons(self):
+
+        first_time = True
+        current_index = 0
+
+        for widget in self.file_button_list:
+            self.file_selection_hobx.removeWidget(widget)
+
+        self.file_button_list = []
+        self.file_selection_button_group = QButtonGroup()
+
+        for file in os.listdir(self.selected_diameter_path):
+            if file.endswith(".gcode"):
+                file_name = Path(file).stem
+                self.file_button_list.append(QRadioButton(file_name))
+                self.file_selection_button_group.addButton(self.file_button_list[current_index])
+                self.file_selection_hobx.addWidget(self.file_button_list[current_index], QtCore.Qt.AlignLeft)
+
+                if first_time:
+                    self.file_button_list[current_index].setChecked(True)
+                    self.selected_file_name = file_name + ".gcode"
+                    first_time = False
+
+                self.file_button_list[current_index].toggled.connect(self.update_file_name)
+                current_index += 1
+
     def differentiate_flow_rate(self, current_text):
 
         if current_text == "Different flow rate for outer walls and infill":
@@ -351,22 +359,15 @@ class Left_Side(QWidget):
             if size == "0.6":
                 self.selected_diameter_path = self.file_handler.diameter_0_6_path
 
+            self.create_file_buttons()
             self.notify_observer()
 
-    def update_file_name(self, size):
-        sender = self.sender()
-        if sender.isChecked():
-            if size == "Cube":
-                self.selected_file_name = "cube.gcode"
-                self.storage_name_entry.setText("cube")
-            if size == "Vase":
-                self.selected_file_name = "vase.gcode"
-                self.storage_name_entry.setText("vase")
-            if size == "Apple":
-                self.selected_file_name = "apple.gcode"
-                self.storage_name_entry.setText("apple")
+    def update_file_name(self):
 
-            self.notify_observer()
+        checked_button = self.file_selection_button_group.checkedButton()
+        name = checked_button.text()
+        self.selected_file_name = name + ".gcode"
+        self.storage_name_entry.setText(name)
 
     def pause_print_toggled(self):
         checkbx = self.sender()
@@ -394,6 +395,7 @@ class Left_Side(QWidget):
 
     def select_storage_location(self):
         directory = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
+        directory.setWindowIcon(QtGui.QIcon(str(self.file_handler.icon_png_path)))
 
         if len(directory) == 0 & len(self.last_directory) != 0:
             directory = self.self.last_directory
