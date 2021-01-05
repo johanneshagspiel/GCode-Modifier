@@ -4,7 +4,6 @@ from PyQt5.QtWidgets import QGridLayout, QLabel, QLineEdit, QWidget, QRadioButto
 from PyQt5 import QtCore
 from PyQt5 import QtGui
 from paste_printer.gui.right_side.gcode_layer_viewer.gcode_layer_viewer import GCode_Layer_Viewer
-from paste_printer.gui.right_side.gcode_3d_viewer.gcode_3d_viewer import Gcode_3D_Viewer
 from paste_printer.gui.right_side.gcode_layer_viewer.gcode_layer_viewer_static import GCode_Layer_Viewer_Static
 
 
@@ -54,15 +53,15 @@ class Right_Side(QWidget):
         self.row_position += 1
 
         self.show_3d_button = QPushButton("Show 3D Animation")
-        self.show_3d_button.clicked.connect(self.shop_3d_animation)
+        #self.show_3d_button.clicked.connect(self.show_3d_animation)
         self.grid.addWidget(self.show_3d_button, self.row_position, 0, 1, 2)
         self.row_position += 1
 
         self.setLayout(self.grid)
 
-    def shop_3d_animation(self):
-        gcode_3d_viewer = Gcode_3D_Viewer()
-        gcode_3d_viewer.show_with_open3D(self.gcode.layer_list)
+    # def show_3d_animation(self):
+    #     gcode_3d_viewer = Gcode_3D_Viewer()
+    #     gcode_3d_viewer.show_with_open3D(self.gcode.layer_list)
 
     def turn_on_off_animation(self, text):
         if text == "Turn Animation On":

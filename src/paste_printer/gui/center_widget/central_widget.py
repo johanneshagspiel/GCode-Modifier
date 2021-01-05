@@ -1,11 +1,4 @@
-from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QGridLayout, QLabel, QLineEdit, QWidget, QRadioButton, \
-    QCheckBox, QPushButton, QFileDialog, QMessageBox, QHBoxLayout, QButtonGroup, QMainWindow
-from PyQt5.QtCore import Qt
-from PyQt5 import QtCore
-from PyQt5 import QtGui
-
-from paste_printer.gui.customization.load_font import load_font
+from PyQt5.QtWidgets import QGridLayout, QWidget
 from paste_printer.gui.left_side.left_side import Left_Side
 from paste_printer.gui.right_side.right_side import Right_Side
 from paste_printer.util.file_handler import File_Handler

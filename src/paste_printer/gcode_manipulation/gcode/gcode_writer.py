@@ -66,8 +66,8 @@ class Gcode_Writer():
         movement_commands = ["G0", "G1", "G2", "G3", "G5"]
 
         for index, line in enumerate(self.start_gcode.main_body):
-            if any(x in line for x in movement_commands):
-                split_line = line.split()
+            split_line = line.split()
+            if split_line[0] in movement_commands:
                 for index, word in enumerate(split_line):
                     if "F" in word:
                         current_speed = float(word[1:])
@@ -88,7 +88,8 @@ class Gcode_Writer():
 
         for line in self.start_gcode.main_body:
             new_main_body.append(line)
-            if any(x in line for x in movement_commands) and first_time:
+            split_line = line.split()
+            if split_line[0] in movement_commands and first_time:
                 new_main_body.append(turn_on_fan_text)
                 first_time = False
 
@@ -119,7 +120,8 @@ class Gcode_Writer():
         movement_commands = ["G0", "G1", "G2", "G3", "G5"]
         for index, line in enumerate(self.start_gcode.main_body):
             new_main.append(line)
-            if any(x in line for x in movement_commands):
+            split_line = line.split()
+            if split_line[0] in movement_commands:
                 if current_move % 5 == 0 or current_move == self.start_gcode.movements_per_layer_list[current_layer] or current_move == 1:
                     text = "M117 Mov " + str(current_move) + "/" + str(self.start_gcode.movements_per_layer_list[current_layer]) \
                            + " Lay " + str(current_layer + 1) + "/" + str(self.start_gcode.amount_layers) + "; Additional Information"
@@ -174,26 +176,43 @@ class Gcode_Writer():
 
     def clean_nozzle(self, amount_of_moves):
 
+        amount_of_moves_int = int(amount_of_moves)
+
         movement_commands = ["G0", "G1", "G2", "G3", "G5"]
 
         new_main=[]
+        current_speed = 0
+        current_x_position = 0
+        current_y_position = 0
         current_z_position = 0
+        current_movements_seen = 0
 
-        for index, line in enumerate(self.start_gcode.main_body):
+        for line in self.start_gcode.main_body:
             new_main.append(line)
-            if any(x in line for x in movement_commands):
-                split_line = line.split()
+            split_line = line.split()
+            #In the gcode format the movement command should be the first word
+            if split_line[0] in movement_commands:
+                current_movements_seen += 1
                 for word in split_line:
+                    if "F" in word:
+                        current_speed = float(word[1:])
+                    if "X" in word:
+                        current_x_position = float(word[1:])
+                    if "Y" in word:
+                        current_y_position = float(word[1:])
                     if "Z" in word:
-                        z_position = float(word[1:])
-                        current_z_position = z_position
-            if index != 0 and index % amount_of_moves == 0:
-                clean_nozzle_command = []
-                clean_nozzle_command.append("G60 S1 ; Save Current Position To Return To")
-                if current_z_position<16:
-                    current_z_position = 16
-                clean_nozzle_command.append("G1 Z" + str(current_z_position + 15) + " ; Move Up A Bit")
+                        current_z_position = float(word[1:])
+            if current_movements_seen != 0 and current_movements_seen % amount_of_moves_int == 0:
+                new_main.append("G0 F600 X0 Y0 ; Move to Origin")
 
+                # Set How often it goes up and down
+                for iteration in range(6):
+                    new_main.append("G0 Z0 ; Move Down")
+                    new_main.append("G0 Z" + str(current_z_position) + " ; Move Up")
+
+                new_main.append("G0 X" + str(current_x_position) +" Y" + str(current_y_position) + " ; Move to Back To Print Position")
+                new_main.append("G0 F" + str(current_speed) + " ; Set Speed Back")
+                current_movements_seen = 0
 
         self.end_gcode.main_body = new_main
 

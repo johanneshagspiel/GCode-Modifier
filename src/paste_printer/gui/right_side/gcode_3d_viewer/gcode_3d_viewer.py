@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-import open3d as o3d
 
 from open3d.cpu.pybind.geometry import LineSet
 from open3d.cpu.pybind.utility import Vector3dVector, Vector2iVector

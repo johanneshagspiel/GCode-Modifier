@@ -565,7 +565,7 @@ class Left_Side(QWidget):
 
                            additional_information_bol=additional_information_bol,
                            pause_each_layer_bol=pause_each_layer_bol,
-                           clean_nozzle_bol=False,
+                           clean_nozzle_bol=clean_nozzle_bol,
                            retract_syringe_bol=retract_syringe_bol,
 
                            file_name=file_name_checked,

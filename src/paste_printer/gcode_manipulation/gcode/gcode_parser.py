@@ -145,14 +145,13 @@ class GCode_Parser:
         largest_extrusion_value = 0
 
         for index, line in enumerate(self.start_gcode.main_body):
+            split_line = line.split()
             if ";LAYER:" in line:
                 layer_list.append(index)
                 current_layer += 1
                 movements_per_layer_list.append(0)
-            elif any(x in line for x in movement_commands):
+            elif split_line[0] in movement_commands:
                 movements_per_layer_list[current_layer] += 1
-
-                split_line = line.split()
                 for word in split_line:
                     if "E" in word:
                         extrusion_value = float(word[1:])

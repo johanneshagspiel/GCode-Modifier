@@ -26,19 +26,21 @@ class TestCommandExecutor(unittest.TestCase):
         pause_each_layer_par_2 = True
 
         self.test_command_1 = Command(path_to_file=self.path_to_file,
-                                      flow_rate_par_1="100",
-                                      flow_rate_par_2="65",
-                                      flow_rate_infill="55",
+                                      flow_rate_layer_0 = "100",
+                                      flow_rate_par_1 = "100",
+                                      flow_rate_differentiate_bol = True,
                                       bed_temperature="0",
                                       print_speed="100",
                                       fan_bol=True,
                                       additional_information_bol=additional_information_bol,
                                       pause_each_layer_bol=pause_each_layer_bol,
+                                      clean_nozzle_bol=True,
                                       retract_syringe_bol=retract_syringe_bol,
                                       file_name="test",
                                       storage_path=self.test_file_handler.temp_files,
                                       pause_each_layer_par_1=10,
-                                      pause_each_layer_par_2=pause_each_layer_par_2)
+                                      pause_each_layer_par_2=pause_each_layer_par_2,
+                                      clean_nozzle_par_1=50)
 
         self.execute_command(self.test_command_1)
 
@@ -50,18 +52,20 @@ class TestCommandExecutor(unittest.TestCase):
 
         self.test_command_1 = Command(path_to_file=self.path_to_file,
                                       flow_rate_layer_0="100",
-                                      flow_rate_par_1="55",
-                                      flow_rate_differentiate_bol="True",
-                                      flow_rate_par_2="67",
+                                      flow_rate_par_1="100",
+                                      flow_rate_differentiate_bol=True,
                                       bed_temperature="0",
-                                      print_speed="120",
-                                      fan_bol=False,
+                                      print_speed="100",
+                                      fan_bol=True,
                                       additional_information_bol=additional_information_bol,
                                       pause_each_layer_bol=pause_each_layer_bol,
-                                      clean_nozzle_bol=False,
+                                      clean_nozzle_bol=True,
                                       retract_syringe_bol=retract_syringe_bol,
                                       file_name="test",
-                                      storage_path=self.test_file_handler.temp_files)
+                                      storage_path=self.test_file_handler.temp_files,
+                                      pause_each_layer_par_1=10,
+                                      pause_each_layer_par_2=pause_each_layer_par_2,
+                                      clean_nozzle_par_1=50)
 
         result_gcode = self.execute_command(self.test_command_1)
 
