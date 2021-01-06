@@ -77,19 +77,19 @@ class Left_Side(QWidget):
         self.nozzle_1_5_button.setChecked(True)
         self.selected_diameter_path = self.file_handler.diameter_1_5_path
 
-        self.nozzle_1_5_button.toggled.connect(lambda:self.update_diameter("1.5"))
+        self.nozzle_1_5_button.toggled.connect(lambda:self.update_diameter_button("1.5"))
         nozzle_size_selection_button_group.addButton(self.nozzle_1_5_button)
         nozzle_size_selection_hobx.addWidget(self.nozzle_1_5_button, QtCore.Qt.AlignLeft)
 
         #Nozzle 0.8 Size Button
         self.nozzle_0_8_button = QRadioButton("0.8 mm")
-        self.nozzle_0_8_button.toggled.connect(lambda:self.update_diameter("0.8"))
+        self.nozzle_0_8_button.toggled.connect(lambda:self.update_diameter_button("0.8"))
         nozzle_size_selection_button_group.addButton(self.nozzle_0_8_button)
         nozzle_size_selection_hobx.addWidget(self.nozzle_0_8_button, QtCore.Qt.AlignLeft)
 
         #Nozzle 0.6 Size Button
         self.nozzle_0_6_button = QRadioButton("0.6 mm")
-        self.nozzle_0_6_button.toggled.connect(lambda:self.update_diameter("0.6"))
+        self.nozzle_0_6_button.toggled.connect(lambda:self.update_diameter_button("0.6"))
         nozzle_size_selection_button_group.addButton(self.nozzle_0_6_button)
         nozzle_size_selection_hobx.addWidget(self.nozzle_0_6_button, QtCore.Qt.AlignLeft)
 
@@ -307,7 +307,6 @@ class Left_Side(QWidget):
         self.setLayout(self.grid)
 
     def create_file_buttons(self):
-
         first_time = True
         current_index = 0
 
@@ -349,18 +348,21 @@ class Left_Side(QWidget):
             self.flow_rate_par_2_label.setHidden(True)
             self.flow_rate_par_2_entry.setHidden(True)
 
-    def update_diameter(self, size):
+    def update_diameter_button(self, size):
         sender = self.sender()
         if sender.isChecked():
-            if size == "1.5":
-                self.selected_diameter_path = self.file_handler.diameter_1_5_path
-            if size == "0.8":
-                self.selected_diameter_path = self.file_handler.diameter_0_8_path
-            if size == "0.6":
-                self.selected_diameter_path = self.file_handler.diameter_0_6_path
+            self.update_diameter(size)
 
-            self.create_file_buttons()
-            self.notify_observer()
+    def update_diameter(self, size):
+        if size == "1.5":
+            self.selected_diameter_path = self.file_handler.diameter_1_5_path
+        if size == "0.8":
+            self.selected_diameter_path = self.file_handler.diameter_0_8_path
+        if size == "0.6":
+            self.selected_diameter_path = self.file_handler.diameter_0_6_path
+
+        self.create_file_buttons()
+        self.notify_observer()
 
     def update_file_name(self):
 
@@ -394,21 +396,21 @@ class Left_Side(QWidget):
             self.clean_nozzle_label_2.setParent(None)
 
     def select_storage_location(self):
-        directory = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
-        directory.setWindowIcon(QtGui.QIcon(str(self.file_handler.icon_png_path)))
+        directory = QFileDialog.getExistingDirectory(self, "Select Directory")
 
-        if len(directory) == 0 & len(self.last_directory) != 0:
-            directory = self.self.last_directory
+        if directory:
+            if len(directory) == 0 & len(self.last_directory) != 0:
+                directory = self.self.last_directory
 
-        self.path_name_label.setText(directory)
-        self.last_directory = directory
+            self.path_name_label.setText(directory)
+            self.last_directory = directory
 
-        self.storage_grid.addWidget(self.path_name_label, 1, 1)
+            self.storage_grid.addWidget(self.path_name_label, 1, 1)
 
-        #Shift Everything below the new path text one row down
-        self.choose_location_button.setText("Choose a different location")
-        self.grid.addWidget(self.choose_location_button, self.storage_location_button_row, 0, 1, 2)
-        self.grid.addWidget(self.modify_button, self.storage_location_button_row + 1, 0, 1, 2)
+            #Shift Everything below the new path text one row down
+            self.choose_location_button.setText("Choose a different location")
+            self.grid.addWidget(self.choose_location_button, self.storage_location_button_row, 0, 1, 2)
+            self.grid.addWidget(self.modify_button, self.storage_location_button_row + 1, 0, 1, 2)
 
     def start_modification(self):
         checked_command = self.sanity_check()
@@ -435,6 +437,22 @@ class Left_Side(QWidget):
             finish_modification_message.setStandardButtons(QMessageBox.Ok)
 
             finish_modification_message.exec_()
+
+    def uncheck_all_nozzle_size_buttons(self):
+        self.nozzle_1_5_button.setChecked(False)
+        self.nozzle_0_8_button.setChecked(False)
+        self.nozzle_0_6_button.setChecked(False)
+
+    def uncheck_all_file_buttons(self):
+
+        for button in self.file_button_list:
+            button.setChecked(False)
+
+    def check_file_button(self, file_name):
+
+        for button in self.file_button_list:
+            if button.text() == file_name:
+                button.setChecked(True)
 
     def sanity_check(self):
         messages = []
@@ -591,4 +609,4 @@ class Left_Side(QWidget):
         new_gocde_line_list = self.file_handler.read_gcode_file(self.path_to_file)
         temp_gcode_parser = GCode_Parser(new_gocde_line_list)
         new_gcode = temp_gcode_parser.create_gcode()
-        self.observer.update(new_gcode)
+        self.observer.update("left_side", new_gcode)

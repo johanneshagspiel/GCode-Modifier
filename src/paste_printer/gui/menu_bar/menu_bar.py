@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from PyQt5.QtWidgets import QMenuBar, QAction, QFileDialog
 from shutil import copy
 
@@ -11,6 +13,7 @@ class Menu_Bar(QMenuBar):
         super().__init__()
 
         self.initUI()
+        self.observer = None
 
     def initUI(self):
         self.file_handler = File_Handler()
@@ -25,16 +28,25 @@ class Menu_Bar(QMenuBar):
         selected_nozzle_size = Select_Nozzle_Window.get_nozzle_size()
         dest = 0
 
-        if selected_nozzle_size =="0.6 mm":
+        if selected_nozzle_size =="0.6":
             dest = self.file_handler.diameter_0_6_path
-        if selected_nozzle_size =="0.8 mm":
+        if selected_nozzle_size =="0.8":
             dest = self.file_handler.diameter_0_8_path
-        if selected_nozzle_size =="1.5 mm":
+        if selected_nozzle_size =="1.5":
             dest = self.file_handler.diameter_1_5_path
 
         if selected_nozzle_size != 0:
 
-            dialog = QFileDialog(self).getOpenFileName(caption="Select A GCode File That You Want To Add", filter="GCode (*.gcode)", initialFilter="GCode (*.gcode)")
-            src = dialog[0]
+            dialog,_ = QFileDialog(self).getOpenFileName(caption="Select A GCode File That You Want To Add", filter="GCode (*.gcode)", initialFilter="GCode (*.gcode)")
 
-            copy(src, dest)
+            if dialog:
+                src = dialog
+
+                file_name = Path(src).stem
+
+                copy(src, dest)
+                self.notify_observer(selected_nozzle_size, file_name)
+
+    def notify_observer(self, selected_nozzle_size, file_name):
+
+        self.observer.update("menu_bar", selected_nozzle_size, file_name)
