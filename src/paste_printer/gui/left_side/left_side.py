@@ -18,11 +18,13 @@ from paste_printer.util.file_handler import File_Handler
 
 class Left_Side(QWidget):
 
-    def __init__(self):
+    def __init__(self, settings):
         super().__init__()
 
         self.initUI()
         self.observer = None
+
+        self.settings = settings
 
     def initUI(self):
         self.file_handler = File_Handler()
@@ -416,7 +418,7 @@ class Left_Side(QWidget):
         checked_command = self.sanity_check()
 
         if checked_command != False:
-            command_executor = Command_Executor(checked_command)
+            command_executor = Command_Executor(checked_command, self.settings)
             result_gcode = command_executor.execute()
 
             finish_modification_message = QMessageBox()

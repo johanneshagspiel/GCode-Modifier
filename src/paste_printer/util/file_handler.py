@@ -1,4 +1,8 @@
+import json
 from pathlib import Path
+
+from paste_printer.util.mapper_util import Mapper_Util
+from paste_printer.util.settings import Settings
 from paste_printer.gcode_manipulation.gcode.gcode import GCode
 
 class File_Handler():
@@ -9,6 +13,7 @@ class File_Handler():
         self.gcode_path = Path.joinpath(self.root, "gcode")
         self.font_path = Path.joinpath(self.root, "fonts")
         self.icon_path = Path.joinpath(self.root, "icons")
+        self.settings_path = Path.joinpath(self.root, "settings")
 
         self.icon_ico_path = Path.joinpath(self.icon_path, "apple_icon.ico")
         self.icon_png_path = Path.joinpath(self.icon_path, "apple_icon.png")
@@ -18,6 +23,7 @@ class File_Handler():
         self.diameter_0_8_path = Path.joinpath(self.gcode_path, "0.8")
         self.diameter_0_6_path = Path.joinpath(self.gcode_path, "0.6")
 
+        self.settings_file_path = Path.joinpath(self.settings_path, "settings_file.json")
 
     def read_gcode_file(self, file_path):
         line_list = []
@@ -33,3 +39,19 @@ class File_Handler():
         f = open(file_path, "w")
         f.write(gcode.whole_code)
         f.close()
+
+    def read_settings(self):
+
+        with open(self.settings_file_path) as file:
+            new_settings_json = json.loads(file.read())
+
+        new_settings = Mapper_Util.json_to_settings(new_settings_json)
+        return new_settings
+
+    def settings_to_file(self, settings):
+
+        settings_json = Mapper_Util.settings_to_json(settings)
+
+        with open(self.settings_file_path, "w") as file:
+            file.write(json.dumps(settings_json))
+            file.close()

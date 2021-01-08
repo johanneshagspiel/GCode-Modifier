@@ -3,16 +3,18 @@ from paste_printer.command.tasks import Writer_Task, Parser_Task
 from paste_printer.gcode_manipulation.gcode.gcode_parser import GCode_Parser
 from paste_printer.gcode_manipulation.gcode.gcode_writer import Gcode_Writer
 from paste_printer.util.file_handler import File_Handler
+from paste_printer.util.settings import Settings
+
 
 class Command_Executor:
 
-    def __init__(self, command: Command):
+    def __init__(self, command: Command, settings: Settings):
         self.command = command
         self.file_handler = File_Handler()
 
         self.gcode = None
         self.gcode_parser = None
-        self.gcode_writer = Gcode_Writer()
+        self.gcode_writer = Gcode_Writer(settings)
 
     def execute(self):
 

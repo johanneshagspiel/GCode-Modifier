@@ -2,9 +2,11 @@ from paste_printer.gcode_manipulation.gcode.gcode import GCode
 
 class Gcode_Writer():
 
-    def __init__(self):
+    def __init__(self, settings):
         self.start_gcode = None
         self.end_gcode = None
+
+        self.settings = settings
 
     def set_flowrate_layer_0(self, flowrate_layer_0):
         text = "M221 S" + str(flowrate_layer_0) + " ; Set Flowrate Layer 0"
@@ -203,14 +205,25 @@ class Gcode_Writer():
                     if "Z" in word:
                         current_z_position = float(word[1:])
             if current_movements_seen != 0 and current_movements_seen % amount_of_moves_int == 0:
-                new_main.append("G0 F600 X0 Y0 ; Move to Origin")
+                x_border_sponge = self.settings.environment.printer.bed_width_x - self.settings.environment.sponge.width_x - 2 # 2 is a small offsett - we do not want to hit the sponge
+                y_border_sponge = self.settings.environment.sponge.depth_y + 2
+                z_border_sponge = self.settings.environment.sponge.height_z + 2
+
+                new_main.append("G0 F600 X" + str(x_border_sponge) + " Y" + str(y_border_sponge) + " ; Move To The Top Left Border Of The Sponge")
+                new_main.append("G0 Z" + str(z_border_sponge) + " ; Move Slightly Above The Height Of The Sponge")
+
+                x_mid_sponge = self.settings.environment.printer.bed_width_x - (self.settings.environment.sponge.width_x / 2)
+                y_mid_sponge = self.settings.environment.sponge.depth_y / 2
+
+                new_main.append("G0 X" + str(x_mid_sponge) + " Y" + str(y_mid_sponge) + " ; Move To The Middle Of The Sponge")
 
                 # Set How often it goes up and down
                 for iteration in range(6):
                     new_main.append("G0 Z0 ; Move Down")
-                    new_main.append("G0 Z" + str(current_z_position) + " ; Move Up")
+                    new_main.append("G0 Z" + str(z_border_sponge) + " ; Move Up")
 
-                new_main.append("G0 X" + str(current_x_position) +" Y" + str(current_y_position) + " ; Move to Back To Print Position")
+                new_main.append("G0 F600 X" + str(x_border_sponge) + " Y" + str(y_border_sponge) + " ; Move Back To The Top Left Border Of The Sponge")
+                new_main.append("G0 X" + str(current_x_position) +" Y" + str(current_y_position) + " Z" + str(current_z_position) + " ; Move to Back To Previous Print Position")
                 new_main.append("G0 F" + str(current_speed) + " ; Set Speed Back")
                 current_movements_seen = 0
 
