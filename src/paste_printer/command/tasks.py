@@ -12,6 +12,7 @@ class Writer_Task (Enum):
     PAUSE_EACH_LAYER = 8
     CLEAN_NOZZLE = 9
     RETRACT_SYRINGE_AT_END = 10
+    BIG_SYRINGE = 11
 
 class Parser_Task (Enum):
     CREATE_GCODE = 1

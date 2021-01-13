@@ -8,6 +8,23 @@ class Gcode_Writer():
 
         self.settings = settings
 
+    def big_syringe_support(self):
+
+        big_syringe_multiplier = self.settings.big_syringe.flow_rate_modifier;
+        new_main = []
+
+        for line in self.start_gcode.main_body:
+            if "M221" in line:
+                split_line = line.split()
+                current_speed = float(split_line[1][1:])
+                new_speed = current_speed * big_syringe_multiplier
+                split_line[1] = "S" + str(new_speed)
+                line = " ".join(split_line)
+            new_main.append(line)
+
+        self.end_gcode.main_body = new_main
+        return self.end_gcode
+
     def set_flowrate_layer_0(self, flowrate_layer_0):
         text = "M221 S" + str(flowrate_layer_0) + " ; Set Flowrate Layer 0"
 

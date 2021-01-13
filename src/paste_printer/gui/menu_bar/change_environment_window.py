@@ -21,7 +21,7 @@ class Change_Environment_Window(QDialog):
 
         file_handler = File_Handler()
 
-        self.setWindowTitle("Environment Change")
+        self.setWindowTitle("Settings Change")
         self.setWindowIcon(QtGui.QIcon(str(file_handler.icon_png_path)))
 
         self.setWindowFlags(Qt.WindowFlags())
@@ -30,7 +30,7 @@ class Change_Environment_Window(QDialog):
 
         top_label = QLabel("What do you want to change in the settings?")
         top_label.setAlignment(Qt.AlignCenter)
-        grid.addWidget(top_label, 0, 0, 1, 6)
+        grid.addWidget(top_label, 0, 0, 1, 8)
 
         environment_label = QLabel("Printer Dimensions")
         environment_label.setAlignment(Qt.AlignCenter)
@@ -82,6 +82,17 @@ class Change_Environment_Window(QDialog):
         grid.addWidget(self.sponge_height_z_entry, 4, 4)
         self.entries_to_check.append(self.sponge_height_z_entry)
 
+        big_syringe_label = QLabel("Big Syringe")
+        big_syringe_label.setAlignment(Qt.AlignCenter)
+        grid.addWidget(big_syringe_label, 1, 6, 1, 1)
+
+        big_syringe_flow_rate_modifier_label = QLabel("Flow Rate Modifier")
+        grid.addWidget(big_syringe_flow_rate_modifier_label, 2, 6)
+
+        self.big_syringe_flow_rate_modifier_entry = QLineEdit()
+        grid.addWidget(self.big_syringe_flow_rate_modifier_entry, 2, 7)
+        self.entries_to_check.append(self.big_syringe_flow_rate_modifier_entry)
+
         for row_printer_dimension in range(2, 5):
             mm_label = QLabel("mm")
             grid.addWidget(mm_label, row_printer_dimension, 2)
@@ -94,8 +105,14 @@ class Change_Environment_Window(QDialog):
             entry.setMaximumWidth(36)
             entry.setAlignment(Qt.AlignCenter)
 
+        button_grid = QGridLayout()
+        grid.addLayout(button_grid, 5, 0, 1, 8 )
+
         accept_button = QPushButton("Accept")
-        grid.addWidget(accept_button, 5, 1, 1, 3)
+        button_grid.addWidget(accept_button, 0, 1)
+        button_grid.setColumnStretch(0, 1)
+        button_grid.setColumnStretch(1, 1)
+        button_grid.setColumnStretch(2, 1)
         accept_button.clicked.connect(self.accept_pressed)
 
         self.setLayout(grid)
@@ -108,6 +125,8 @@ class Change_Environment_Window(QDialog):
             self.sponge_width_x_entry.setText(str(self.settings.environment.sponge.width_x))
             self.sponge_depth_y_entry.setText(str(self.settings.environment.sponge.depth_y))
             self.sponge_height_z_entry.setText(str(self.settings.environment.sponge.height_z))
+
+            self.big_syringe_flow_rate_modifier_entry.setText(str(self.settings.big_syringe.flow_rate_modifier))
 
     def accept_pressed(self):
 

@@ -205,6 +205,10 @@ class Left_Side(QWidget):
         # Add Information Checkbox
         self.add_information_checkbox = QCheckBox("Show additional information while printing")
         self.grid.addWidget(self.add_information_checkbox, row_position, 0)
+
+        # Add Big Syringe Support Checkbox
+        self.big_syringe_checkbox = QCheckBox("Enable big syringe support")
+        self.grid.addWidget(self.big_syringe_checkbox, row_position, 1)
         row_position += 1
 
         #Pause after each layer checkbox
@@ -559,6 +563,7 @@ class Left_Side(QWidget):
             pause_each_layer_bol = self.pause_print_retraction_checkbox.isChecked()
             clean_nozzle_bol = self.clean_nozzle_checkbox.isChecked()
             retract_syringe_bol = self.retract_syringe_checkbox.isChecked()
+            big_syringe_bol = self.big_syringe_checkbox.isChecked()
 
             flow_rate_par_2 = None
             pause_each_layer_par_1 = None
@@ -589,6 +594,7 @@ class Left_Side(QWidget):
                            pause_each_layer_bol=pause_each_layer_bol,
                            clean_nozzle_bol=clean_nozzle_bol,
                            retract_syringe_bol=retract_syringe_bol,
+                           big_syringe_bol=big_syringe_bol,
 
                            file_name=file_name_checked,
                            storage_path=storage_location,

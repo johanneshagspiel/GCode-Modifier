@@ -1,4 +1,4 @@
-from paste_printer.util.settings import Printer, Sponge, Environment, Settings
+from paste_printer.util.settings import Printer, Sponge, Environment, Settings, Big_Syringe
 
 
 class Mapper_Util():
@@ -17,7 +17,11 @@ class Mapper_Util():
 
         new_environment = Environment(new_printer, new_sponge)
 
-        new_settings = Settings(new_environment)
+        big_syringe_json = json['big_syringe']
+        big_syringe_modifier = big_syringe_json['flow_rate_modifier']
+        new_big_syringe = Big_Syringe(big_syringe_modifier)
+
+        new_settings = Settings(new_environment, new_big_syringe)
 
         return new_settings
 
@@ -29,11 +33,13 @@ class Mapper_Util():
 
         new_environment = Environment(new_printer, new_sponge)
 
-        new_settings = Settings(new_environment)
+        new_big_syringe = Big_Syringe(float_list[6])
+
+        new_settings = Settings(new_environment, new_big_syringe)
 
         return new_settings
 
-    def settings_to_json(settings):
+    def settings_to_json(settings : Settings):
 
         json = {
                   "environment" : {
@@ -47,7 +53,10 @@ class Mapper_Util():
                       "depth_y" : settings.environment.sponge.depth_y,
                       "height_z" : settings.environment.sponge.height_z
                     }
-                  }
+                  },
+                    "big_syringe" : {
+                        "flow_rate_modifier" : settings.big_syringe.flow_rate_modifier,
+                    }
                 }
 
         return json

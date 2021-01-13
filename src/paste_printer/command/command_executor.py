@@ -59,8 +59,12 @@ class Command_Executor:
             self.execute_writer_task(Writer_Task.CLEAN_NOZZLE, self.command.clean_nozzle_par_1)
 
         # Check if retract syringe was ticked
-        if self.command.retract_syringe_bol == True:
+        if self.command.retract_syringe_bol:
             self.execute_writer_task(Writer_Task.RETRACT_SYRINGE_AT_END)
+
+        #Check if big syringe support was ticked
+        if self.command.big_syringe_bol:
+            self.execute_writer_task(Writer_Task.BIG_SYRINGE)
 
         #TODO!!! Improve the gcode at the end (i.e. add start timer)
         self.execute_parser_task(Parser_Task.IMPROVE_GCODE_AT_END)
@@ -98,6 +102,8 @@ class Command_Executor:
             result_gcode = self.gcode_writer.clean_nozzle(parameter_1)
         if writer_task == Writer_Task.RETRACT_SYRINGE_AT_END:
             result_gcode = self.gcode_writer.retract_syringe()
+        if writer_task == Writer_Task.BIG_SYRINGE:
+            result_gcode = self.gcode_writer.big_syringe_support()
 
         self.gcode = result_gcode
         self.execute_parser_task(Parser_Task.FIND_INDEXES)
