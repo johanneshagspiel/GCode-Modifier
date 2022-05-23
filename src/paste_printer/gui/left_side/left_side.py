@@ -29,24 +29,10 @@ class Left_Side(QWidget):
     def initUI(self):
         self.file_handler = File_Handler()
 
-        #Create program name
-        program_name="Paste Printer G-Code Modifier - Version "
-        program_version ="0.1"
-
-        #Set Name Of Program
-        self.setWindowTitle(program_name + program_version)
-
-        #change program icon
-        self.setWindowIcon(QtGui.QIcon(str(self.file_handler.icon_png_path)))
-
         #change Font
         load_font(self.file_handler.used_font_path)
         self.setFont(QFont("Eurostile LT Std", 18))
         heading_font = QFont("Eurostile LT Std", 18,weight=QtGui.QFont.Bold)
-
-        #change taskbar icon
-        myappid = program_name + program_version  # arbitrary string
-        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
         #Set name of Window (Starting x, starting y, width, height
         self.setGeometry(180, 180, 720, 720)

@@ -19,7 +19,7 @@ class Main_Screen(QMainWindow):
         self.file_handler = File_Handler()
 
         # Create program name
-        program_name = "GCode Modifier"
+        program_name = "GCode Modifier "
         program_version = "1.2"
 
         # Set Name Of Program
