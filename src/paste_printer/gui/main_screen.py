@@ -20,7 +20,7 @@ class Main_Screen(QMainWindow):
 
         # Create program name
         program_name = "G-Code Modifier "
-        program_version = "1.2"
+        program_version = "1.0"
 
         # Set Name Of Program
         self.setWindowTitle(program_name + program_version)
