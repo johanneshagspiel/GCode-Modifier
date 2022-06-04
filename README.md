@@ -33,7 +33,7 @@ The possible modifications of G-Code include:
 | Version control system | [Git](https://git-scm.com/)                                  |
 | Testing framework      | [unittest](https://docs.python.org/3/library/unittest.html/) |
 | Application Bundler    | [PyInstaller](https://pyinstaller.org/en/stable/index.html/) |
-
+| GUI Framework 		 | [PyQt5](https://www.riverbankcomputing.com/software/pyqt/)   |
 
 ## Installation Process
 
