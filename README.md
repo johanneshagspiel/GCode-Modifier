@@ -1,4 +1,4 @@
-<img src=resources/gcode_modifier_logo.JPG alt="G-Code Modifier Logo" width="121" height="128">
+<img src=img/gcode_modifier_logo.JPG alt="G-Code Modifier Logo" width="121" height="128">
 
 --------------------------------------------------------------------------------
 [![MIT-License](https://img.shields.io/github/license/johanneshagspiel/gcode-modifier)](LICENSE)
