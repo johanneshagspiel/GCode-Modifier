@@ -2,16 +2,27 @@
 
 --------------------------------------------------------------------------------
 [![MIT-License](https://img.shields.io/github/license/johanneshagspiel/gcode-modifier)](LICENSE)
-[![Top Language](https://img.shields.io/github/languages/top/johanneshagspiel/gcode-modifier)](https://github.com/johanneshagspiel/gcode-modifier)
 [![Latest Release](https://img.shields.io/github/v/release/johanneshagspiel/gcode-modifier)](https://github.com/johanneshagspiel/gcode-modifier/releases/)
 
 # G-Code Modifier
 
-G-Code Modifier is 
+"G-Code Modifier" is desktop application created in order to support the 3D printing of sustainable materials via extrusion through a syringe. 
+Such a 3D printing process posses unique problems that either can not be addressed at all with popular 3D printer slicing applications like [Cura](https://ultimaker.com/software/ultimaker-cura) or only in a very cumbersome manner.
+The "G-Code Modifier" itself, however, can not slice a model into G-Code as it instead modifies existing G-Code. 
 
 ## Features
 
-The
+The possible modifications of G-Code include:
+- changing the flow rate between the first and every other layer
+- changing the flow rate between the outer walls and the infill
+- changing the bed temperature
+- changing the print speed
+- turning on the fan while printing
+- pausing the print after each layer for a certain amount of time
+  - and possibly retracting the syringe slightly during the pause
+- cleaning the nozzle during the print (by moving to the bottom right corner, where a sponge is assumed to be installed, and moving the syringe up and down repeatedly)
+- retracting the syringe at the end of the print
+- supporting a larger syringe with a higher flow-rate
 
 ## Tools
 
