@@ -1,0 +1,11 @@
+name: GCode-Modifier
+channels:
+  - pip
+  - defaults
+  - https://conda.anaconda.org/conda-forge
+  - conda-forge
+  - anaconda
+  - free
+dependencies:
+  - python=3.8
+prefix: C:\Users\Johannes\anaconda3\envs\GCode-Modifier

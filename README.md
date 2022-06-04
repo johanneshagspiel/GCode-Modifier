@@ -55,6 +55,18 @@ Now, create the executable via:
 
 This should have created a new folder in `src` called `pyinstaller`. The executable can be then be found at `src/pyinstaller/dist/main.exe`
 
+If you want to import this project and resolve all the dependencies associated with it, it is assumed that you have already installed [Anaconda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html). Re-create the original `GCode-Modifier` environment from the `environment.yml` file with this command:
+
+	conda env create -f environment.yml
+
+Activate the new environment:
+ 
+	conda activate GCode-Modifier
+
+Lastly, check that the new environment was installed correctly:
+	
+	conda env list
+
 ## Licence
 
 The G-Code Modifier is published under the MIT licence, which can be found in the [LICENSE](LICENSE) file.
