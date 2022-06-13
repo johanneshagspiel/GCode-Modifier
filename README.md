@@ -2,6 +2,7 @@
 
 --------------------------------------------------------------------------------
 [![MIT-License](https://img.shields.io/github/license/johanneshagspiel/gcode-modifier)](LICENSE)
+[![Top Language](https://img.shields.io/github/languages/top/johanneshagspiel/gcode-modifier)](https://github.com/johanneshagspiel/gcode-modifier)
 [![Latest Release](https://img.shields.io/github/v/release/johanneshagspiel/gcode-modifier)](https://github.com/johanneshagspiel/gcode-modifier/releases/)
 
 # G-Code Modifier
